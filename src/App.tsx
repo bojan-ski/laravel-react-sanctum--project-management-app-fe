@@ -7,6 +7,8 @@ import AppLayout from "./layout/AppLayout";
 
 // pages
 import Login from "./pages/auth/Login";
+import Projects from "./pages/Projects";
+import Profile from "./pages/Profile";
 
 const router = createBrowserRouter([
   {
@@ -17,6 +19,14 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Login />
+      },
+      {
+        path: '/projects',
+        element: <Projects />,
+      },
+      {
+        path: '/profile',
+        element: <Profile />,
       },
     ]
   }
