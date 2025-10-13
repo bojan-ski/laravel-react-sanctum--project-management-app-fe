@@ -114,7 +114,20 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* CUSTOM CSS */
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: "Poppins", sans-serif;
+}
+
+main {
+  flex: 1;
 }
