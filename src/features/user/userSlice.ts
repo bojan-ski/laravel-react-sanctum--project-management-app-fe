@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { User } from "../../types/types";
-import { getUserDataFromLS, setUserDataInLS } from "../../utils/storage";
+import { getUserDataFromLS, removeUserDataFromLS, setUserDataInLS } from "../../utils/storage";
 
 const initialUserState: User = getUserDataFromLS() || {
     id: '',
@@ -23,12 +23,23 @@ const userSlice = createSlice({
 
             // set user data in storage
             setUserDataInLS(payload);
-        }
+        },
+        logoutUser: (state) => {
+            state.id = '';
+            state.name = '';
+            state.email = '';
+            state.avatar = null;
+            state.is_admin = 0;
+
+            // clear storage
+            removeUserDataFromLS();
+        },
     }
 });
 
 export const {
     setUserData, // Login
+    logoutUser, // LogoutOption
 } = userSlice.actions;
 
 export default userSlice.reducer;

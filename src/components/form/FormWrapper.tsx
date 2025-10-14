@@ -3,7 +3,7 @@ import { type FormEvent, type JSX, type ReactNode } from "react";
 type FormWrapperProps = {
     children: ReactNode;
     onSubmit: (e: FormEvent<Element>) => Promise<void>;
-    formCss: string;
+    formCss?: string;
 };
 
 function FormWrapper({ children, onSubmit, formCss }: FormWrapperProps): JSX.Element {

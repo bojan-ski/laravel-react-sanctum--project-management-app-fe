@@ -8,3 +8,9 @@ export async function login(email: string, password: string) {
 
     return res.data;
 }
+
+export async function logout() {
+    const res = await api.post('/api/logout');
+
+    return res.data;
+}

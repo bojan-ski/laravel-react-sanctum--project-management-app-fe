@@ -1,7 +1,7 @@
 import { useState, type FormEvent, type JSX } from 'react';
 import { useNavigate, type NavigateFunction } from 'react-router';
-import { useAppDispatch } from '../../hooks/useRedux';
 import { login } from '../../services/auth';
+import { useAppDispatch } from '../../hooks/useRedux';
 import { setUserData } from '../../features/user/userSlice';
 import PageHeader from '../../components/global/PageHeader';
 import FormWrapper from '../../components/form/FormWrapper';
@@ -32,14 +32,14 @@ function Login(): JSX.Element {
                 form.password,
             );
 
-            // set user data
+            // userSlice call
             dispatch(setUserData(response.data));
 
             // display toast message
             toast.success(response.message);
 
             // navigate user
-            navigate('/');
+            navigate('/projects');
         } catch (error: any) {
             if (error.response?.status === 422) {
                 const fieldErrors = error?.response?.data?.errors;
