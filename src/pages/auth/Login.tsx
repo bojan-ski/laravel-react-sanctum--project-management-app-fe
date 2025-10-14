@@ -1,6 +1,7 @@
 import { useState, type FormEvent, type JSX } from 'react';
-import { login } from '../../services/auth';
+import { useNavigate, type NavigateFunction } from 'react-router';
 import { useAppDispatch } from '../../hooks/useRedux';
+import { login } from '../../services/auth';
 import { setUserData } from '../../features/user/userSlice';
 import PageHeader from '../../components/global/PageHeader';
 import FormWrapper from '../../components/form/FormWrapper';
@@ -10,6 +11,7 @@ import toast from 'react-hot-toast';
 
 function Login(): JSX.Element {
     const dispatch = useAppDispatch();
+    const navigate: NavigateFunction = useNavigate();
 
     const [form, setForm] = useState<{ email: string, password: string; }>({
         email: '',
@@ -33,8 +35,11 @@ function Login(): JSX.Element {
             // set user data
             dispatch(setUserData(response.data));
 
-            // toast msg
+            // display toast message
             toast.success(response.message);
+
+            // navigate user
+            navigate('/');
         } catch (error: any) {
             if (error.response?.status === 422) {
                 const fieldErrors = error?.response?.data?.errors;

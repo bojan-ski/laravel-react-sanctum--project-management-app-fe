@@ -1,7 +1,8 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { User } from "../../types/types";
+import { getUserDataFromLS, setUserDataInLS } from "../../utils/storage";
 
-const initialUserState: User = {
+const initialUserState: User = getUserDataFromLS() || {
     id: '',
     name: '',
     email: '',
@@ -19,6 +20,9 @@ const userSlice = createSlice({
             state.email = payload.email;
             state.avatar = payload.avatar;
             state.is_admin = payload.is_admin;
+
+            // set user data in storage
+            setUserDataInLS(payload);
         }
     }
 });
