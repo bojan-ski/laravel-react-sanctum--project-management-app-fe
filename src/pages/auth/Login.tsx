@@ -1,5 +1,7 @@
 import { useState, type FormEvent, type JSX } from 'react';
 import { login } from '../../services/auth';
+import { useAppDispatch } from '../../hooks/useRedux';
+import { setUserData } from '../../features/user/userSlice';
 import PageHeader from '../../components/global/PageHeader';
 import FormWrapper from '../../components/form/FormWrapper';
 import FormInput from '../../components/form/FormInput';
@@ -7,6 +9,8 @@ import FormSubmitButton from '../../components/form/FormSubmitButton';
 import toast from 'react-hot-toast';
 
 function Login(): JSX.Element {
+    const dispatch = useAppDispatch();
+
     const [form, setForm] = useState<{ email: string, password: string; }>({
         email: '',
         password: '',
@@ -26,10 +30,12 @@ function Login(): JSX.Element {
                 form.password,
             );
 
-            console.log(response);
+            // set user data
+            dispatch(setUserData(response.data));
+
+            // toast msg
+            toast.success(response.message);
         } catch (error: any) {
-            console.log(error);
-            
             if (error.response?.status === 422) {
                 const fieldErrors = error?.response?.data?.errors;
                 const formattedErrors: Record<string, string> = {};

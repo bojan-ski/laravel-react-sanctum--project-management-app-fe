@@ -1,8 +1,8 @@
 export type User = {
-    id: number;
+    id: string;
     name: string;
     email: string;
-    avatar?: string;
+    avatar: string | null;
     is_admin: number;
     // role: string;
 };

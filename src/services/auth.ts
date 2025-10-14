@@ -1,7 +1,6 @@
 import api from "../api/axios";
 import { getCsrfCookie } from "./cookie";
 
-
 export async function login(email: string, password: string) {
     await getCsrfCookie();
 
