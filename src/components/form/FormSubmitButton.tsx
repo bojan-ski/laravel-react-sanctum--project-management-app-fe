@@ -8,15 +8,15 @@ type FormSubmitButtonProps = {
 };
 
 function FormSubmitButton({ btnCss, btnLabel }: FormSubmitButtonProps): JSX.Element {
-    const { pending } = useFormStatus();
+    const { pending } = useFormStatus();   
 
     return (
         <Button
             type="submit"
-            className={`text-md ${btnCss}`}
+            className={btnCss}
             disabled={pending}
         >
-            {btnLabel}
+            {pending ? 'Processing...' : btnLabel}
         </Button>
     );
 }

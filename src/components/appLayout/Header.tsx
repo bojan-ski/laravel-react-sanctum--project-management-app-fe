@@ -7,19 +7,16 @@ import LogoutOption from './header/LogoutOption';
 
 function Header(): JSX.Element {
     const user: User = useAppSelector(state => state.user);
-    // console.log(user);
 
     return (
         <header className="header bg-gray-800 text-gray-300 py-4">
             {user.name ? (
                 <div className="container navbar mx-auto flex items-center justify-between">
-
                     {/* nav links */}
-                    <Navbar />
+                    <Navbar role={user.role} />
 
-                    {/* auth option */}
+                    {/* logout option */}
                     <LogoutOption />
-
                 </div>
 
             ) : (

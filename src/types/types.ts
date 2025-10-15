@@ -3,6 +3,5 @@ export type User = {
     name: string;
     email: string;
     avatar: string | null;
-    is_admin: number;
-    // role: string;
+    role: string;
 };

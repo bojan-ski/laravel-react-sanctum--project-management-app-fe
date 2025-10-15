@@ -1,7 +1,7 @@
 import { type JSX } from 'react';
 import { NavLink } from 'react-router';
 
-function Navbar(): JSX.Element {
+function Navbar({ role }: { role: string; }): JSX.Element {
     return (
         <nav className='flex items-center gap-2'>
             <NavLink
@@ -13,7 +13,17 @@ function Navbar(): JSX.Element {
                 projects
             </NavLink>
 
-            <NavLink
+            {role == 'admin' ? (
+                <NavLink
+                to={'/users'}
+                className={({ isActive }) =>
+                    `capitalize btn font-semibold text-sm border rounded-sm py-1.5 px-4 text-white hover:bg-yellow-500 transition cursor-pointer ${isActive ? 'bg-yellow-500' : 'bg-yellow-600'}`
+                }
+            >
+                users
+            </NavLink>
+            ) : (
+                <NavLink
                 to={'/profile'}
                 className={({ isActive }) =>
                     `capitalize btn font-semibold text-sm border rounded-sm py-1.5 px-4 text-white hover:bg-yellow-500 transition cursor-pointer ${isActive ? 'bg-yellow-500' : 'bg-yellow-600'}`
@@ -21,6 +31,7 @@ function Navbar(): JSX.Element {
             >
                 profile
             </NavLink>
+            )}
         </nav>
     );
 }

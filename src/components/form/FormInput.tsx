@@ -46,7 +46,7 @@ const FormInput = ({
             {label && (
                 <Label
                     htmlFor={name}
-                    className={`block capitalize font-semibold mb-2 text-md ${labelCss}`}
+                    className={`block capitalize font-semibold mb-2 ${labelCss}`}
                 >
                     {label}:
                 </Label>

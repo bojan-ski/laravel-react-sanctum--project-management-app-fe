@@ -7,7 +7,7 @@ const initialUserState: User = getUserDataFromLS() || {
     name: '',
     email: '',
     avatar: null,
-    is_admin: 0,
+    role: '',
 };
 
 const userSlice = createSlice({
@@ -19,7 +19,7 @@ const userSlice = createSlice({
             state.name = payload.name;
             state.email = payload.email;
             state.avatar = payload.avatar;
-            state.is_admin = payload.is_admin;
+            state.role = payload.role;
 
             // set user data in storage
             setUserDataInLS(payload);
@@ -29,7 +29,7 @@ const userSlice = createSlice({
             state.name = '';
             state.email = '';
             state.avatar = null;
-            state.is_admin = 0;
+            state.role = '';
 
             // clear storage
             removeUserDataFromLS();

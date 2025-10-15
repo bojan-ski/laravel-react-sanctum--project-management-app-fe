@@ -9,6 +9,7 @@ import AppLayout from "./layout/AppLayout";
 import Login from "./pages/auth/Login";
 import Projects from "./pages/Projects";
 import Profile from "./pages/Profile";
+import Users from "./pages/admin/Users";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: '/projects',
         element: <Projects />,
+      },
+      {
+        path: '/users',
+        element: <Users />,
       },
       {
         path: '/profile',
