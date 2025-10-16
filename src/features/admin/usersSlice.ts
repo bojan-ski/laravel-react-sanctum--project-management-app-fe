@@ -2,20 +2,20 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { createUser } from "../../services/admin";
 import type { LaravelValidationErrors, NewUserFormData, User } from "../../types/types";
 
-type CreateNewUserErrorsProp = {
+type CreateNewUserErrors = {
     name?: string;
     email?: string;
     password?: string;
     random?: string;
 };
 
-type UsersStateProp = {
+type UsersState = {
     isLoading: boolean;
     users: User[];
-    errors: CreateNewUserErrorsProp;
+    errors: CreateNewUserErrors;
 };
 
-const initialUserState: UsersStateProp = {
+const initialUserState: UsersState = {
     isLoading: false,
     users: [],
     errors: {},
@@ -23,21 +23,21 @@ const initialUserState: UsersStateProp = {
 
 export const addUser = createAsyncThunk('users/createUser', async (newUserData: NewUserFormData, { rejectWithValue }) => {
     try {
-        const data = await createUser(newUserData);
+        const response = await createUser(newUserData);
 
-        return data;
+        return response;
     } catch (error: any) {
         if (error.response?.status === 422) {
             const fieldErrors = error?.response?.data?.errors as LaravelValidationErrors;
-            const formattedErrors: CreateNewUserErrorsProp = {};
+            const formattedErrors: CreateNewUserErrors = {};
 
             Object.keys(fieldErrors).forEach((key) => {
-                formattedErrors[key as keyof CreateNewUserErrorsProp] = fieldErrors[key][0];
+                formattedErrors[key as keyof CreateNewUserErrors] = fieldErrors[key][0];
             });
 
             return rejectWithValue(formattedErrors);
         } else {
-            return rejectWithValue({ random: error.response.statusText || "Error" });
+            return rejectWithValue({ random: error.response.statusText || "Error - Create new user" });
         }
     }
 }
@@ -63,7 +63,7 @@ const usersSlice = createSlice({
                 console.log(payload);
 
                 state.isLoading = false;
-                state.errors = payload as CreateNewUserErrorsProp;
+                state.errors = payload as CreateNewUserErrors;
             });
     },
 });

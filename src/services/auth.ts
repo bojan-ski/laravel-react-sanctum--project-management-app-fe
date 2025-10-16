@@ -4,13 +4,14 @@ import { getCsrfCookie } from "./cookie";
 export async function login(email: string, password: string) {
     await getCsrfCookie();
 
-    const res = await api.post('/api/login', { email, password });
+    const response = await api.post('/api/login', { email, password });   
 
-    return res.data;
+    return response.data;
 }
 
 export async function logout() {
-    const res = await api.post('/api/logout');
-
-    return res.data;
+    const response = await api.post('/api/logout');
+    console.log(response);
+    
+    return response.data;
 }

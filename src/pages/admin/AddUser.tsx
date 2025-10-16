@@ -30,7 +30,7 @@ function AddUser() {
         }
 
         if (response.meta.requestStatus == 'rejected') {
-            toast.error(response?.meta.requestStatus);
+            toast.error(response.payload.random || response?.meta.requestStatus);
         }
     };
 

@@ -6,7 +6,7 @@ import Navbar from './header/Navbar';
 import LogoutOption from './header/LogoutOption';
 
 function Header(): JSX.Element {
-    const user: User = useAppSelector(state => state.user);
+    const {user} = useAppSelector(state => state.user);
 
     return (
         <header className="header bg-gray-800 text-gray-300 py-4">
