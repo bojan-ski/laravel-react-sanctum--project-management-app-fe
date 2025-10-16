@@ -1,69 +1,45 @@
-import React, { useState } from 'react';
+import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
+import { addUser } from '../../features/admin/usersSlice';
+import type { NewUserFormData } from '../../types/types';
+import FormInput from '../../components/form/FormInput';
+import FormSubmitButton from '../../components/form/FormSubmitButton';
+import FormWrapper from '../../components/form/FormWrapper';
+import PageHeader from '../../components/global/PageHeader';
 import toast from 'react-hot-toast';
-import { type NavigateFunction, useNavigate } from 'react-router';
-import { createUser } from '../../../services/admin';
-import FormInput from '../../form/FormInput';
-import FormSubmitButton from '../../form/FormSubmitButton';
-import FormWrapper from '../../form/FormWrapper';
-import PageHeader from '../../global/PageHeader';
 
 function AddUser() {
-    const navigate: NavigateFunction = useNavigate();
-    const [form, setForm] = useState<{
-        name: string,
-        email: string,
-        password: string,
-    }>({
+    const { isLoading, errors } = useAppSelector(state => state.users);
+    const dispatch = useAppDispatch();
+    const [form, setForm] = useState<NewUserFormData>({
         name: '',
         email: '',
         password: '',
     });
-    const [errors, setErrors] = useState<Record<string, string>>({});
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void =>
+    const handleChange = (e: ChangeEvent<HTMLInputElement>): void =>
         setForm({ ...form, [e.target.name]: e.target.value });
 
-    const handleSubmit = async (e: React.FormEvent): Promise<void> => {
+    const handleSubmit = async (e: FormEvent): Promise<void> => {
         e.preventDefault();
 
-        try {
-            // api call
-            const response = await createUser(
-                form.name,
-                form.email,
-                form.password,
-            );
+        const response = await dispatch(addUser(form));
 
-            console.log(response);
-            
+        if (response.meta.requestStatus == 'fulfilled') {
+            toast.success(response?.payload.message);
+        }
 
-            // display toast message
-            toast.success(response?.message);
-
-            // navigate user
-            navigate('/users');
-        } catch (error: any) {
-            if (error.response?.status === 422) {
-                const fieldErrors = error?.response?.data?.errors;
-                const formattedErrors: Record<string, string> = {};
-
-                Object.keys(fieldErrors).forEach((key) => {
-                    formattedErrors[key] = fieldErrors[key][0];
-                });
-
-                setErrors(formattedErrors);
-            } else {
-                toast.error(error?.message || 'Error!');
-            }
+        if (response.meta.requestStatus == 'rejected') {
+            toast.error(response?.meta.requestStatus);
         }
     };
 
     return (
-        <section className='add-user border'>
+        <div className='add-user-page mt-20'>
             {/* Page header */}
             <PageHeader label='Add User' headerCss='mb-5 text-center text-4xl font-semibold' />
 
-            {/* Create account form */}
+            {/* Create new user form */}
             <FormWrapper
                 onSubmit={handleSubmit}
                 formCss={'mx-auto lg:w-1/2'}
@@ -79,7 +55,7 @@ function AddUser() {
                     value={form.name}
                     onMutate={handleChange}
                     divCss='mb-3'
-                    error={errors.name}
+                    error={errors?.name}
                 />
 
                 {/* email */}
@@ -94,7 +70,7 @@ function AddUser() {
                     value={form.email}
                     onMutate={handleChange}
                     divCss='mb-3'
-                    error={errors.email}
+                    error={errors?.email}
                 />
 
                 {/* password */}
@@ -108,17 +84,17 @@ function AddUser() {
                     value={form.password}
                     onMutate={handleChange}
                     divCss='mb-3'
-                    error={errors.password}
+                    error={errors?.password}
                 />
 
                 {/* submit */}
                 <FormSubmitButton
+                    loading={isLoading}
                     btnCss='border rounded-sm py-2 px-5 text-white bg-yellow-500 hover:bg-yellow-600 transition cursor-pointer font-semibold'
                     btnLabel='Register'
                 />
-
             </FormWrapper>
-        </section>
+        </div>
     );
 }
 

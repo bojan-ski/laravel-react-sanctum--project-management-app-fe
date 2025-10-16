@@ -1,13 +1,45 @@
-import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { createUser } from "../../services/admin";
-import type { User } from "../../types/types";
+import type { LaravelValidationErrors, NewUserFormData, User } from "../../types/types";
 
-const initialUserState = {
-    users: []
+type CreateNewUserErrorsProp = {
+    name?: string;
+    email?: string;
+    password?: string;
+    random?: string;
 };
 
-export const addUser = createAsyncThunk('adminUsers/createUser', async (userData, { rejectWithValue }) => {
+type UsersStateProp = {
+    isLoading: boolean;
+    users: User[];
+    errors: CreateNewUserErrorsProp;
+};
 
+const initialUserState: UsersStateProp = {
+    isLoading: false,
+    users: [],
+    errors: {},
+};
+
+export const addUser = createAsyncThunk('users/createUser', async (newUserData: NewUserFormData, { rejectWithValue }) => {
+    try {
+        const data = await createUser(newUserData);
+
+        return data;
+    } catch (error: any) {
+        if (error.response?.status === 422) {
+            const fieldErrors = error?.response?.data?.errors as LaravelValidationErrors;
+            const formattedErrors: CreateNewUserErrorsProp = {};
+
+            Object.keys(fieldErrors).forEach((key) => {
+                formattedErrors[key as keyof CreateNewUserErrorsProp] = fieldErrors[key][0];
+            });
+
+            return rejectWithValue(formattedErrors);
+        } else {
+            return rejectWithValue({ random: error.response.statusText || "Error" });
+        }
+    }
 }
 );
 
@@ -18,13 +50,20 @@ const usersSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(addUser.pending, (state) => {
-
+                state.isLoading = true;
+                state.errors = {};
             })
-            .addCase(addUser.fulfilled, (state) => {
+            .addCase(addUser.fulfilled, (state, action) => {
+                console.log(action);
+                console.log(action.payload);
 
+                state.isLoading = false;
             })
-            .addCase(addUser.rejected, (state, action) => {
+            .addCase(addUser.rejected, (state, { payload }) => {
+                console.log(payload);
 
+                state.isLoading = false;
+                state.errors = payload as CreateNewUserErrorsProp;
             });
     },
 });

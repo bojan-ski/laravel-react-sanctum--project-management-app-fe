@@ -5,3 +5,11 @@ export type User = {
     avatar: string | null;
     role: string;
 };
+
+export type LaravelValidationErrors = Record<string, string[]>;
+
+export type NewUserFormData = {
+    name: string;
+    email: string;
+    password: string;
+};

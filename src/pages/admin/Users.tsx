@@ -1,12 +1,11 @@
 import { type JSX } from 'react';
-import AddUser from '../../components/admin/usersPage/AddUser';
+import AddUser from './AddUser';
 
 function Users(): JSX.Element {
     return (
         <div className='users-page container mx-auto mt-10'>
 
-            <AddUser/>
-            
+            Users
         </div>
     );
 }
