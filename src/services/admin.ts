@@ -1,9 +1,9 @@
 import api from "../api/axios";
 import type { NewUserFormData } from "../types/types";
 
-export async function getUsers(page: number) {  
+export async function getUsers(search: string = '', page: number = 1) {
     const response = await api.get(`/api/admin/users`, {
-        params: { page },
+        params: { search, page },
     });
 
     return response.data;

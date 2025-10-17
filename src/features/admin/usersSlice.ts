@@ -5,23 +5,21 @@ import type { CreateNewUserErrors, LaravelValidationErrors, NewUserFormData, Use
 const initialUserState: UsersState = {
     isLoading: false,
     users: [],
+    search: '',
     currentPage: 1,
     lastPage: 1,
     total: 0,
     errors: {},
 };
 
-export const getAllUsers = createAsyncThunk('users/getAllUsers', async (page: number, { rejectWithValue }) => {
+export const getAllUsers = createAsyncThunk('users/getAllUsers', async ({ search, page }: { search?: string, page?: number; }, { rejectWithValue }) => {
     console.log('getAllUsers');
 
     try {
-        const response = await getUsers(page);
-        console.log(response);
+        const response = await getUsers(search, page);
 
-        return response;
+        return response.data;
     } catch (error: any) {
-        console.log(error);
-
         return rejectWithValue(error?.message || 'Failed to fetch users');
     }
 }
@@ -52,6 +50,10 @@ const usersSlice = createSlice({
     name: 'users',
     initialState: initialUserState,
     reducers: {
+        setSearch: (state, {payload}) => {
+            state.search = payload;
+            state.currentPage = 1;
+        },
         setPage: (state, { payload }) => {
             state.currentPage = payload;
         }
@@ -63,14 +65,12 @@ const usersSlice = createSlice({
                 state.isLoading = true;
             })
             .addCase(getAllUsers.fulfilled, (state, { payload }) => {
-                console.log(payload);
-
                 state.isLoading = false;
 
-                state.users = payload.data.data;
-                state.currentPage = payload.data.current_page;
-                state.lastPage = payload.data.last_page;
-                state.total = payload.data.total;
+                state.users = payload.data;
+                state.currentPage = payload.current_page;
+                state.lastPage = payload.last_page;
+                state.total = payload.total;
             })
             .addCase(getAllUsers.rejected, (state) => {
                 state.isLoading = false;
@@ -97,6 +97,7 @@ const usersSlice = createSlice({
 });
 
 export const {
+    setSearch,
     setPage
 } = usersSlice.actions;
 export default usersSlice.reducer;

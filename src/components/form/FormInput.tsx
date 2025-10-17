@@ -29,7 +29,7 @@ const FormInput = ({
     placeholder,
     value,
     defaultValue,
-    required,
+    required = false,
     onMutate,
     disabled,
     maxLength,

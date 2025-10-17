@@ -1,34 +1,39 @@
 import { useEffect, type JSX } from 'react';
 import { useNavigate, type NavigateFunction } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
-import { getAllUsers, setPage } from '../../features/admin/usersSlice';
+import { getAllUsers, setPage, setSearch } from '../../features/admin/usersSlice';
 import type { UsersState } from '../../types/types';
 import NoDataMessage from '../../components/global/NoDataMessage';
 import Loading from '../../components/global/Loading';
+import UsersSearch from '../../components/admin/usersPage/UsersSearch';
 import UsersTable from '../../components/admin/usersPage/UsersTable';
 import UsersTablePagination from '../../components/admin/usersPage/UsersTablePagination';
 
 function Users(): JSX.Element {
-    const { users, currentPage, isLoading, lastPage, total } = useAppSelector<UsersState>(state => state.users);
+    const { isLoading, users, search, currentPage, lastPage, total } = useAppSelector<UsersState>(state => state.users);
     const dispatch = useAppDispatch();
     const navigate: NavigateFunction = useNavigate();
 
     useEffect((): void => {
         console.log('useEffect - Users');
-        if (users.length == 0) dispatch(getAllUsers(1));
+        if (users.length == 0) dispatch(getAllUsers({}));
     }, []);
+
+    const handleSearch = (searchTerm: string): void => {
+        dispatch(setSearch(searchTerm));
+        dispatch(getAllUsers({ search: searchTerm, page: 1 }));
+
+        navigate(`?search=${searchTerm}&page=1`);
+    };
 
     const handlePageChange = (newPage: number): void => {
         dispatch(setPage(newPage));
-        dispatch(getAllUsers(newPage));
+        dispatch(getAllUsers({ search: search, page: newPage }));
 
-        navigate(`?page=${newPage}`);
+        navigate(`?search=${search}$page=${newPage}`);
     };
 
     if (isLoading) return <Loading />;
-
-    console.log(users);
-    console.log(currentPage);
 
     return (
         <div className='users-page container mx-auto mt-10'>
@@ -36,6 +41,11 @@ function Users(): JSX.Element {
                 <NoDataMessage message="There are no users" />
             ) : (
                 <>
+                    <UsersSearch
+                        search={search}
+                        handleSearch={handleSearch}
+                    />
+
                     <UsersTable users={users} />
 
                     <UsersTablePagination

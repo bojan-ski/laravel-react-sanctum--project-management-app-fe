@@ -1,3 +1,4 @@
+// GLOBAL
 export type User = {
     id: string;
     name: string;
@@ -8,8 +9,7 @@ export type User = {
     updated_at: string;
 };
 
-
-
+// REDUX SLICES
 export type LaravelValidationErrors = Record<string, string[]>;
 
 export type NewUserFormData = {
@@ -28,6 +28,7 @@ export type CreateNewUserErrors = {
 export type UsersState = {
     isLoading: boolean;
     users: User[];
+    search: string;
     currentPage: number;
     lastPage: number;
     total: number;

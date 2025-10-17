@@ -12,7 +12,7 @@ type UsersTablePaginationProps = {
 
 function UsersTablePagination({ users, total, currentPage, lastPage, handlePageChange }: UsersTablePaginationProps): JSX.Element {
     return (
-        <div className="flex items-center justify-between mt-6">
+        <section className="users-pagination flex items-center justify-between mb-10">
             <p className="text-sm text-gray-600">
                 {users.length} of {total}
             </p>
@@ -40,7 +40,7 @@ function UsersTablePagination({ users, total, currentPage, lastPage, handlePageC
                     Next
                 </Button>
             </div>
-        </div>
+        </section>
     );
 }
 
