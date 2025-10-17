@@ -1,44 +1,28 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { createUser, getUsers } from "../../services/admin";
-import type { LaravelValidationErrors, NewUserFormData, User } from "../../types/types";
-
-type CreateNewUserErrors = {
-    name?: string;
-    email?: string;
-    password?: string;
-    random?: string;
-};
-
-type UsersState = {
-    isLoading: boolean;
-    users: User[];
-    currentPage: number;
-    firstPage: number;
-    lastPage: number;
-    total: number;
-    errors: CreateNewUserErrors;
-};
+import type { CreateNewUserErrors, LaravelValidationErrors, NewUserFormData, UsersState } from "../../types/types";
 
 const initialUserState: UsersState = {
     isLoading: false,
     users: [],
     currentPage: 1,
-    firstPage: 1,
     lastPage: 1,
     total: 0,
     errors: {},
 };
 
-export const getAllUsers = createAsyncThunk('users/getAllUsers', async (_, { rejectWithValue }) => {
+export const getAllUsers = createAsyncThunk('users/getAllUsers', async (page: number, { rejectWithValue }) => {
+    console.log('getAllUsers');
+
     try {
-        const response = await getUsers();
+        const response = await getUsers(page);
         console.log(response);
 
         return response;
     } catch (error: any) {
         console.log(error);
 
-        return rejectWithValue(error.response?.data?.message || 'Failed to fetch users');
+        return rejectWithValue(error?.message || 'Failed to fetch users');
     }
 }
 );
@@ -67,31 +51,32 @@ export const addNewUser = createAsyncThunk('users/addNewUser', async (newUserDat
 const usersSlice = createSlice({
     name: 'users',
     initialState: initialUserState,
-    reducers: {},
+    reducers: {
+        setPage: (state, { payload }) => {
+            state.currentPage = payload;
+        }
+    },
     extraReducers: (builder) => {
         builder
+            // get all users
             .addCase(getAllUsers.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(getAllUsers.fulfilled, (state, {payload}) => {
+            .addCase(getAllUsers.fulfilled, (state, { payload }) => {
                 console.log(payload);
 
                 state.isLoading = false;
 
-                state.users = payload.data.data
-                state.currentPage = payload.data.current_page
-                state.firstPage = payload.data.from
-                state.lastPage = payload.data.last_page
-                state.total = payload.data.total
+                state.users = payload.data.data;
+                state.currentPage = payload.data.current_page;
+                state.lastPage = payload.data.last_page;
+                state.total = payload.data.total;
             })
-            .addCase(getAllUsers.rejected, (state, action) => {
-                console.log(action);
-                console.log(action.payload);
-
+            .addCase(getAllUsers.rejected, (state) => {
                 state.isLoading = false;
-                state.errors = action.payload as CreateNewUserErrors;
             })
 
+            // create new user
             .addCase(addNewUser.pending, (state) => {
                 state.isLoading = true;
                 state.errors = {};
@@ -111,4 +96,7 @@ const usersSlice = createSlice({
     },
 });
 
+export const {
+    setPage
+} = usersSlice.actions;
 export default usersSlice.reducer;

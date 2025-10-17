@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
 import { addNewUser } from '../../features/admin/usersSlice';
-import type { NewUserFormData } from '../../types/types';
+import type { NewUserFormData, UsersState } from '../../types/types';
 import FormInput from '../../components/form/FormInput';
 import FormSubmitButton from '../../components/form/FormSubmitButton';
 import FormWrapper from '../../components/form/FormWrapper';
@@ -9,7 +9,7 @@ import PageHeader from '../../components/global/PageHeader';
 import toast from 'react-hot-toast';
 
 function AddUser() {
-    const { isLoading, errors } = useAppSelector(state => state.users);
+    const { isLoading, errors } = useAppSelector<UsersState>(state => state.users);
     const dispatch = useAppDispatch();
     const [form, setForm] = useState<NewUserFormData>({
         name: '',

@@ -70,6 +70,7 @@ const userSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+            // login
             .addCase(loginUser.pending, (state) => {
                 state.isLoading = true;
                 state.errors = {};
@@ -84,8 +85,11 @@ const userSlice = createSlice({
                 state.isLoading = false;
                 state.errors = payload as LoginErrors;
             })
+
+            // logout
             .addCase(logoutUser.pending, (state) => {
                 state.isLoading = true;
+                state.errors = {};
             })
             .addCase(logoutUser.fulfilled, (state) => {
                 state.isLoading = false;
