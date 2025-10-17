@@ -1,6 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
-import { addUser } from '../../features/admin/usersSlice';
+import { addNewUser } from '../../features/admin/usersSlice';
 import type { NewUserFormData } from '../../types/types';
 import FormInput from '../../components/form/FormInput';
 import FormSubmitButton from '../../components/form/FormSubmitButton';
@@ -23,7 +23,7 @@ function AddUser() {
     const handleSubmit = async (e: FormEvent): Promise<void> => {
         e.preventDefault();
 
-        const response = await dispatch(addUser(form));
+        const response = await dispatch(addNewUser(form));
 
         if (response.meta.requestStatus == 'fulfilled') {
             toast.success(response?.payload.message);

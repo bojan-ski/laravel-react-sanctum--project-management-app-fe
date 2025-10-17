@@ -11,6 +11,7 @@ import Projects from "./pages/Projects";
 import Profile from "./pages/Profile";
 import Users from "./pages/admin/Users";
 import AddUser from "./pages/admin/AddUser";
+import SelectedUser from "./pages/admin/SelectedUser";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: '/users',
         element: <Users />,
+      },
+      {
+        path: '/users/:id',
+        element: <SelectedUser />,
       },
       {
         path: '/add_user',
