@@ -23,14 +23,14 @@ function AddUser() {
     const handleSubmit = async (e: FormEvent): Promise<void> => {
         e.preventDefault();
 
-        const response = await dispatch(addNewUser(form));
+        const result = await dispatch(addNewUser(form));
 
-        if (response.meta.requestStatus == 'fulfilled') {
-            toast.success(response?.payload.message);
+        if (result.meta.requestStatus == 'fulfilled') {
+            toast.success(result?.payload.message);
         }
 
-        if (response.meta.requestStatus == 'rejected') {
-            toast.error(response.payload.random || response?.meta.requestStatus);
+        if (result.meta.requestStatus == 'rejected') {
+            toast.error(result.payload.random || result?.meta.requestStatus);
         }
     };
 

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createUser, getUsers } from "../../services/admin";
+import { createUser, deleteUser, getUsers } from "../../services/admin";
 import type { CreateNewUserErrors, LaravelValidationErrors, NewUserFormData, UsersState } from "../../types/types";
 
 const initialUserState: UsersState = {
@@ -20,7 +20,7 @@ export const getAllUsers = createAsyncThunk('users/getAllUsers', async ({ search
 
         return response.data;
     } catch (error: any) {
-        return rejectWithValue(error?.message || 'Failed to fetch users');
+        return rejectWithValue({ random: error?.response?.statusText || 'Error - Fetch users' });
     }
 }
 );
@@ -46,11 +46,22 @@ export const addNewUser = createAsyncThunk('users/addNewUser', async (newUserDat
     }
 });
 
+export const removeUser = createAsyncThunk("users/removeUser", async (userId: number | string, { rejectWithValue }) => {
+    try {
+        const response = await deleteUser(userId);
+
+        return { userId, message: response.message };
+    } catch (error: any) {
+        return rejectWithValue({ random: error?.response?.statusText || "Error - Delete user" });
+    }
+}
+);
+
 const usersSlice = createSlice({
     name: 'users',
     initialState: initialUserState,
     reducers: {
-        setSearch: (state, {payload}) => {
+        setSearch: (state, { payload }) => {
             state.search = payload;
             state.currentPage = 1;
         },
@@ -92,6 +103,19 @@ const usersSlice = createSlice({
 
                 state.isLoading = false;
                 state.errors = payload as CreateNewUserErrors;
+            })
+
+            // delete user
+            .addCase(removeUser.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(removeUser.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+                state.users = state.users.filter(user => user.id !== payload.userId);
+            })
+            .addCase(removeUser.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                state.errors = { random: payload as string };
             });
     },
 });

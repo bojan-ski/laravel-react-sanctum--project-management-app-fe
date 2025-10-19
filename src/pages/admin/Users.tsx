@@ -37,19 +37,18 @@ function Users(): JSX.Element {
 
     return (
         <div className='users-page container mx-auto mt-10'>
+            <UsersSearch
+                search={search}
+                handleSearch={handleSearch}
+            />
+
             {users.length == 0 ? (
                 <NoDataMessage message="There are no users" />
             ) : (
                 <>
-                    <UsersSearch
-                        search={search}
-                        handleSearch={handleSearch}
-                    />
-
                     <UsersTable users={users} />
 
                     <UsersTablePagination
-                        users={users}
                         total={total}
                         currentPage={currentPage}
                         lastPage={lastPage}

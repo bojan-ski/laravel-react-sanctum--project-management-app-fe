@@ -24,16 +24,16 @@ function Login(): JSX.Element {
     const handleSubmit = async (e: FormEvent): Promise<void> => {
         e.preventDefault();
 
-        const response = await dispatch(loginUser(form));      
+        const result = await dispatch(loginUser(form));      
 
-        if (response.meta.requestStatus == 'fulfilled') {
-            toast.success(response?.payload.message);
+        if (result.meta.requestStatus == 'fulfilled') {
+            toast.success(result?.payload.message);
 
             navigate('/projects');
         }
 
-        if (response.meta.requestStatus == 'rejected') {
-            toast.error(response.payload.random || response?.meta.requestStatus);
+        if (result.meta.requestStatus == 'rejected') {
+            toast.error(result.payload.random || result?.meta.requestStatus);
         }
     };
 

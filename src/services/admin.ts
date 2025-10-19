@@ -14,3 +14,9 @@ export async function createUser(newUserData: NewUserFormData) {
 
     return response.data;
 }
+
+export async function deleteUser(userId: number | string) {    
+    const response = await api.delete(`/api/admin/users/${userId}`);
+
+    return response.data;
+}
