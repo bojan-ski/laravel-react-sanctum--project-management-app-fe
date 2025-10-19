@@ -77,6 +77,7 @@ const userSlice = createSlice({
             })
             .addCase(loginUser.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
+                
                 state.user = payload.data;
 
                 setUserDataInLS(payload.data);
@@ -93,6 +94,7 @@ const userSlice = createSlice({
             })
             .addCase(logoutUser.fulfilled, (state) => {
                 state.isLoading = false;
+
                 state.user = initialUserState.user;
 
                 removeUserDataFromLS();

@@ -9,23 +9,23 @@ import { MoreVertical } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 function UsersTableRowOptions({ user }: { user: User; }): JSX.Element {
-    const { search, currentPage } = useAppSelector(state => state.users);
+    const { isLoading, search, currentPage } = useAppSelector(state => state.users);
     const dispatch = useAppDispatch();
 
     const handleDelete = async (): Promise<void> => {
         if (confirm(`Delete user ${user.name}?`)) {
-            const result = await dispatch(removeUser(user.id));
+            const result = await dispatch(removeUser(user.id));           
 
             if (result.meta.requestStatus == 'fulfilled') {
-                const payload = result.payload as { message: string; };
-                toast.success(payload.message);
+                const successMsg = result.payload as { message: string; };
+                toast.success(successMsg.message);
 
                 dispatch(getAllUsers({ search: search, page: currentPage }));
             }
 
             if (result.meta.requestStatus == 'rejected') {
-                const payload = result.payload as { random: string; };
-                toast.error(payload.random || result?.meta.requestStatus);
+                const errorMsg = result.payload || result?.meta.requestStatus;
+                toast.error(errorMsg as string);
             }
         }
     };
@@ -47,6 +47,7 @@ function UsersTableRowOptions({ user }: { user: User; }): JSX.Element {
                 <DropdownMenuItem
                     onClick={handleDelete}
                     className="text-red-600 focus:text-red-600"
+                    disabled={isLoading}
                 >
                     Delete User
                 </DropdownMenuItem>

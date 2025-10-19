@@ -12,6 +12,7 @@ export type User = {
 // REDUX SLICES
 export type LaravelValidationErrors = Record<string, string[]>;
 
+// admin/createUserSlice
 export type NewUserFormData = {
     name: string;
     email: string;
@@ -25,6 +26,13 @@ export type CreateNewUserErrors = {
     random?: string;
 };
 
+export type NewUserState = {
+    isLoading: boolean;
+    formData: NewUserFormData;
+    errors: CreateNewUserErrors;
+};
+
+// admin/usersSlice
 export type UsersState = {
     isLoading: boolean;
     users: User[];
@@ -32,5 +40,5 @@ export type UsersState = {
     currentPage: number;
     lastPage: number;
     total: number;
-    errors: CreateNewUserErrors;
+    error: string;
 };

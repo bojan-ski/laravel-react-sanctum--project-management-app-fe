@@ -8,6 +8,7 @@ import Loading from '../../components/global/Loading';
 import UsersSearch from '../../components/admin/usersPage/UsersSearch';
 import UsersTable from '../../components/admin/usersPage/UsersTable';
 import UsersTablePagination from '../../components/admin/usersPage/UsersTablePagination';
+import AddUser from '../../components/admin/usersPage/AddUser';
 
 function Users(): JSX.Element {
     const { isLoading, users, search, currentPage, lastPage, total } = useAppSelector<UsersState>(state => state.users);
@@ -37,11 +38,20 @@ function Users(): JSX.Element {
 
     return (
         <div className='users-page container mx-auto mt-10'>
-            <UsersSearch
-                search={search}
-                handleSearch={handleSearch}
-            />
+            {/* search & add new user */}
+            <section className='flex items-center justify-between mb-5'>
+                <UsersSearch
+                    search={search}
+                    handleSearch={handleSearch}
+                />
 
+                <AddUser
+                    search={search}
+                    currentPage={currentPage}
+                />
+            </section>
+
+            {/* users container */}
             {users.length == 0 ? (
                 <NoDataMessage message="There are no users" />
             ) : (

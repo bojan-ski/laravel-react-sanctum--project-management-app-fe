@@ -20,7 +20,7 @@ function UsersSearch({ search, handleSearch }: UsersSearchProps): JSX.Element {
     }, [searchTerm]);
 
     return (
-        <section className="users-search mb-5">
+        <div className="users-search">
             <Input
                 min={2}
                 maxLength={48}
@@ -29,7 +29,7 @@ function UsersSearch({ search, handleSearch }: UsersSearchProps): JSX.Element {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-60"
             />
-        </section>
+        </div>
     );
 }
 

@@ -10,7 +10,6 @@ import Login from "./pages/auth/Login";
 import Projects from "./pages/Projects";
 import Profile from "./pages/Profile";
 import Users from "./pages/admin/Users";
-import AddUser from "./pages/admin/AddUser";
 import SelectedUser from "./pages/admin/SelectedUser";
 
 const router = createBrowserRouter([
@@ -34,10 +33,6 @@ const router = createBrowserRouter([
       {
         path: '/users/:id',
         element: <SelectedUser />,
-      },
-      {
-        path: '/add_user',
-        element: <AddUser />,
       },
       {
         path: '/profile',
