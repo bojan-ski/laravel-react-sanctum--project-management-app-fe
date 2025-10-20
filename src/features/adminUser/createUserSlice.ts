@@ -12,9 +12,9 @@ const initialUserState: NewUserState = {
     errors: {},
 };
 
-export const addNewUser = createAsyncThunk('newUser/addNewUser', async (newUserData: NewUserFormData, { rejectWithValue }) => {
+export const addNewUser = createAsyncThunk('newUser/addNewUser', async (newUserFormData: NewUserFormData, { rejectWithValue }) => {
     try {
-        const response = await createUser(newUserData);
+        const response = await createUser(newUserFormData);
         
         return response;
     } catch (error: any) {        

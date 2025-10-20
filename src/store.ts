@@ -1,13 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
 import userSlice from './features/user/userSlice';
-import usersSlice from './features/admin/usersSlice';
-import createUserSlice from './features/admin/createUserSlice';
+import profileSlice from './features/regularUser/profileSlice';
+import usersSlice from './features/adminUser/usersSlice';
+import createUserSlice from './features/adminUser/createUserSlice';
 
 export const store = configureStore({
     reducer: {
         user: userSlice,
+        profile: profileSlice,
         users: usersSlice,
-        newUser: createUserSlice
+        newUser: createUserSlice,
     }
 });
 

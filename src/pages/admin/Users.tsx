@@ -1,7 +1,7 @@
 import { useEffect, type JSX } from 'react';
 import { useNavigate, type NavigateFunction } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
-import { getAllUsers, setPage, setSearch } from '../../features/admin/usersSlice';
+import { getAllUsers, setPage, setSearch } from '../../features/adminUser/usersSlice';
 import type { UsersState } from '../../types/types';
 import NoDataMessage from '../../components/global/NoDataMessage';
 import Loading from '../../components/global/Loading';

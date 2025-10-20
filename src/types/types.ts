@@ -12,7 +12,27 @@ export type User = {
 // REDUX SLICES
 export type LaravelValidationErrors = Record<string, string[]>;
 
-// admin/createUserSlice
+// user/profileSlice
+export type ChangePasswordFormData = {
+    old_password: string;
+    new_password: string;
+    new_password_confirm: string;
+};
+
+export type ProfileStateErrors = {
+    old_password?: string;
+    new_password?: string;
+    new_password_confirm?: string;
+    random?: string;
+};
+
+export type ProfileState = {
+    isLoading: boolean;
+    changePasswordFormData: ChangePasswordFormData;
+    errors: ProfileStateErrors;
+};
+
+// adminUser/createUserSlice
 export type NewUserFormData = {
     name: string;
     email: string;
@@ -32,7 +52,7 @@ export type NewUserState = {
     errors: CreateNewUserErrors;
 };
 
-// admin/usersSlice
+// adminUser/usersSlice
 export type UsersState = {
     isLoading: boolean;
     users: User[];

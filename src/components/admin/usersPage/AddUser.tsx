@@ -1,7 +1,7 @@
 import { type ChangeEvent, type FormEvent, type JSX } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
-import { getAllUsers } from '../../../features/admin/usersSlice';
-import { addNewUser, setFormData } from '../../../features/admin/createUserSlice';
+import { getAllUsers } from '../../../features/adminUser/usersSlice';
+import { addNewUser, setFormData } from '../../../features/adminUser/createUserSlice';
 import type { NewUserState } from '../../../types/types';
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "../../../components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";

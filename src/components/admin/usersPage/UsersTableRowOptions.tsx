@@ -1,7 +1,7 @@
 import { type JSX } from 'react';
 import { Link } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
-import { getAllUsers, removeUser } from '../../../features/admin/usersSlice';
+import { getAllUsers, removeUser } from '../../../features/adminUser/usersSlice';
 import type { User } from '../../../types/types';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, } from '../../ui/dropdown-menu';
 import { Button } from '../../ui/button';
