@@ -1,19 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { login, logout } from "../../services/auth";
 import { getUserDataFromLS, removeUserDataFromLS, setUserDataInLS } from "../../utils/storage";
-import type { LaravelValidationErrors, User } from "../../types/types";
-
-type LoginErrors = {
-    email?: string;
-    password?: string;
-    random?: string;
-};
-
-type UserState = {
-    isLoading: boolean;
-    user: User;
-    errors: LoginErrors;
-};
+import type { LaravelValidationErrors, LoginFormData, UserState, UserStateErrors } from "../../types/types";
+import { deleteAccount } from "../../services/profile";
 
 const initialUserState: UserState = {
     isLoading: false,
@@ -29,18 +18,18 @@ const initialUserState: UserState = {
     errors: {}
 };
 
-export const loginUser = createAsyncThunk("user/loginUser", async ({ email, password }: { email: string, password: string; }, { rejectWithValue }) => {
+export const loginUser = createAsyncThunk("user/loginUser", async ({ email, password }: LoginFormData, { rejectWithValue }) => {
     try {
-        const response = await login(email, password);
+        const apiCall = await login(email, password);
 
-        return response;
+        return apiCall;
     } catch (error: any) {
         if (error.response?.status === 422) {
             const fieldErrors = error.response.data.errors as LaravelValidationErrors;
-            const formattedErrors: LoginErrors = {};
+            const formattedErrors: UserStateErrors = {};
 
             for (const key in fieldErrors) {
-                formattedErrors[key as keyof LoginErrors] = fieldErrors[key][0];
+                formattedErrors[key as keyof UserStateErrors] = fieldErrors[key][0];
             }
 
             return rejectWithValue(formattedErrors);
@@ -56,11 +45,34 @@ export const loginUser = createAsyncThunk("user/loginUser", async ({ email, pass
 
 export const logoutUser = createAsyncThunk("user/logoutUser", async (_, { rejectWithValue }) => {
     try {
-        const response = await logout();
+        const apiCall = await logout();
+        console.log(apiCall);
+        
 
-        return response;
+        return apiCall;
     } catch (error: any) {
-        return rejectWithValue({ random: "Logout failed" });
+        console.log(error);
+        
+        return rejectWithValue({ random: "Error - Logout" });
+    }
+});
+
+export const deleteUserAccount = createAsyncThunk('user/deleteAccount', async (password: string, { rejectWithValue }) => {
+    console.log(password);
+    
+    try {
+        const apiCall = await deleteAccount(password);
+        console.log(apiCall);
+
+        return apiCall;
+    } catch (error: any) {
+        console.log(error);
+
+        if (error.response?.status === 404) {
+            return rejectWithValue({ random: error.response.statusText || "Error - Change Password" });
+        }
+
+        return rejectWithValue({ random: error.response.data.message });
     }
 });
 
@@ -73,23 +85,26 @@ const userSlice = createSlice({
             // login
             .addCase(loginUser.pending, (state) => {
                 state.isLoading = true;
+
                 state.errors = {};
             })
             .addCase(loginUser.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
-                
+
                 state.user = payload.data;
 
                 setUserDataInLS(payload.data);
             })
             .addCase(loginUser.rejected, (state, { payload }) => {
                 state.isLoading = false;
-                state.errors = payload as LoginErrors;
+
+                state.errors = payload as UserStateErrors;
             })
 
             // logout
             .addCase(logoutUser.pending, (state) => {
                 state.isLoading = true;
+
                 state.errors = {};
             })
             .addCase(logoutUser.fulfilled, (state) => {
@@ -101,7 +116,27 @@ const userSlice = createSlice({
             })
             .addCase(logoutUser.rejected, (state, { payload }) => {
                 state.isLoading = false;
-                state.errors = payload as LoginErrors;
+
+                state.errors = payload as UserStateErrors;
+            })
+
+            // delete user account
+            .addCase(deleteUserAccount.pending, (state) => {
+                state.isLoading = true;
+
+                state.errors = {};
+            })
+            .addCase(deleteUserAccount.fulfilled, (state) => {
+                state.isLoading = false;
+
+                state.user = initialUserState.user;
+
+                removeUserDataFromLS();
+            })
+            .addCase(deleteUserAccount.rejected, (state, { payload }) => {
+                state.isLoading = false;
+
+                state.errors = payload as UserStateErrors;
             });
     }
 });

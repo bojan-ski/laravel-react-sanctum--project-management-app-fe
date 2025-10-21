@@ -46,7 +46,7 @@ function ChangePassword(): JSX.Element {
     };
 
     return (
-        <div className='change-password-option p-5 border rounded-lg'>
+        <div className='change-password-option p-5 border border-yellow-500 rounded-lg'>
             {/* Page header */}
             <PageHeader label='Change password' headerCss='mb-5 text-xl font-semibold' />
 

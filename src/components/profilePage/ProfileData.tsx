@@ -7,7 +7,7 @@ function ProfileData(): JSX.Element {
     const { user } = useAppSelector(state => state.user);
     
     return (
-        <div className='user-profile-data p-5 border rounded-lg mb-5 md:mb-0'>
+        <div className='user-profile-data p-5 border border-yellow-500 rounded-lg mb-5 md:mb-0'>
             <ProfileImage
                 profileImage={user.avatar}
                 imgCss="border-2 w-25 h-25 rounded-full object-cover"

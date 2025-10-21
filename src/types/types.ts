@@ -12,7 +12,25 @@ export type User = {
 // REDUX SLICES
 export type LaravelValidationErrors = Record<string, string[]>;
 
-// user/profileSlice
+// user/userSlice
+export type LoginFormData = {
+    email: string;
+    password: string;
+};
+
+export type UserStateErrors = {
+    email?: string;
+    password?: string;
+    random?: string;
+};
+
+export type UserState = {
+    isLoading: boolean;
+    user: User;
+    errors: UserStateErrors;
+};
+
+// regularUser/profileSlice
 export type ChangePasswordFormData = {
     old_password: string;
     new_password: string;
