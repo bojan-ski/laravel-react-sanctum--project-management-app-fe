@@ -11,7 +11,6 @@ export async function deleteAccount(password: string) {
     const response = await api.delete('/api/profile', {
         data: { password }
     });    
-    console.log(response);
 
     return response.data;
 }

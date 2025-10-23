@@ -16,9 +16,9 @@ export const getAllUsers = createAsyncThunk('users/getAllUsers', async ({ search
     console.log('getAllUsers');
 
     try {
-        const response = await getUsers(search, page);
+        const apiCall = await getUsers(search, page);
 
-        return response.data;
+        return apiCall.data;
     } catch (error: any) {
         return rejectWithValue(error?.response?.statusText || 'Error - Fetch users');
     }
@@ -26,9 +26,9 @@ export const getAllUsers = createAsyncThunk('users/getAllUsers', async ({ search
 
 export const removeUser = createAsyncThunk("users/removeUser", async (userId: number | string, { rejectWithValue }) => {
     try {
-        const response = await deleteUser(userId);
+        const apiCall = await deleteUser(userId);
 
-        return { userId, message: response.message };
+        return { userId, message: apiCall.message };
     } catch (error: any) {
         console.log(error);
 

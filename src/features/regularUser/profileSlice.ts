@@ -14,9 +14,9 @@ const initialProfileState: ProfileState = {
 
 export const userChangePassword = createAsyncThunk('profile/userChangePassword', async (changePasswordFormData: ChangePasswordFormData, { rejectWithValue }) => {
     try {
-        const response = await changePassword(changePasswordFormData);
+        const apiCall = await changePassword(changePasswordFormData);
 
-        return response;
+        return apiCall;
     } catch (error: any) {
         if (error.response?.status === 422) {
             const fieldErrors = error?.response?.data?.errors as LaravelValidationErrors;

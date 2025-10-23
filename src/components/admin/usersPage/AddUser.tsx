@@ -62,7 +62,7 @@ function AddUser({ search, currentPage }: AddUserProps): JSX.Element {
                     <FormInput
                         name='name'
                         label='Enter name *'
-                        // minLength={2}
+                        minLength={2}
                         maxLength={48}
                         placeholder='max 48 characters'
                         required={true}
@@ -77,7 +77,7 @@ function AddUser({ search, currentPage }: AddUserProps): JSX.Element {
                         name='email'
                         type='email'
                         label='Enter email *'
-                        // minLength={2}
+                        minLength={2}
                         maxLength={48}
                         placeholder='max 48 characters'
                         required={true}
@@ -92,7 +92,7 @@ function AddUser({ search, currentPage }: AddUserProps): JSX.Element {
                         name='password'
                         type='password'
                         label='Enter password *'
-                        // minLength={6}
+                        minLength={6}
                         placeholder='min 6 characters'
                         required={true}
                         value={formData.password}

@@ -20,8 +20,7 @@ function DeleteAccount() {
         e.preventDefault();
 
         if (confirm('Are you sure?')) {
-            const response = await dispatch(deleteUserAccount(password));
-            console.log(response);            
+            const response = await dispatch(deleteUserAccount(password));        
 
             if (response.meta.requestStatus == 'fulfilled') {
                 toast.success(response?.payload.message);

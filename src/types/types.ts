@@ -50,6 +50,26 @@ export type ProfileState = {
     errors: ProfileStateErrors;
 };
 
+// regularUser/createProjectSlice
+export type NewProjectFormData = {
+    title: string;
+    description: string;
+    deadline: string;
+};
+
+export type CreateNewProjectErrors = {
+    title?: string;
+    description?: string;
+    deadline?: string;
+    random?: string;
+};
+
+export type NewProjectState = {
+    isLoading: boolean;
+    formData: NewProjectFormData;
+    errors: CreateNewProjectErrors;
+};
+
 // adminUser/createUserSlice
 export type NewUserFormData = {
     name: string;

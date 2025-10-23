@@ -37,7 +37,7 @@ function Users(): JSX.Element {
     if (isLoading) return <Loading />;
 
     return (
-        <div className='users-page container mx-auto mt-10'>
+        <div className='users-page mt-10'>
             {/* search & add new user */}
             <section className='flex items-center justify-between mb-5'>
                 <UsersSearch

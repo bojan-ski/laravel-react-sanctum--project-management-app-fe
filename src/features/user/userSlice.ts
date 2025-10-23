@@ -57,17 +57,12 @@ export const logoutUser = createAsyncThunk("user/logoutUser", async (_, { reject
     }
 });
 
-export const deleteUserAccount = createAsyncThunk('user/deleteAccount', async (password: string, { rejectWithValue }) => {
-    console.log(password);
-    
+export const deleteUserAccount = createAsyncThunk('user/deleteAccount', async (password: string, { rejectWithValue }) => {    
     try {
         const apiCall = await deleteAccount(password);
-        console.log(apiCall);
 
         return apiCall;
     } catch (error: any) {
-        console.log(error);
-
         if (error.response?.status === 404) {
             return rejectWithValue({ random: error.response.statusText || "Error - Change Password" });
         }

@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { createUser } from "../../services/admin";
 import type { CreateNewUserErrors, LaravelValidationErrors, NewUserFormData, NewUserState } from "../../types/types";
 
-const initialUserState: NewUserState = {
+const initialNewUserState: NewUserState = {
     isLoading: false,
     formData: {
         name: '',
@@ -14,9 +14,9 @@ const initialUserState: NewUserState = {
 
 export const addNewUser = createAsyncThunk('newUser/addNewUser', async (newUserFormData: NewUserFormData, { rejectWithValue }) => {
     try {
-        const response = await createUser(newUserFormData);
+        const apiCall = await createUser(newUserFormData);
         
-        return response;
+        return apiCall;
     } catch (error: any) {        
         if (error.response?.status === 422) {
             const fieldErrors = error?.response?.data?.errors as LaravelValidationErrors;
@@ -35,7 +35,7 @@ export const addNewUser = createAsyncThunk('newUser/addNewUser', async (newUserF
 
 const createUserSlice = createSlice({
     name: 'newUser',
-    initialState: initialUserState,
+    initialState: initialNewUserState,
     reducers: {
         setFormData: (state, { payload }):void => {
             state.formData = payload;
@@ -49,7 +49,7 @@ const createUserSlice = createSlice({
             })
             .addCase(addNewUser.fulfilled, (state) => {
                 state.isLoading = false;                
-                state.formData = initialUserState.formData;
+                state.formData = initialNewUserState.formData;
             })
             .addCase(addNewUser.rejected, (state, { payload }) => {
                 state.isLoading = false;
