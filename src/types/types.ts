@@ -9,6 +9,20 @@ export type User = {
     updated_at: string;
 };
 
+export type ProjectCard = {
+    id: string;
+    title: string;
+    description: string;
+    deadline: string;
+    is_owner: boolean;
+    owner: {
+        avatar: string;
+        name: string;
+    };
+    created_at: string;
+    updated_at: string;
+};
+
 // REDUX SLICES
 export type LaravelValidationErrors = Record<string, string[]>;
 
@@ -28,6 +42,16 @@ export type UserState = {
     isLoading: boolean;
     user: User;
     errors: UserStateErrors;
+};
+
+// regularUser/userProjectsSlice
+export type UserProjectsState = {
+    isLoading: boolean;
+    userProjects: ProjectCard[];
+    currentPage: number;
+    lastPage: number;
+    total: number;
+    error: string;
 };
 
 // regularUser/profileSlice

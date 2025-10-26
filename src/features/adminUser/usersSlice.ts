@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { deleteUser, getUsers } from "../../services/admin";
 import type { UsersState } from "../../types/types";
 
-const initialUserState: UsersState = {
+const initialUsersState: UsersState = {
     isLoading: false,
     users: [],
     search: '',
@@ -38,7 +38,7 @@ export const removeUser = createAsyncThunk("users/removeUser", async (userId: nu
 
 const usersSlice = createSlice({
     name: 'users',
-    initialState: initialUserState,
+    initialState: initialUsersState,
     reducers: {
         setSearch: (state, { payload }): void => {
             state.search = payload;

@@ -14,3 +14,9 @@ export const userInitials = (name: string): string => {
         .toUpperCase()
         .substring(0, 2);
 };
+
+export const isProjectOverdue = (deadline: string): boolean => {
+    if (!deadline) return false;
+
+    return new Date(deadline) < new Date();
+};
