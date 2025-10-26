@@ -9,7 +9,7 @@ import ProjectProgress from './ProjectProgress';
 import ProjectDeadline from './ProjectDeadline';
 
 function ProjectCard({ project }: { project: ProjectCardType }): JSX.Element {
-    console.log(project);
+    // console.log(project);
 
     return (
         <Card className="hover:shadow-md transition-shadow">

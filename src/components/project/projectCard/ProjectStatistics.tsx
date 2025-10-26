@@ -1,8 +1,10 @@
-import { type JSX } from 'react';
+import { type JSX } from 'react'
 
 function ProjectStatistics(): JSX.Element {
   return (
-    <div>ProjectStatistics</div>
+    <div>
+        ProjectStatistics
+    </div>
   )
 }
 

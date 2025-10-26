@@ -11,11 +11,11 @@ const initialUserProjectsState: UserProjectsState = {
     error: '',
 };
 
-export const getAllUserProjects = createAsyncThunk('userProjects/getAllUserProjects', async (_, { rejectWithValue }) => {
+export const getAllUserProjects = createAsyncThunk('userProjects/getAllUserProjects', async ({ page }: { page?: number; }, { rejectWithValue }) => {
     console.log('getUserProjects');
 
     try {
-        const apiCall = await getUserProjects();
+        const apiCall = await getUserProjects(page);
         console.log(apiCall);
 
         return apiCall.data;
@@ -30,7 +30,7 @@ const userProjectsSlice = createSlice({
     name: 'userProjects',
     initialState: initialUserProjectsState,
     reducers: {
-        setPage: (state, { payload }): void => {
+        setUserProjectsPage: (state, { payload }): void => {
             console.log(payload);
 
             state.currentPage = payload;
@@ -38,9 +38,11 @@ const userProjectsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            // get all users
+            // get all projects
             .addCase(getAllUserProjects.pending, (state) => {
                 state.isLoading = true;
+                
+                state.error = '';
             })
             .addCase(getAllUserProjects.fulfilled, (state, { payload }) => {
                 console.log(payload);
@@ -56,11 +58,13 @@ const userProjectsSlice = createSlice({
                 console.log(payload);
 
                 state.isLoading = false;
+
+                state.error = payload as string;
             });
     },
 });
 
 export const {
-    setPage
+    setUserProjectsPage
 } = userProjectsSlice.actions;
 export default userProjectsSlice.reducer;
