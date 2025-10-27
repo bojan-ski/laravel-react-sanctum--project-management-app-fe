@@ -45,7 +45,6 @@ const profileSlice = createSlice({
         builder
             .addCase(userChangePassword.pending, (state) => {
                 state.isLoading = true;
-
                 state.errors = {};
             })
             .addCase(userChangePassword.fulfilled, (state) => {
@@ -53,7 +52,6 @@ const profileSlice = createSlice({
             })
             .addCase(userChangePassword.rejected, (state, { payload }) => {
                 state.isLoading = false;
-
                 state.errors = payload as ProfileStateErrors;
             });
     },

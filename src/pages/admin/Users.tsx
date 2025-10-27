@@ -5,13 +5,14 @@ import { getAllUsers, setPage, setSearch } from '../../features/adminUser/usersS
 import type { UsersState } from '../../types/types';
 import NoDataMessage from '../../components/global/NoDataMessage';
 import Loading from '../../components/global/Loading';
+import ErrorMessage from '../../components/global/ErrorMessage';
+import AddUser from '../../components/admin/usersPage/AddUser';
 import UsersSearch from '../../components/admin/usersPage/UsersSearch';
 import UsersTable from '../../components/admin/usersPage/UsersTable';
 import UsersTablePagination from '../../components/admin/usersPage/UsersTablePagination';
-import AddUser from '../../components/admin/usersPage/AddUser';
 
 function Users(): JSX.Element {
-    const { isLoading, users, search, currentPage, lastPage, total } = useAppSelector<UsersState>(state => state.users);
+    const { isLoading, users, search, currentPage, lastPage, total, error } = useAppSelector<UsersState>(state => state.users);
     const dispatch = useAppDispatch();
     const navigate: NavigateFunction = useNavigate();
 
@@ -35,6 +36,8 @@ function Users(): JSX.Element {
     };
 
     if (isLoading) return <Loading />;
+
+    if(error) return <ErrorMessage error={error}/>
 
     return (
         <div className='users-page mt-10'>

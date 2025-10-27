@@ -48,6 +48,7 @@ export type UserState = {
 export type UserProjectsState = {
     isLoading: boolean;
     userProjects: ProjectCard[];
+    filterOwnership: string;
     currentPage: number;
     lastPage: number;
     total: number;

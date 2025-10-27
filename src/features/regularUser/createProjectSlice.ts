@@ -45,17 +45,14 @@ const createProjectSlice = createSlice({
         builder
             .addCase(addNewProject.pending, (state) => {
                 state.isLoading = true;
-
                 state.errors = {};
             })
             .addCase(addNewProject.fulfilled, (state) => {
                 state.isLoading = false;
-
                 state.formData = initialNewProjectState.formData;
             })
             .addCase(addNewProject.rejected, (state, { payload }) => {
                 state.isLoading = false;
-
                 state.errors = payload as CreateNewProjectErrors;
             });
     },

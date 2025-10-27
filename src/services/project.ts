@@ -1,8 +1,8 @@
 import api from "../api/axios";
 
-export async function getUserProjects(page: number = 1) {
+export async function getUserProjects(ownership: string = '', page: number = 1) {
     const response = await api.get(`/api/projects`, {
-        params: { page },
+        params: { ownership, page },
     });
     console.log(response);
 

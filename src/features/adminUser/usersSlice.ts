@@ -53,17 +53,18 @@ const usersSlice = createSlice({
             // get all users
             .addCase(getAllUsers.pending, (state) => {
                 state.isLoading = true;
+                state.error = '';
             })
             .addCase(getAllUsers.fulfilled, (state, { payload }) => {
-                state.isLoading = false;
-
+                state.isLoading = false;                
                 state.users = payload.data;
                 state.currentPage = payload.current_page;
                 state.lastPage = payload.last_page;
                 state.total = payload.total;
             })
-            .addCase(getAllUsers.rejected, (state) => {
+            .addCase(getAllUsers.rejected, (state, { payload }) => {
                 state.isLoading = false;
+                state.error = payload as string;
             })
 
             // delete user
@@ -72,8 +73,8 @@ const usersSlice = createSlice({
                 state.error = '';
             })
             .addCase(removeUser.fulfilled, (state, { payload }) => {
-                state.isLoading = false;    
-                            
+                state.isLoading = false;
+
                 state.users = state.users.filter(user => user.id !== payload.userId);
             })
             .addCase(removeUser.rejected, (state, { payload }) => {
