@@ -80,12 +80,14 @@ export type NewProjectFormData = {
     title: string;
     description: string;
     deadline: string;
+    document_path: File | null;
 };
 
 export type CreateNewProjectErrors = {
     title?: string;
     description?: string;
     deadline?: string;
+    document_path?: string;
     random?: string;
 };
 

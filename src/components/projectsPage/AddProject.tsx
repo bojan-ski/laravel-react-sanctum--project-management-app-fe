@@ -1,4 +1,4 @@
-import { type ChangeEvent, type FormEvent, type JSX } from 'react';
+import { useState, type ChangeEvent, type FormEvent, type JSX } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
 import { addNewProject, setNewProjectFormData } from '../../features/regularUser/createProjectSlice';
 import type { NewProjectState } from '../../types/types';
@@ -15,14 +15,22 @@ function AddProject(): JSX.Element {
     const { isLoading, formData, errors } = useAppSelector<NewProjectState>(state => state.newProject);
     const dispatch = useAppDispatch();
 
+    const [file, setFile] = useState<File | null>(null);
+
     const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
-        dispatch(setNewProjectFormData({ ...formData, [e.target.name]: e.target.value }));
+        const { name, type, files, value } = e.target;
+
+        if (type === 'file') {
+            setFile(files?.[0] || null);
+        } else {
+            dispatch(setNewProjectFormData({ ...formData, [name]: value }));
+        }
     };
 
-    const handleAddUser = async (e: FormEvent): Promise<void> => {
+    const handleAddNewProject = async (e: FormEvent): Promise<void> => {
         e.preventDefault();
 
-        const result = await dispatch(addNewProject(formData));
+        const result = await dispatch(addNewProject({ ...formData, document_path: file }));
 
         if (result.meta.requestStatus == 'fulfilled') {
             toast.success(result?.payload.message);
@@ -51,7 +59,7 @@ function AddProject(): JSX.Element {
                 </VisuallyHidden>
 
                 <FormWrapper
-                    onSubmit={handleAddUser}
+                    onSubmit={handleAddNewProject}
                 >
                     {/* title */}
                     <FormInput
@@ -59,7 +67,7 @@ function AddProject(): JSX.Element {
                         label='enter title *'
                         minLength={3}
                         maxLength={64}
-                        placeholder='max 64 characters'
+                        placeholder='min 2, max 64 characters'
                         required={true}
                         value={formData.title}
                         onMutate={handleChange}
@@ -71,9 +79,9 @@ function AddProject(): JSX.Element {
                     <FormTextarea
                         name='description'
                         label='enter description *'
-                        minLength={255}
+                        minLength={10}
                         maxLength={3000}
-                        placeholder='max 3000 characters'
+                        placeholder='min 10, max 3000 characters'
                         required={true}
                         value={formData.description}
                         onMutate={handleChange}
@@ -92,6 +100,17 @@ function AddProject(): JSX.Element {
                         onMutate={handleChange}
                         divCss='mb-3'
                         error={errors?.deadline}
+                    />
+
+                    {/* document */}
+                    <FormInput
+                        name='document_path'
+                        type='file'
+                        label='upload file'
+                        required={false}
+                        onMutate={handleChange}
+                        divCss='mb-3'
+                        error={errors?.document_path}
                     />
 
                     {/* submit */}

@@ -7,17 +7,18 @@ const initialNewProjectState: NewProjectState = {
     formData: {
         title: '',
         description: '',
-        deadline: ''
+        deadline: '',
+        document_path: null
     },
     errors: {},
 };
 
-export const addNewProject = createAsyncThunk('newProject/addNewProject', async (newProjectData: NewProjectFormData, { rejectWithValue }) => {
+export const addNewProject = createAsyncThunk('newProject/addNewProject', async (newProjectData: NewProjectFormData, { rejectWithValue }) => {    
     try {
         const apiCall = await createProject(newProjectData);
 
         return apiCall;
-    } catch (error: any) {
+    } catch (error: any) {        
         if (error.response?.status === 422) {
             const fieldErrors = error?.response?.data?.errors as LaravelValidationErrors;
             const formattedErrors: CreateNewProjectErrors = {};
