@@ -49,6 +49,7 @@ export type UserProjectsState = {
     isLoading: boolean;
     userProjects: ProjectCard[];
     filterOwnership: string;
+    filterStatus: string;
     currentPage: number;
     lastPage: number;
     total: number;

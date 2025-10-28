@@ -1,11 +1,14 @@
 import api from "../api/axios";
 import type { NewProjectFormData } from "../types/types";
 
-export async function getUserProjects(ownership: string = '', page: number = 1) {
+export async function getUserProjects(
+    ownership: string = '',
+    status: string = '',
+    page: number = 1
+) {
     const response = await api.get(`/api/projects`, {
-        params: { ownership, page },
+        params: { ownership, status, page },
     });
-    console.log(response);
 
     return response.data;
 }

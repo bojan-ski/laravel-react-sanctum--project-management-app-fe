@@ -56,7 +56,7 @@ const usersSlice = createSlice({
                 state.error = '';
             })
             .addCase(getAllUsers.fulfilled, (state, { payload }) => {
-                state.isLoading = false;                
+                state.isLoading = false; 
                 state.users = payload.data;
                 state.currentPage = payload.current_page;
                 state.lastPage = payload.last_page;
@@ -73,8 +73,7 @@ const usersSlice = createSlice({
                 state.error = '';
             })
             .addCase(removeUser.fulfilled, (state, { payload }) => {
-                state.isLoading = false;
-
+                state.isLoading = false;                
                 state.users = state.users.filter(user => user.id !== payload.userId);
             })
             .addCase(removeUser.rejected, (state, { payload }) => {

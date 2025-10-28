@@ -80,57 +80,48 @@ const userSlice = createSlice({
             // login
             .addCase(loginUser.pending, (state) => {
                 state.isLoading = true;
-
                 state.errors = {};
             })
             .addCase(loginUser.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
-
                 state.user = payload.data;
 
                 setUserDataInLS(payload.data);
             })
             .addCase(loginUser.rejected, (state, { payload }) => {
                 state.isLoading = false;
-
                 state.errors = payload as UserStateErrors;
             })
 
             // logout
             .addCase(logoutUser.pending, (state) => {
                 state.isLoading = true;
-
                 state.errors = {};
             })
             .addCase(logoutUser.fulfilled, (state) => {
                 state.isLoading = false;
-
                 state.user = initialUserState.user;
 
                 removeUserDataFromLS();
             })
             .addCase(logoutUser.rejected, (state, { payload }) => {
                 state.isLoading = false;
-
                 state.errors = payload as UserStateErrors;
             })
 
             // delete user account
             .addCase(deleteUserAccount.pending, (state) => {
                 state.isLoading = true;
-
                 state.errors = {};
             })
             .addCase(deleteUserAccount.fulfilled, (state) => {
                 state.isLoading = false;
-
                 state.user = initialUserState.user;
 
                 removeUserDataFromLS();
             })
             .addCase(deleteUserAccount.rejected, (state, { payload }) => {
                 state.isLoading = false;
-
                 state.errors = payload as UserStateErrors;
             });
     }
