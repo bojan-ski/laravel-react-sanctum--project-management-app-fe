@@ -4,7 +4,6 @@ import { useAppDispatch, useAppSelector } from '../hooks/useRedux';
 import { getAllUserProjects, setUserProjectsPage } from '../features/regularUser/userProjectsSlice';
 import type { UserProjectsState } from '../types/types';
 import Loading from '../components/global/Loading';
-import ErrorMessage from '../components/global/ErrorMessage';
 import TotalAndAddProject from '../components/projectsPage/TotalAndAddProject';
 import NoDataMessage from '../components/global/NoDataMessage';
 import FilterOptions from '../components/projectsPage/FilterOptions';
@@ -12,7 +11,7 @@ import ProjectsList from '../components/project/ProjectsList';
 import GlobalPagination from '../components/pagination/GlobalPagination';
 
 function Projects(): JSX.Element {
-    const { isLoading, userProjects, filterOwnership, filterStatus, currentPage, lastPage, total, error } = useAppSelector<UserProjectsState>(state => state.userProjects);
+    const { isLoading, userProjects, filterOwnership, filterStatus, currentPage, lastPage, total } = useAppSelector<UserProjectsState>(state => state.userProjects);
     const dispatch = useAppDispatch();
     const navigate: NavigateFunction = useNavigate();
 
@@ -29,8 +28,6 @@ function Projects(): JSX.Element {
     };
 
     if (isLoading) return <Loading />;
-
-    if (error) return <ErrorMessage error={error} />;
 
     return (
         <div className='projects-page mt-10'>

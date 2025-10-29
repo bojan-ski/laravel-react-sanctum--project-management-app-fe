@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getUserProjects } from "../../services/project";
+import { deleteProject, getUserProjects } from "../../services/project";
 import type { UserProjectsState } from "../../types/types";
 
 const initialUserProjectsState: UserProjectsState = {
@@ -30,7 +30,20 @@ export const getAllUserProjects = createAsyncThunk('userProjects/getAllUserProje
 
         return apiCall.data;
     } catch (error: any) {
-        return rejectWithValue(error?.response?.statusText || 'Error - Fetch users');
+        return rejectWithValue(error?.response?.statusText || 'Error - Fetch user projects');
+    }
+});
+
+export const deleteUserProject = createAsyncThunk('userProjects/deleteUserProject', async (
+    projectId: string,
+    { rejectWithValue }
+) => {
+    try {
+        const apiCall = await deleteProject(projectId);
+
+        return { projectId, message: apiCall.message };
+    } catch (error: any) {     
+        return rejectWithValue(error?.response?.statusText || 'Error - Delete project');
     }
 });
 
@@ -65,6 +78,20 @@ const userProjectsSlice = createSlice({
                 state.total = payload.total;
             })
             .addCase(getAllUserProjects.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                state.error = payload as string;
+            })
+
+            // delete project
+            .addCase(deleteUserProject.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(deleteUserProject.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+                state.userProjects = state.userProjects.filter(project => project.id !== payload.projectId);
+                state.total -= 1;
+            })
+            .addCase(deleteUserProject.rejected, (state, { payload }) => {
                 state.isLoading = false;
                 state.error = payload as string;
             });

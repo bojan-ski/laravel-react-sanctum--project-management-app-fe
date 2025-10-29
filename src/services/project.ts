@@ -31,3 +31,9 @@ export const createProject = async (newProjectData: NewProjectFormData) => {
 
     return response.data;
 };
+
+export const deleteProject = async (projectId: string) => {
+    const response = await api.delete(`/api/projects/${projectId}`);   
+
+    return response.data;
+};

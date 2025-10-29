@@ -8,7 +8,7 @@ import ProjectStatistics from './ProjectStatistics';
 import ProjectProgress from './ProjectProgress';
 import ProjectDeadline from './ProjectDeadline';
 
-function ProjectCard({ project }: { project: ProjectCardType }): JSX.Element {
+function ProjectCard({ project }: { project: ProjectCardType; }): JSX.Element {
     // console.log(project);
 
     return (
@@ -31,7 +31,7 @@ function ProjectCard({ project }: { project: ProjectCardType }): JSX.Element {
                     />
 
                     {/* if project owner - edit & delete options */}
-                    {project.is_owner && <ProjectOptions />}
+                    {project.is_owner && <ProjectOptions project={project} />}
                 </div>
 
                 {/* statistics */}
