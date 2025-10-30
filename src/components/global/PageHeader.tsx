@@ -2,7 +2,7 @@ import { type JSX } from 'react';
 
 type PageHeaderProps = {
     label: string;
-    headerCss: string;
+    headerCss?: string;
 };
 
 function PageHeader({ label, headerCss }: PageHeaderProps): JSX.Element {

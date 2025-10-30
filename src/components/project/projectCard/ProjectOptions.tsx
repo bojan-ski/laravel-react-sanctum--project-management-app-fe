@@ -1,7 +1,7 @@
 import type { JSX } from 'react';
 import { Link } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
-import { deleteUserProject, getAllUserProjects } from '../../../features/regularUser/userProjectsSlice';
+import { deleteUserProject, getUserProjects } from '../../../features/regularUser/projectSlice';
 import type { ProjectCard as ProjectCardType } from '../../../types/types';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../../ui/dropdown-menu';
 import { Button } from '../../ui/button';
@@ -9,7 +9,7 @@ import { MoreVertical, Edit, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 function ProjectOptions({ project }: { project: ProjectCardType; }): JSX.Element {
-    const { isLoading, filterOwnership, filterStatus, currentPage } = useAppSelector(state => state.userProjects);
+    const { isLoading, filterOwnership, filterStatus, currentPage } = useAppSelector(state => state.project);
     const dispatch = useAppDispatch();
 
     const handleDelete = async (): Promise<void> => {
@@ -20,7 +20,7 @@ function ProjectOptions({ project }: { project: ProjectCardType; }): JSX.Element
                 const successMsg = result.payload as { message: string; };
                 toast.success(successMsg.message);
 
-                dispatch(getAllUserProjects({
+                dispatch(getUserProjects({
                     ownership: filterOwnership,
                     status: filterStatus,
                     page: currentPage
@@ -47,7 +47,7 @@ function ProjectOptions({ project }: { project: ProjectCardType; }): JSX.Element
                 <DropdownMenuItem>
                     <Link 
                         className='flex items-center gap-2'
-                        to={`/projects/${project.id}`}
+                        to={`/projects/${project.id}/edit`}
                     >
                         <Edit className="h-4 w-4" />
                         Edit Project

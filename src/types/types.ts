@@ -44,8 +44,8 @@ export type UserState = {
     errors: UserStateErrors;
 };
 
-// regularUser/userProjectsSlice
-export type UserProjectsState = {
+// regularUser/projectSlice
+export type ProjectState = {
     isLoading: boolean;
     userProjects: ProjectCard[];
     filterOwnership: string;
@@ -54,6 +54,27 @@ export type UserProjectsState = {
     lastPage: number;
     total: number;
     error: string;
+};
+
+export type ProjectFormData = {
+    title: string;
+    description: string;
+    deadline: string;
+    document_path: File | null;
+};
+
+export type ProjectFormDataErrors = {
+    title?: string;
+    description?: string;
+    deadline?: string;
+    document_path?: string;
+    random?: string;
+};
+
+export type NewProjectState = {
+    isLoading: boolean;
+    formData: ProjectFormData;
+    errors: ProjectFormDataErrors;
 };
 
 // regularUser/profileSlice
@@ -74,28 +95,6 @@ export type ProfileState = {
     isLoading: boolean;
     changePasswordFormData: ChangePasswordFormData;
     errors: ProfileStateErrors;
-};
-
-// regularUser/createProjectSlice
-export type NewProjectFormData = {
-    title: string;
-    description: string;
-    deadline: string;
-    document_path: File | null;
-};
-
-export type CreateNewProjectErrors = {
-    title?: string;
-    description?: string;
-    deadline?: string;
-    document_path?: string;
-    random?: string;
-};
-
-export type NewProjectState = {
-    isLoading: boolean;
-    formData: NewProjectFormData;
-    errors: CreateNewProjectErrors;
 };
 
 // adminUser/createUserSlice

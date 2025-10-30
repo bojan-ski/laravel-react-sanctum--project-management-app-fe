@@ -1,7 +1,8 @@
 import { useState, type ChangeEvent, type FormEvent, type JSX } from 'react';
+import { useNavigate, type NavigateFunction } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
-import { addNewProject, setNewProjectFormData } from '../../features/regularUser/createProjectSlice';
-import type { NewProjectState } from '../../types/types';
+import { createNewProject, getUserProjects } from '../../features/regularUser/projectSlice';
+import type { ProjectState } from '../../types/types';
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "../ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Button } from '../ui/button';
@@ -12,10 +13,26 @@ import FormSubmitButton from '../form/FormSubmitButton';
 import toast from 'react-hot-toast';
 
 function AddProject(): JSX.Element {
-    const { isLoading, formData, errors } = useAppSelector<NewProjectState>(state => state.newProject);
+    const { isLoading } = useAppSelector<ProjectState>(state => state.project);
     const dispatch = useAppDispatch();
+    const navigate: NavigateFunction = useNavigate();
 
+    const [formData, setFormData] = useState<{
+        title: string;
+        description: string;
+        deadline: string;
+    }>({
+        title: '',
+        description: '',
+        deadline: ''
+    });
     const [file, setFile] = useState<File | null>(null);
+    const [errors, setErrors] = useState({
+        title: '',
+        description: '',
+        deadline: '',
+        document_path: ''
+    });
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
         const { name, type, files, value } = e.target;
@@ -23,22 +40,32 @@ function AddProject(): JSX.Element {
         if (type === 'file') {
             setFile(files?.[0] || null);
         } else {
-            dispatch(setNewProjectFormData({ ...formData, [name]: value }));
+            setFormData({ ...formData, [name]: value });
         }
     };
 
     const handleAddNewProject = async (e: FormEvent): Promise<void> => {
         e.preventDefault();
 
-        const result = await dispatch(addNewProject({ ...formData, document_path: file }));
+        const result = await dispatch(createNewProject({ ...formData, document_path: file }));
 
         if (result.meta.requestStatus == 'fulfilled') {
             toast.success(result?.payload.message);
 
-            // get all projects
+            setErrors({
+                title: '',
+                description: '',
+                deadline: '',
+                document_path: ''
+            });
+
+            dispatch(getUserProjects({}));
+            navigate('/projects');
         }
 
         if (result.meta.requestStatus == 'rejected') {
+            setErrors(result.payload);
+
             toast.error(result.payload.random || result?.meta.requestStatus);
         }
     };
@@ -72,7 +99,7 @@ function AddProject(): JSX.Element {
                         value={formData.title}
                         onMutate={handleChange}
                         divCss='mb-3'
-                        error={errors?.title}
+                        error={errors.title}
                     />
 
                     {/* description */}
@@ -87,7 +114,7 @@ function AddProject(): JSX.Element {
                         onMutate={handleChange}
                         divCss='mb-3'
                         textareaCss='h-72'
-                        error={errors?.description}
+                        error={errors.description}
                     />
 
                     {/* deadline */}
@@ -99,7 +126,7 @@ function AddProject(): JSX.Element {
                         value={formData.deadline}
                         onMutate={handleChange}
                         divCss='mb-3'
-                        error={errors?.deadline}
+                        error={errors.deadline}
                     />
 
                     {/* document */}
@@ -110,7 +137,7 @@ function AddProject(): JSX.Element {
                         required={false}
                         onMutate={handleChange}
                         divCss='mb-3'
-                        error={errors?.document_path}
+                        error={errors.document_path}
                     />
 
                     {/* submit */}

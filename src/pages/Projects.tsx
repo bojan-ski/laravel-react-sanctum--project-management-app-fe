@@ -1,8 +1,8 @@
 import { useEffect, type JSX } from 'react';
 import { useNavigate, type NavigateFunction } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../hooks/useRedux';
-import { getAllUserProjects, setUserProjectsPage } from '../features/regularUser/userProjectsSlice';
-import type { UserProjectsState } from '../types/types';
+import { getUserProjects, setUserProjectsPage } from '../features/regularUser/projectSlice';
+import type { ProjectState } from '../types/types';
 import Loading from '../components/global/Loading';
 import TotalAndAddProject from '../components/projectsPage/TotalAndAddProject';
 import NoDataMessage from '../components/global/NoDataMessage';
@@ -11,18 +11,18 @@ import ProjectsList from '../components/project/ProjectsList';
 import GlobalPagination from '../components/pagination/GlobalPagination';
 
 function Projects(): JSX.Element {
-    const { isLoading, userProjects, filterOwnership, filterStatus, currentPage, lastPage, total } = useAppSelector<UserProjectsState>(state => state.userProjects);
+    const { isLoading, userProjects, filterOwnership, filterStatus, currentPage, lastPage, total } = useAppSelector<ProjectState>(state => state.project);
     const dispatch = useAppDispatch();
     const navigate: NavigateFunction = useNavigate();
 
     useEffect((): void => {
         console.log('useEffect - Users');
-        if (userProjects.length == 0) dispatch(getAllUserProjects({}));
+        if (userProjects.length == 0) dispatch(getUserProjects({}));
     }, []);
 
     const handleProjectsPageChange = (newPage: number): void => {
         dispatch(setUserProjectsPage(newPage));
-        dispatch(getAllUserProjects({ ownership: filterOwnership, status: filterStatus, page: newPage }));
+        dispatch(getUserProjects({ ownership: filterOwnership, status: filterStatus, page: newPage }));
 
         navigate(`?ownership=${filterOwnership}&status=${filterStatus}&page=${newPage}`);
     };

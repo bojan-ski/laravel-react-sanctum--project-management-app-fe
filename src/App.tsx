@@ -8,9 +8,14 @@ import AppLayout from "./layout/AppLayout";
 // pages
 import Login from "./pages/auth/Login";
 import Projects from "./pages/Projects";
+import SelectedProject from "./pages/SelectedProject";
+import EditProject from "./pages/EditProject";
 import Profile from "./pages/Profile";
 import Users from "./pages/admin/Users";
 import SelectedUser from "./pages/admin/SelectedUser";
+
+// loaders
+import { loader as projectDetailsLoader } from "./pages/EditProject";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +30,15 @@ const router = createBrowserRouter([
       {
         path: '/projects',
         element: <Projects />,
+      },
+      {
+        path: '/projects/:id',
+        element: <SelectedProject />,
+      },
+      {
+        path: '/projects/:id/edit',
+        element: <EditProject />,
+        loader: projectDetailsLoader
       },
       {
         path: '/users',
