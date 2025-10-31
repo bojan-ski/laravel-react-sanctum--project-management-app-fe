@@ -1,5 +1,6 @@
 import { type JSX } from 'react';
-import AddProject from './AddProject';
+import { Link } from 'react-router';
+import { Button } from '../ui/button';
 
 function TotalAndAddProject({ total }: { total: number; }): JSX.Element {
     return (
@@ -8,7 +9,15 @@ function TotalAndAddProject({ total }: { total: number; }): JSX.Element {
                 Projects: {total} project{total !== 1 ? 's' : ''}
             </p>
 
-            <AddProject />
+            <Button
+                asChild
+                className='font-semibold text-white hover:text-white bg-yellow-500 hover:bg-yellow-600 transition cursor-pointer'
+                variant="outline"
+            >
+                <Link to={'/add_project'}>
+                    +
+                </Link>
+            </Button>
         </section>
     );
 }

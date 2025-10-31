@@ -9,6 +9,7 @@ import AppLayout from "./layout/AppLayout";
 import Login from "./pages/auth/Login";
 import Projects from "./pages/Projects";
 import SelectedProject from "./pages/SelectedProject";
+import AddProject from "./pages/AddProject";
 import EditProject from "./pages/EditProject";
 import Profile from "./pages/Profile";
 import Users from "./pages/admin/Users";
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Login />
+      },
+      {
+        path: '/add_project',
+        element: <AddProject />,
       },
       {
         path: '/projects',

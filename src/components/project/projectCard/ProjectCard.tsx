@@ -2,7 +2,7 @@ import { type JSX } from 'react';
 import { Link } from 'react-router';
 import type { ProjectCard as ProjectCardType } from '../../../types/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
-import ProjectOptions from './ProjectOptions';
+import ProjectOptions from '../ProjectOptions';
 import ProjectOwnerDetails from './ProjectOwnerDetails';
 import ProjectStatistics from './ProjectStatistics';
 import ProjectProgress from './ProjectProgress';

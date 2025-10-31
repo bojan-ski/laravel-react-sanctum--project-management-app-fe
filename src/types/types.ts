@@ -60,7 +60,13 @@ export type ProjectFormData = {
     title: string;
     description: string;
     deadline: string;
-    document_path: File | null;
+    document_path?: File | null;
+};
+
+export type ProjectFormSubmit = {
+    status: 'fulfilled' | 'rejected';
+    message: string;
+    errors?: any;
 };
 
 export type ProjectFormDataErrors = {
