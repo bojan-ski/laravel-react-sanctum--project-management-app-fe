@@ -23,9 +23,7 @@ function EditProject(): JSX.Element {
         const result = await dispatch(updateUserProject({
             projectId: data.id,
             updateProjectFormData: formData
-        }));
-        console.log(result);
-        
+        }));        
 
         if (result.meta.requestStatus === 'fulfilled') {
             navigate(`/projects?ownership=${filterOwnership}&status=${filterStatus}&page=${currentPage}`);
@@ -41,7 +39,7 @@ function EditProject(): JSX.Element {
             message: result.payload.random || result?.meta.requestStatus,
             errors: result.payload
         };
-    };
+    };    
 
     return (
         <ProjectForm
@@ -51,7 +49,6 @@ function EditProject(): JSX.Element {
             submitLabel="Update project"
             onSubmit={handleUpdateProject}
             showExistingFile={!!data.document_path}
-            projectId={data.id}
         />
     );
 }

@@ -6,13 +6,13 @@ import PageHeader from '../global/PageHeader';
 import FormWrapper from '../form/FormWrapper';
 import FormInput from '../form/FormInput';
 import FormTextarea from '../form/FormTextarea';
+import DocumentOptions from '../document/DocumentOptions';
 import FormSubmitButton from '../form/FormSubmitButton';
 import toast from 'react-hot-toast';
-import DocumentOptions from './DocumentOptions';
 
 type ProjectFormProps = {
     initialData?: {
-        id: string;
+        id: number;
         title: string;
         description: string;
         deadline: string;
@@ -23,7 +23,6 @@ type ProjectFormProps = {
     submitLabel: string;
     headerLabel: string;
     showExistingFile?: boolean;
-    projectId?: number;
 };
 
 export default function ProjectForm({
@@ -41,6 +40,7 @@ export default function ProjectForm({
     });
     const [file, setFile] = useState<File | null>(null);
     const [errors, setErrors] = useState<Record<string, string>>({});
+    const [showDocOptions, setShowDocOptions] = useState<boolean>(showExistingFile);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
         const { name, type, files, value } = e.target;
@@ -81,9 +81,9 @@ export default function ProjectForm({
             toast.success(result.message);
 
             setErrors({});
-        } 
-        
-        if (result.status === 'rejected') {            
+        }
+
+        if (result.status === 'rejected') {
             toast.error(result.message);
 
             setErrors(result.errors);
@@ -105,7 +105,7 @@ export default function ProjectForm({
                     <FormInput
                         name='title'
                         label='enter title *'
-                        // minLength={3}
+                        minLength={3}
                         maxLength={64}
                         placeholder='min 2, max 64 characters'
                         required={true}
@@ -119,7 +119,7 @@ export default function ProjectForm({
                     <FormTextarea
                         name='description'
                         label='enter description *'
-                        // minLength={10}
+                        minLength={10}
                         maxLength={3000}
                         placeholder='min 10, max 3000 characters'
                         required={true}
@@ -142,10 +142,12 @@ export default function ProjectForm({
                         error={errors.deadline}
                     />
 
-                    {showExistingFile && initialData?.document_path && (
+                    {/* if document, show document options */}
+                    {showDocOptions && initialData?.document_path && (
                         <DocumentOptions
-                            document_path={initialData?.document_path}
+                            documentPath={initialData?.document_path}
                             projectId={initialData.id}
+                            setShowDocOptions={setShowDocOptions}
                         />
                     )}
 

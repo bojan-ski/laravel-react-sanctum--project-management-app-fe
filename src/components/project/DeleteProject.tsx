@@ -39,12 +39,12 @@ function DeleteProject({ projectId, projectTitle }: DeleteProjectProps): JSX.Ele
 
     return (
         <DropdownMenuItem
-            onClick={handleDelete}
             className="text-red-600 focus:text-red-600 flex items-center gap-2"
+            onClick={handleDelete}
             disabled={isLoading}
         >
             <Trash2 className="h-4 w-4" />
-            Delete Project
+            {isLoading ? 'Deleting...' : 'Delete Project'}
         </DropdownMenuItem>
     );
 }

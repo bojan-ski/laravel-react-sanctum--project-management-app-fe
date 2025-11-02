@@ -63,13 +63,6 @@ export async function updateProject(
     return response.data;
 }
 
-export const deleteProjectDocument = async (projectId: string) => {
-    const response = await api.delete(`/api/projects/${projectId}/delete_file`);   
-
-    return response.data;
-};
-
-
 export const deleteProject = async (projectId: string) => {
     const response = await api.delete(`/api/projects/${projectId}/destroy`);
 
