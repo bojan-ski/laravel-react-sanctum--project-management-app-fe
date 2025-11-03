@@ -1,12 +1,16 @@
 import type { JSX } from 'react';
 import { Link } from 'react-router';
-import type { ProjectCard as ProjectCardType } from '../../types/types';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
-import { Button } from '../ui/button';
 import DeleteProject from './DeleteProject';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../../ui/dropdown-menu';
+import { Button } from '../../ui/button';
 import { MoreVertical, Edit } from 'lucide-react';
 
-function ProjectOptions({ project }: { project: ProjectCardType; }): JSX.Element {
+type ProjectOptionsProps = {
+    projectId: number;
+    projectTitle: string
+}
+
+function ProjectOptions({ projectId, projectTitle }: ProjectOptionsProps): JSX.Element {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -20,7 +24,7 @@ function ProjectOptions({ project }: { project: ProjectCardType; }): JSX.Element
                 <DropdownMenuItem>
                     <Link 
                         className='flex items-center gap-2'
-                        to={`/projects/${project.id}/edit`}
+                        to={`/projects/${projectId}/edit`}
                     >
                         <Edit className="h-4 w-4" />
                         Edit Project
@@ -29,8 +33,8 @@ function ProjectOptions({ project }: { project: ProjectCardType; }): JSX.Element
 
                 {/* delete */}
                 <DeleteProject
-                    projectId={project.id}
-                    projectTitle={project.title}
+                    projectId={projectId}
+                    projectTitle={projectTitle}
                 />
             </DropdownMenuContent>
         </DropdownMenu>

@@ -16,7 +16,8 @@ import Users from "./pages/admin/Users";
 import SelectedUser from "./pages/admin/SelectedUser";
 
 // loaders
-import { loader as projectDetailsLoader } from "./pages/EditProject";
+import { loader as projectDetailsLoader } from "./pages/SelectedProject";
+import { loader as projectDataLoader } from "./pages/EditProject";
 
 const router = createBrowserRouter([
   {
@@ -39,11 +40,12 @@ const router = createBrowserRouter([
       {
         path: '/projects/:id',
         element: <SelectedProject />,
+        loader: projectDetailsLoader
       },
       {
         path: '/projects/:id/edit',
         element: <EditProject />,
-        loader: projectDetailsLoader
+        loader: projectDataLoader
       },
       {
         path: '/users',
@@ -51,7 +53,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/users/:id',
-        element: <SelectedUser />,
+        element: <SelectedUser />
       },
       {
         path: '/profile',

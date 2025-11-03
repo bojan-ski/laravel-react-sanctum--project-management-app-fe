@@ -2,11 +2,10 @@ import { type JSX } from 'react';
 import { Link } from 'react-router';
 import type { ProjectCard as ProjectCardType } from '../../../types/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
-import ProjectOptions from '../ProjectOptions';
-import ProjectOwnerDetails from './ProjectOwnerDetails';
+import ProjectOwner from '../projectOwner/ProjectOwner';
 import ProjectStatistics from './ProjectStatistics';
 import ProjectProgress from './ProjectProgress';
-import ProjectDeadline from './ProjectDeadline';
+import ProjectDeadline from '../ProjectDeadline';
 
 function ProjectCard({ project }: { project: ProjectCardType; }): JSX.Element {
     // console.log(project);
@@ -23,16 +22,15 @@ function ProjectCard({ project }: { project: ProjectCardType; }): JSX.Element {
             </CardHeader>
 
             <CardContent>
-                <div className='flex items-center justify-between'>
-                    {/* project owner */}
-                    <ProjectOwnerDetails
-                        ownerAvatar={project.owner?.avatar}
-                        ownerName={project.owner?.name}
-                    />
-
-                    {/* if project owner - edit & delete options */}
-                    {project.is_owner && <ProjectOptions project={project} />}
-                </div>
+                {/* project owner & project options */}
+                <ProjectOwner
+                    divCss='mb-3'
+                    ownerAvatar={project.owner?.avatar}
+                    ownerName={project.owner?.name}
+                    isProjectOWner={project.is_owner}
+                    projectId={project.id}
+                    projectTitle={project.title}
+                />
 
                 {/* statistics */}
                 <ProjectStatistics />

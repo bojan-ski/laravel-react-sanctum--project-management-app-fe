@@ -10,7 +10,7 @@ export type User = {
 };
 
 export type ProjectCard = {
-    id: string;
+    id: number;
     title: string;
     description: string;
     deadline: string;
@@ -21,6 +21,14 @@ export type ProjectCard = {
     };
     created_at: string;
     updated_at: string;
+};
+
+export type Member = {
+    id: number;
+    name: string;
+    email: string;
+    avatar: string | null;
+    joined_at: string;
 };
 
 // REDUX SLICES

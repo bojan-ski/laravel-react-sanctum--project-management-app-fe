@@ -7,17 +7,17 @@ type ProjectOwnerDetailsProps = {
     ownerName: string;
 };
 
-function ProjectOwnerDetails({ ownerAvatar, ownerName }: ProjectOwnerDetailsProps): JSX.Element {    
+function ProjectOwnerDetails({ ownerAvatar, ownerName }: ProjectOwnerDetailsProps): JSX.Element {       
     return (
-        <div className="flex items-center gap-2 mb-3">
-            <Avatar className="h-6 w-6">
+        <div className="flex items-center gap-2">
+            <Avatar className="h-8 w-8">
                 <AvatarImage src={ownerAvatar} alt={ownerName} />
 
                 <AvatarFallback className="border-2 w-25 h-25 text-center rounded-full">
                     {userInitials(ownerName)}
                 </AvatarFallback>
             </Avatar>
-            <span className="text-sm text-gray-600">
+            <span className="text-sm">
                 {ownerName}
             </span>
         </div>

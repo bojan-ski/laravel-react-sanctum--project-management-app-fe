@@ -1,5 +1,5 @@
 import { type JSX } from 'react';
-import { formatDate, isProjectOverdue } from '../../../utils/helpers';
+import { formatDate, isProjectOverdue } from '../../utils/helpers';
 import { Calendar } from 'lucide-react';
 
 function ProjectDeadline({ deadline }: { deadline: string; }): JSX.Element {

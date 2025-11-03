@@ -82,7 +82,7 @@ export const updateUserProject = createAsyncThunk('project/updateProject', async
 });
 
 export const deleteUserProject = createAsyncThunk('project/deleteUserProject', async (
-    projectId: string,
+    projectId: number,
     { rejectWithValue }
 ) => {
     try {
@@ -166,7 +166,7 @@ const projectSlice = createSlice({
             })
             .addCase(deleteUserProject.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
-                state.userProjects = state.userProjects.filter(project => project.id !== payload.projectId);
+                state.userProjects = state.userProjects.filter(project => +project.id !== payload.projectId);
                 state.total -= 1;
             })
             .addCase(deleteUserProject.rejected, (state, { payload }) => {

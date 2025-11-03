@@ -2,15 +2,15 @@ import { type JSX } from 'react';
 import { useLoaderData, useNavigate, type NavigateFunction } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../hooks/useRedux';
 import { updateUserProject } from '../features/regularUser/projectSlice';
-import { getProjectDetails } from '../services/project';
+import { getProjectData } from '../services/project';
 import type { ProjectFormData, ProjectFormSubmit, ProjectState } from '../types/types';
 import ProjectForm from '../components/project/ProjectForm';
 
 // loader
 export const loader = async ({ params }: { params: any; }): Promise<any> => {
-    const projectDetails: any = await getProjectDetails(params.id);
+    const projectData: any = await getProjectData(params.id);
 
-    return projectDetails;
+    return projectData;
 };
 
 function EditProject(): JSX.Element {
@@ -23,7 +23,7 @@ function EditProject(): JSX.Element {
         const result = await dispatch(updateUserProject({
             projectId: data.id,
             updateProjectFormData: formData
-        }));        
+        }));
 
         if (result.meta.requestStatus === 'fulfilled') {
             navigate(`/projects?ownership=${filterOwnership}&status=${filterStatus}&page=${currentPage}`);
@@ -39,7 +39,7 @@ function EditProject(): JSX.Element {
             message: result.payload.random || result?.meta.requestStatus,
             errors: result.payload
         };
-    };    
+    };
 
     return (
         <ProjectForm

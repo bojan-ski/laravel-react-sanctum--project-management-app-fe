@@ -1,13 +1,13 @@
 import { type JSX } from 'react';
-import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
-import { deleteUserProject, getUserProjects } from '../../features/regularUser/projectSlice';
-import type { ProjectState } from '../../types/types';
-import { DropdownMenuItem } from '../ui/dropdown-menu';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
+import type { ProjectState } from '../../../types/types';
+import { deleteUserProject, getUserProjects } from '../../../features/regularUser/projectSlice';
+import { DropdownMenuItem } from '../../ui/dropdown-menu';
 import { Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 type DeleteProjectProps = {
-    projectId: string;
+    projectId: number;
     projectTitle: string;
 };
 
