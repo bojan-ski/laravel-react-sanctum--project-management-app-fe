@@ -1,7 +1,6 @@
 import { type JSX } from 'react';
 import { Checkbox } from '../../../ui/checkbox';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../ui/avatar';
-import { userInitials } from '../../../../utils/helpers';
+import UserAvatar from '../../../global/UserAvatar';
 
 type AvailableUserRowProps = {
     isSelected: boolean;
@@ -32,15 +31,13 @@ function AvailableUserRow({
                 onClick={(e) => e.stopPropagation()}
             />
 
-            <Avatar className="h-10 w-10">
-                <AvatarImage src={userAvatar as string} alt={userName} />
+            <UserAvatar 
+                avatarCss='h-10 w-10'
+                name={userName}
+                avatar={userAvatar}
+            />            
 
-                <AvatarFallback className='text-xs'>
-                    {userInitials(userName)}
-                </AvatarFallback>
-            </Avatar>
-
-            <div className="flex-1 min-w-0">
+            <div>
                 <p className="font-medium text-sm">
                     {userName}
                 </p>

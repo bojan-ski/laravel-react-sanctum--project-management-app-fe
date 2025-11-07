@@ -1,46 +1,61 @@
 import { type JSX } from 'react';
 import type { Member } from '../../../types/types';
-import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
-import { formatDate, userInitials } from '../../../utils/helpers';
+import UserAvatar from '../../global/UserAvatar';
+import RemoveMember from './remove/RemoveMember';
 import { Badge } from '../../ui/badge';
+import { formatDate } from '../../../utils/helpers';
 
 type MemberRowProps = {
+    projectId: number;
     ownerId: number;
     member: Member;
+    onRefresh: () => void;
 };
 
-function MemberRow({ ownerId, member }: MemberRowProps): JSX.Element {
+function MemberRow({
+    projectId,
+    ownerId,
+    member,
+    onRefresh
+}: MemberRowProps): JSX.Element {
     return (
-        <div
-            key={member.id}
-            className="flex items-center justify-between hover:bg-gray-50 rounded-lg transition-colors"
-        >
+        <div className="flex items-center justify-between p-4  p-4rounded-md hover:bg-gray-50 transition">
+            {/* left side */}
             <div className="flex items-center gap-3">
-                <Avatar>
-                    <AvatarImage src={member.avatar as string} alt={member.name} />
+                <UserAvatar
+                    name={member.name}
+                    avatar={member.avatar}
+                />
 
-                    <AvatarFallback>
-                        {userInitials(member.name)}
-                    </AvatarFallback>
-                </Avatar>
-
-                <div className="flex items-center gap-2">
+                <div>
                     <p className="text-sm">
                         {member.name}
+                        {member.id == ownerId && (
+                            <Badge variant="secondary" className="ml-2 text-xs">
+                                Owner
+                            </Badge>
+                        )}
                     </p>
-                    {member.id == ownerId ? (
-                        <Badge variant="secondary" className="text-xs">
-                            Owner
-                        </Badge>
-                    ) : (
-                        <p className="text-sm text-gray-600">
-                            {member.email}
-                        </p>
-                    )}
+                    <p className="text-sm text-gray-600">
+                        {member.email}
+                    </p>
                 </div>
             </div>
-            <div className="text-sm text-gray-500">
-                Joined: {formatDate(member.joined_at)}
+
+            {/* right side */}
+            <div className='text-end text-sm'>
+                <p className="text-gray-500">
+                    Joined: {formatDate(member.joined_at)}
+                </p>
+
+                {ownerId != member.id && (
+                    <RemoveMember
+                        projectId={projectId}
+                        memberId={member.id}
+                        memberName={member.name}
+                        onRefresh={onRefresh}
+                    />
+                )}
             </div>
         </div>
     );

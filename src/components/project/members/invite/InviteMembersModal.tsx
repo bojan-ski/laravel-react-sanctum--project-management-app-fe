@@ -107,7 +107,7 @@ function InviteMembersModal({
 
                                 {/* warning for large selections */}
                                 {selectedUserIds.length > 20 && (
-                                    <WarningMsg selectedUserIdsLength={setSelectedUserIds.length} />
+                                    <WarningMsg selectedUserIdsLength={selectedUserIds.length} />
                                 )}
                             </div>
 

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getAvailableUsers, inviteMembers } from "../../services/member";
+import { getAvailableUsers, inviteMembers, removeMember } from "../../services/member";
 import type { ProjectMembersState } from "../../types/types";
 
 const initialProjectMembersState: ProjectMembersState = {
@@ -39,6 +39,24 @@ export const inviteSelectedUsers = createAsyncThunk('projectMembers/inviteMember
     }
 });
 
+type RemoveSelectedMemberProps = {
+    projectId: number;
+    memberId: number;
+};
+
+export const removeSelectedMember = createAsyncThunk('projectMembers/removeSelectedMember', async (
+    { projectId, memberId }: RemoveSelectedMemberProps,
+    { rejectWithValue }
+) => {
+    try {
+        const apiCall = await removeMember(projectId, memberId);
+
+        return apiCall;
+    } catch (error: any) {
+        return rejectWithValue(error?.response?.statusText || 'Error - Remove member');
+    }
+});
+
 const projectMemberSlice = createSlice({
     name: 'projectMembers',
     initialState: initialProjectMembersState,
@@ -67,6 +85,18 @@ const projectMemberSlice = createSlice({
                 state.isLoading = false;
             })
             .addCase(inviteSelectedUsers.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                state.error = payload as string;
+            })
+
+            // remove selected member from project
+            .addCase(removeSelectedMember.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(removeSelectedMember.fulfilled, (state) => {
+                state.isLoading = false;
+            })
+            .addCase(removeSelectedMember.rejected, (state, { payload }) => {
                 state.isLoading = false;
                 state.error = payload as string;
             });
