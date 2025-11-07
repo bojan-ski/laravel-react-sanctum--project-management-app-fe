@@ -43,7 +43,7 @@ function AddUser({ search, currentPage }: AddUserProps): JSX.Element {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button className='cursor-pointer hover:text-red-900'>
+                <Button className='cursor-pointer hover:text-yellow-500'>
                     +
                 </Button>
             </DialogTrigger>

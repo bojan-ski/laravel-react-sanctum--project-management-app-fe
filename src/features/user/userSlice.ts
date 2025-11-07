@@ -7,7 +7,7 @@ import { deleteAccount } from "../../services/profile";
 const initialUserState: UserState = {
     isLoading: false,
     user: getUserDataFromLS() || {
-        id: '',
+        id: 0,
         name: '',
         email: '',
         avatar: null,

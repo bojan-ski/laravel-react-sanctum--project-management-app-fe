@@ -16,7 +16,7 @@ function Projects(): JSX.Element {
     const navigate: NavigateFunction = useNavigate();
 
     useEffect((): void => {
-        console.log('useEffect - Users');
+        console.log('useEffect - Projects');
         if (userProjects.length == 0) dispatch(getUserProjects({}));
     }, []);
 

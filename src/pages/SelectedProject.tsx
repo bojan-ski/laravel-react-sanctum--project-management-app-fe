@@ -1,5 +1,5 @@
 import { type JSX } from 'react';
-import { useLoaderData } from 'react-router';
+import { useLoaderData, useRevalidator } from 'react-router';
 import { getProjectDetails } from '../services/project';
 import ProjectDeadline from '../components/project/ProjectDeadline';
 import ProjectOwner from '../components/project/projectOwner/ProjectOwner';
@@ -9,14 +9,15 @@ import DownloadDocument from '../components/document/DownloadDocument';
 // loader
 export const loader = async ({ params }: { params: any; }): Promise<any> => {
     const projectDetails: any = await getProjectDetails(params.id);
-    console.log(projectDetails);
+    // console.log(projectDetails);
 
-    return projectDetails;
+    return { ...projectDetails };
 };
 
 function SelectedProject(): JSX.Element {
     const { data } = useLoaderData();
-    console.log(data);
+    const revalidator = useRevalidator();
+    // console.log(data);
 
     return (
         <div className='selected-project-page my-10 grid lg:grid-cols-2 gap-4'>
@@ -60,10 +61,12 @@ function SelectedProject(): JSX.Element {
                     Project statistics
                 </div>
 
-                {/* members */}
+                {/* project members */}
                 <Members
+                    projectId={data.id}
                     ownerId={data.owner.id}
                     members={data.members}
+                    onRefresh={() => revalidator.revalidate()}
                 />
             </section>
         </div>

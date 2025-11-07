@@ -1,15 +1,26 @@
-import { type JSX } from 'react';
+import {type JSX } from 'react';
 import type { Member } from '../../../types/types';
 import MemberRow from './MemberRow';
+import InviteMembersModal from './invite/InviteMembersModal';
 
 type MembersProps = {
+    projectId: number;
     ownerId: number;
     members: Member[];
+    onRefresh: () => void;
 };
 
-function Members({ ownerId, members }: MembersProps): JSX.Element {
+function Members({ projectId, ownerId, members, onRefresh }: MembersProps): JSX.Element {
     return (
-        <div className='p-4 border rounded-md'>
+        <div className='p-4 border rounded-md max-h-[400px] overflow-y-auto'>
+            {/* invite members option */}
+            <InviteMembersModal
+                members={members}
+                projectId={projectId}
+                onRefresh={onRefresh}
+            />
+
+            {/* members list */}
             {members.length != 0 ? (
                 // {data.members.length > 1 ? (
                 <>

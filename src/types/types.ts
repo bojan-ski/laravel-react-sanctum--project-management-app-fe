@@ -1,6 +1,6 @@
 // GLOBAL
 export type User = {
-    id: string;
+    id: number;
     name: string;
     email: string;
     avatar: string | null;
@@ -89,6 +89,13 @@ export type NewProjectState = {
     isLoading: boolean;
     formData: ProjectFormData;
     errors: ProjectFormDataErrors;
+};
+
+// regularUser/projectMemberSlice
+export type ProjectMembersState = {
+    isLoading: boolean;
+    availableUsers: User[];
+    error: string;
 };
 
 // regularUser/profileSlice
