@@ -6,17 +6,19 @@ import Navbar from './header/Navbar';
 import LogoutOption from './header/LogoutOption';
 
 function Header(): JSX.Element {
-    const { user } = useAppSelector<UserState>(state => state.user);  
+    const { user } = useAppSelector<UserState>(state => state.user);
 
     return (
         <header className="header bg-gray-800 text-gray-300 py-4">
             {user.name ? (
                 <div className="container navbar mx-auto flex items-center justify-between">
+
                     {/* nav links */}
                     <Navbar role={user.role} />
 
                     {/* logout option */}
                     <LogoutOption />
+
                 </div>
 
             ) : (

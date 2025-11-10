@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import userSlice from './features/user/userSlice';
+import notificationSlice from './features/regularUser/notificationSlice';
 import projectSlice from './features/regularUser/projectSlice';
 import documentSlice from './features/document/documentSlice';
 import projectMemberSlice from './features/regularUser/projectMemberSlice';
@@ -10,6 +11,7 @@ import createUserSlice from './features/adminUser/createUserSlice';
 export const store = configureStore({
     reducer: {
         user: userSlice,
+        notifications: notificationSlice,
         project: projectSlice,
         document: documentSlice,
         projectMembers: projectMemberSlice,
