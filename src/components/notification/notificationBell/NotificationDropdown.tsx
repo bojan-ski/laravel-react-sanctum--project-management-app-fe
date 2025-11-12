@@ -38,7 +38,7 @@ const NotificationDropdown = ({ isOpen, onClose }: NotificationDropdownProps): J
         return () => {
             document.removeEventListener('click', handleClickOutside);
         };
-    }, [isOpen, onClose]);    
+    }, [isOpen, onClose]);
 
     return (
         <div
@@ -46,7 +46,10 @@ const NotificationDropdown = ({ isOpen, onClose }: NotificationDropdownProps): J
             className="absolute right-0 top-12 w-96 max-h-[600px] z-50 shadow-lg"
         >
             <Card>
-                <BellHeader unreadCount={unreadCount} />
+                <BellHeader
+                    unreadCount={unreadCount}
+                    onClose={onClose}
+                />
 
                 <BellContent
                     isLoading={isLoading}

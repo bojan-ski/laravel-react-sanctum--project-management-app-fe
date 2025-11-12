@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getNotifications, getUnreadCount, markAllAsRead, markAsRead } from "../../services/notification";
-import type { NotificationState } from "../../types/types";
+import type { Notification, NotificationState } from "../../types/types";
 
 const initialNotificationState: NotificationState = {
     isLoading: false,
@@ -55,12 +55,9 @@ export const markAllNotificationsAsRead = createAsyncThunk('notifications/markAl
 ) => {
     try {
         const apiCall = await markAllAsRead();
-        console.log(apiCall);
 
         return apiCall;
     } catch (error: any) {
-        console.log(error);
-
         return rejectWithValue(error?.response?.statusText || 'Error - Mark all messages as read');
     }
 });
@@ -107,9 +104,11 @@ const notificationSlice = createSlice({
             .addCase(markNotificationsAsRead.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
 
-                const notification = state.notifications.find(n => n.id === payload.data);
+                const notification = state.notifications.find((notification: Notification): boolean => notification.id === payload.data);
+
                 if (notification && !notification.read_at) {
                     notification.read_at = new Date().toISOString();
+
                     state.unreadCount = Math.max(0, state.unreadCount - 1);
                 }
             })
@@ -123,14 +122,17 @@ const notificationSlice = createSlice({
                 state.isLoading = true;
                 state.error = '';
             })
-            .addCase(markAllNotificationsAsRead.fulfilled, (state, { payload }) => {
-                console.log(payload);
-
+            .addCase(markAllNotificationsAsRead.fulfilled, (state) => {
                 state.isLoading = false;
+
+                state.notifications.forEach((notification: Notification): void => {
+                    if (!notification.read_at) {
+                        notification.read_at = new Date().toISOString();
+                    }
+                });
+                state.unreadCount = 0;
             })
             .addCase(markAllNotificationsAsRead.rejected, (state, { payload }) => {
-                console.log(payload);
-
                 state.isLoading = false;
                 state.error = payload as string;
             });

@@ -19,8 +19,7 @@ export async function markAsRead(notificationId: number) {
 }
 
 export async function markAllAsRead() {
-    const response = await api.post('/api/notifications/mark_all_read');
-    console.log(response);
+    const response = await api.post('/api/notifications/mark_all_as_read');
 
     return response.data;
 }

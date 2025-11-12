@@ -49,7 +49,6 @@ const NotificationItem = ({ notification, onClose }: NotificationItemProps): JSX
             </div>
 
             {/* invitation action options */}
-
         </div>
     );
 };
