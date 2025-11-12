@@ -66,6 +66,13 @@ export type Notification = {
     created_at: string;
 };
 
+export type NotificationState = {
+    isLoading: boolean;
+    notifications: Notification[];
+    unreadCount: number;
+    error: string;
+};
+
 // regularUser/projectSlice
 export type ProjectState = {
     isLoading: boolean;

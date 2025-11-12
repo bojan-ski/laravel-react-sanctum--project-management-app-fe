@@ -1,9 +1,9 @@
 import { useState, type JSX } from 'react';
-import { useAppSelector } from '../../hooks/useRedux';
-import useNotification from '../../hooks/useNotification';
-import type { NotificationState } from '../../features/regularUser/notificationSlice';
+import { useAppSelector } from '../../../hooks/useRedux';
+import useNotification from '../../../hooks/useNotification';
+import type { NotificationState } from '../../../types/types';
 import NotificationDropdown from './NotificationDropdown';
-import { Button } from '../ui/button';
+import { Button } from '../../ui/button';
 import { Bell } from 'lucide-react';
 
 const NotificationBell = (): JSX.Element => {

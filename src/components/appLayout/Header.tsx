@@ -4,7 +4,7 @@ import type { UserState } from '../../types/types';
 import Logo from '../global/Logo';
 import Navbar from './header/Navbar';
 import LogoutOption from './header/LogoutOption';
-import NotificationBell from '../notification/NotificationBell';
+import NotificationBell from '../notification/notificationBell/NotificationBell';
 
 function Header(): JSX.Element {
     const { user } = useAppSelector<UserState>(state => state.user);

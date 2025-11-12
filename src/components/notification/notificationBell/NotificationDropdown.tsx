@@ -1,8 +1,10 @@
 import { useEffect, useRef, type JSX } from 'react';
-import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
-import { getUserNotifications, type NotificationState } from '../../features/regularUser/notificationSlice';
-import BellHeader from './notificationBell/BellHeader';
-import { Card } from '../ui/card';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
+import { getUserNotifications } from '../../../features/regularUser/notificationSlice';
+import type { NotificationState } from '../../../types/types';
+import BellHeader from './BellHeader';
+import BellContent from './BellContent';
+import { Card } from '../../ui/card';
 
 type NotificationDropdownProps = {
     isOpen: boolean;
@@ -45,6 +47,12 @@ const NotificationDropdown = ({ isOpen, onClose }: NotificationDropdownProps): J
         >
             <Card>
                 <BellHeader unreadCount={unreadCount} />
+
+                <BellContent
+                    isLoading={isLoading}
+                    notifications={notifications}
+                    onClose={onClose}
+                />
             </Card>
         </div>
     );

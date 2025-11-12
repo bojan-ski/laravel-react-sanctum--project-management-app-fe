@@ -12,9 +12,8 @@ export async function getUnreadCount() {
     return response.data;
 }
 
-export async function markAsRead(notificationId: number) {
+export async function markAsRead(notificationId: number) {    
     const response = await api.post(`/api/notifications/${notificationId}/read`);
-    console.log(response);
 
     return response.data;
 }

@@ -1,13 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getNotifications, getUnreadCount, markAllAsRead, markAsRead } from "../../services/notification";
-import type { Notification } from "../../types/types";
-
-export type NotificationState = {
-    isLoading: boolean;
-    notifications: Notification[];
-    unreadCount: number;
-    error: string;
-};
+import type { NotificationState } from "../../types/types";
 
 const initialNotificationState: NotificationState = {
     isLoading: false,
@@ -45,16 +38,13 @@ export const fetchUnreadCount = createAsyncThunk('notifications/fetchUnreadCount
 });
 
 export const markNotificationsAsRead = createAsyncThunk('notifications/markAsRead', async (
-    { notificationId }: { notificationId: number; },
+    notificationId: number,
     { rejectWithValue }) => {
     try {
         const apiCall = await markAsRead(notificationId);
-        console.log(apiCall);
 
         return apiCall;
     } catch (error: any) {
-        console.log(error);
-
         return rejectWithValue(error?.response?.statusText || 'Error - Mark as read');
     }
 });
@@ -88,7 +78,7 @@ const notificationSlice = createSlice({
             })
             .addCase(getUserNotifications.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
-                state.notifications = payload.data
+                state.notifications = payload.data;
             })
             .addCase(getUserNotifications.rejected, (state, { payload }) => {
                 state.isLoading = false;
@@ -102,7 +92,7 @@ const notificationSlice = createSlice({
             })
             .addCase(fetchUnreadCount.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
-                state.unreadCount = payload.data.count
+                state.unreadCount = payload.data.count;
             })
             .addCase(fetchUnreadCount.rejected, (state, { payload }) => {
                 state.isLoading = false;
@@ -115,13 +105,15 @@ const notificationSlice = createSlice({
                 state.error = '';
             })
             .addCase(markNotificationsAsRead.fulfilled, (state, { payload }) => {
-                console.log(payload);
-
                 state.isLoading = false;
+
+                const notification = state.notifications.find(n => n.id === payload.data);
+                if (notification && !notification.read_at) {
+                    notification.read_at = new Date().toISOString();
+                    state.unreadCount = Math.max(0, state.unreadCount - 1);
+                }
             })
             .addCase(markNotificationsAsRead.rejected, (state, { payload }) => {
-                console.log(payload);
-
                 state.isLoading = false;
                 state.error = payload as string;
             })
