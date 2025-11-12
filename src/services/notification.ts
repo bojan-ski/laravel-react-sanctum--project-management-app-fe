@@ -2,14 +2,12 @@ import api from "../api/axios";
 
 export async function getNotifications() {
     const response = await api.get('/api/notifications');
-    console.log(response);
 
     return response.data;
 }
 
 export async function getUnreadCount() {
     const response = await api.get('/api/notifications/unread_count');
-    console.log(response);
 
     return response.data;
 }

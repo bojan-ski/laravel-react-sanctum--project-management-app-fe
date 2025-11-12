@@ -2,12 +2,12 @@ import { useEffect } from 'react';
 import { useAppDispatch } from './useRedux';
 import { fetchUnreadCount } from '../features/regularUser/notificationSlice';
 
-function useNotification(enabled = true, interval = 60000) {
+function useNotification(enabled = true, interval = 60000): void {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
         console.log('useEffect - useNotification');
-        
+
         if (!enabled) return;
 
         dispatch(fetchUnreadCount());

@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getNotifications, getUnreadCount, markAllAsRead, markAsRead } from "../../services/notification";
+import type { Notification } from "../../types/types";
 
 export type NotificationState = {
     isLoading: boolean;
-    notifications: any[];
+    notifications: Notification[];
     unreadCount: number;
     error: string;
 };
@@ -23,12 +24,9 @@ export const getUserNotifications = createAsyncThunk('notifications/getUserNotif
 
     try {
         const apiCall = await getNotifications();
-        console.log(apiCall);
 
         return apiCall;
     } catch (error: any) {
-        console.log(error);
-
         return rejectWithValue(error?.response?.statusText || 'Error - Get user notifications');
     }
 });
@@ -39,16 +37,12 @@ export const fetchUnreadCount = createAsyncThunk('notifications/fetchUnreadCount
 ) => {
     try {
         const apiCall = await getUnreadCount();
-        console.log(apiCall);
 
         return apiCall;
     } catch (error: any) {
-        console.log(error);
-
         return rejectWithValue(error?.response?.statusText || 'Error - Fetch unread count');
     }
 });
-
 
 export const markNotificationsAsRead = createAsyncThunk('notifications/markAsRead', async (
     { notificationId }: { notificationId: number; },
@@ -63,8 +57,7 @@ export const markNotificationsAsRead = createAsyncThunk('notifications/markAsRea
 
         return rejectWithValue(error?.response?.statusText || 'Error - Mark as read');
     }
-}
-);
+});
 
 export const markAllNotificationsAsRead = createAsyncThunk('notifications/markAllAsRead', async (
     _,
@@ -80,8 +73,7 @@ export const markAllNotificationsAsRead = createAsyncThunk('notifications/markAl
 
         return rejectWithValue(error?.response?.statusText || 'Error - Mark all messages as read');
     }
-}
-);
+});
 
 const notificationSlice = createSlice({
     name: 'notifications',
@@ -95,14 +87,10 @@ const notificationSlice = createSlice({
                 state.error = '';
             })
             .addCase(getUserNotifications.fulfilled, (state, { payload }) => {
-                console.log(payload);
-
                 state.isLoading = false;
                 state.notifications = payload.data
             })
             .addCase(getUserNotifications.rejected, (state, { payload }) => {
-                console.log(payload);
-
                 state.isLoading = false;
                 state.error = payload as string;
             })
@@ -113,14 +101,10 @@ const notificationSlice = createSlice({
                 state.error = '';
             })
             .addCase(fetchUnreadCount.fulfilled, (state, { payload }) => {
-                console.log(payload);
-
                 state.isLoading = false;
                 state.unreadCount = payload.data.count
             })
             .addCase(fetchUnreadCount.rejected, (state, { payload }) => {
-                console.log(payload);
-
                 state.isLoading = false;
                 state.error = payload as string;
             })

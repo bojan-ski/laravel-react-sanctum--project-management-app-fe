@@ -11,6 +11,7 @@ import Projects from "./pages/Projects";
 import SelectedProject from "./pages/SelectedProject";
 import AddProject from "./pages/AddProject";
 import EditProject from "./pages/EditProject";
+import Notifications from "./pages/Notifications";
 import Profile from "./pages/Profile";
 import Users from "./pages/admin/Users";
 import SelectedUser from "./pages/admin/SelectedUser";
@@ -48,16 +49,21 @@ const router = createBrowserRouter([
         loader: projectDataLoader
       },
       {
+        path: '/notifications',
+        element: <Notifications />,
+      },
+      {
+        path: '/profile',
+        element: <Profile />,
+      },
+      // ADMIN USER
+      {
         path: '/users',
         element: <Users />,
       },
       {
         path: '/users/:id',
         element: <SelectedUser />
-      },
-      {
-        path: '/profile',
-        element: <Profile />,
       },
     ]
   }
