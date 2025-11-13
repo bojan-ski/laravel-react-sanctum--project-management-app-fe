@@ -1,6 +1,6 @@
 import { useEffect, useRef, type JSX } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
-import { getUserNotifications } from '../../../features/regularUser/notificationSlice';
+import { fetchUnreadCount, getUserNotifications } from '../../../features/regularUser/notificationSlice';
 import type { NotificationState } from '../../../types/types';
 import BellHeader from './BellHeader';
 import BellContent from './BellContent';
@@ -19,6 +19,7 @@ const NotificationDropdown = ({ isOpen, onClose }: NotificationDropdownProps): J
     // fetch notifications on dropdown opens
     useEffect(() => {
         if (isOpen) {
+            dispatch(fetchUnreadCount());
             dispatch(getUserNotifications());
         }
     }, [isOpen, dispatch]);

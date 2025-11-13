@@ -3,6 +3,7 @@ import { useNavigate, type NavigateFunction } from 'react-router';
 import { useAppDispatch } from '../../hooks/useRedux';
 import { markNotificationsAsRead } from '../../features/regularUser/notificationSlice';
 import { formatDateAdvance } from '../../utils/helpers';
+import InvitationOptions from './InvitationOptions';
 import toast from 'react-hot-toast';
 
 type NotificationItemProps = {
@@ -29,9 +30,10 @@ const NotificationItem = ({ notification, onClose }: NotificationItemProps): JSX
         // navigate based on notification type
         if (notification.type == 'project_update') {
             navigate(`/projects/${notification.notifiable_id}`);
+
             onClose();
         }
-    };
+    }; 
 
     return (
         <div
@@ -49,6 +51,12 @@ const NotificationItem = ({ notification, onClose }: NotificationItemProps): JSX
             </div>
 
             {/* invitation action options */}
+            {(notification.is_invitation && !notification.action_taken) && (
+                <InvitationOptions 
+                    notificationId={notification.id}
+                    onClose={onClose}
+                />
+            )}
         </div>
     );
 };

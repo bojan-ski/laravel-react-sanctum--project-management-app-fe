@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getNotifications, getUnreadCount, markAllAsRead, markAsRead } from "../../services/notification";
+import { acceptInvitation, getNotifications, getUnreadCount, markAllAsRead, markAsRead } from "../../services/notification";
 import type { Notification, NotificationState } from "../../types/types";
 
 const initialNotificationState: NotificationState = {
@@ -61,6 +61,21 @@ export const markAllNotificationsAsRead = createAsyncThunk('notifications/markAl
         return rejectWithValue(error?.response?.statusText || 'Error - Mark all messages as read');
     }
 });
+
+export const acceptProjectInvitation = createAsyncThunk('notifications/acceptInvitation', async (
+    notificationId: number,
+    { rejectWithValue }
+) => {
+    try {
+        const apiCall = await acceptInvitation(notificationId);
+
+        return apiCall;
+    } catch (error: any) {
+        return rejectWithValue(error?.response?.statusText || 'Error - Accept Invitation');
+    }
+});
+
+
 
 const notificationSlice = createSlice({
     name: 'notifications',
@@ -135,7 +150,32 @@ const notificationSlice = createSlice({
             .addCase(markAllNotificationsAsRead.rejected, (state, { payload }) => {
                 state.isLoading = false;
                 state.error = payload as string;
-            });
+            })
+
+            // accept project invitation
+            .addCase(acceptProjectInvitation.pending, (state) => {
+                state.isLoading = true;
+                state.error = '';
+            })
+            .addCase(acceptProjectInvitation.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+
+                const notification = state.notifications.find((notification: Notification) => notification.id == payload.data.id);
+
+                if (notification) {                    
+                    notification.action_taken = 'accepted';
+                    notification.read_at = new Date().toISOString();
+
+                    if (!notification.read_at) {
+                        state.unreadCount = Math.max(0, state.unreadCount - 1);
+                    }
+                }
+            })
+            .addCase(acceptProjectInvitation.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                state.error = payload as string;
+            })
+
     },
 });
 
