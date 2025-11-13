@@ -29,3 +29,9 @@ export async function acceptInvitation(notificationId: number) {
 
     return response.data;
 }
+
+export async function declineInvitation(notificationId: number) {
+    const response = await api.post(`/api/notifications/${notificationId}/decline`);
+
+    return response.data;
+};

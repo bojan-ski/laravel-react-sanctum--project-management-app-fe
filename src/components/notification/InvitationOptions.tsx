@@ -1,10 +1,10 @@
-import { type JSX } from 'react';
+import { type JSX, type MouseEvent } from 'react';
 import { useNavigate, type NavigateFunction } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
+import { acceptProjectInvitation, declineProjectInvitation } from '../../features/regularUser/notificationSlice';
 import type { NotificationState } from '../../types/types';
 import { Button } from '../ui/button';
-import { Check, Loader2, X } from 'lucide-react';
-import { acceptProjectInvitation } from '../../features/regularUser/notificationSlice';
+import { Check, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 type InvitationOptionsProps = {
@@ -17,7 +17,7 @@ function InvitationOptions({ notificationId, onClose }: InvitationOptionsProps):
     const dispatch = useAppDispatch();
     const navigate: NavigateFunction = useNavigate();
 
-    const handleAcceptInvitation = async (e: any): Promise<void> => {
+    const handleAcceptInvitation = async (e: MouseEvent<HTMLButtonElement>): Promise<void> => {
         e.stopPropagation();
 
         const response = await dispatch(acceptProjectInvitation(notificationId));
@@ -37,31 +37,41 @@ function InvitationOptions({ notificationId, onClose }: InvitationOptionsProps):
         }
     };
 
-    
+    const handleDeclineInvitation = async (e: MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
+
+        const response = await dispatch(declineProjectInvitation(notificationId));
+
+        if (response.meta.requestStatus == 'fulfilled') {
+            toast.success(response.payload.message);
+        }
+
+        if (response.meta.requestStatus == 'rejected') {
+            toast.error(response.payload);
+        }
+    };
 
     return (
-        <div className="flex gap-2">
+        <div className="flex items-center justify-end gap-2">
             <Button
                 size="sm"
                 onClick={handleAcceptInvitation}
                 disabled={isLoading}
-                className="flex-1"
+                className="text-xs bg-green-500 hover:bg-green-600 cursor-pointer"
             >
-                {isLoading ? (
-                    <Loader2 className="h-3 w-3 mr-1 animate-spin" />
-                ) : (
-                    <Check className="h-3 w-3 mr-1" />
-                )}
-                Accept
+                <Check/>
+                <span className='hidden md:block'>Accept</span>
             </Button>
 
             <Button
                 size="sm"
                 variant="outline"
-                className="flex-1"
+                onClick={handleDeclineInvitation}
+                disabled={isLoading}
+                className="text-xs text-white bg-red-500 hover:bg-red-700 hover:text-white cursor-pointer"
             >
-                <X className="h-3 w-3 mr-1" />
-                Decline
+                <X />
+                <span className='hidden md:block'>Decline</span>
             </Button>
         </div>
     );

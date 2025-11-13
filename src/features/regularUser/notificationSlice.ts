@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { acceptInvitation, getNotifications, getUnreadCount, markAllAsRead, markAsRead } from "../../services/notification";
+import { acceptInvitation, declineInvitation, getNotifications, getUnreadCount, markAllAsRead, markAsRead } from "../../services/notification";
 import type { Notification, NotificationState } from "../../types/types";
 
 const initialNotificationState: NotificationState = {
@@ -75,7 +75,17 @@ export const acceptProjectInvitation = createAsyncThunk('notifications/acceptInv
     }
 });
 
+export const declineProjectInvitation = createAsyncThunk('notifications/declineInvitation', async (
+    notificationId: number,
+    { rejectWithValue }) => {
+    try {
+        const apiCall = await declineInvitation(notificationId);       
 
+        return apiCall;
+    } catch (error: any) {
+        return rejectWithValue(error?.response?.statusText || 'Error - Decline Invitation');
+    }
+});
 
 const notificationSlice = createSlice({
     name: 'notifications',
@@ -176,6 +186,28 @@ const notificationSlice = createSlice({
                 state.error = payload as string;
             })
 
+            // decline project invitation
+            .addCase(declineProjectInvitation.pending, (state) => {
+                state.isLoading = true;
+                state.error = '';
+            })
+            .addCase(declineProjectInvitation.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+
+                const notification = state.notifications.find((notification: Notification) => notification.id === payload.data.id);
+                if (notification) {
+                    notification.action_taken = 'declined';
+                    notification.read_at = new Date().toISOString();
+
+                    if (!notification.read_at) {
+                        state.unreadCount = Math.max(0, state.unreadCount - 1);
+                    }
+                }
+            })
+            .addCase(declineProjectInvitation.rejected, (state, { payload }) => {
+                state.isLoading = false;
+                state.error = payload as string;
+            });
     },
 });
 
