@@ -2,6 +2,7 @@ import { type JSX, type MouseEvent } from 'react';
 import { useNavigate, type NavigateFunction } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
 import { acceptProjectInvitation, declineProjectInvitation } from '../../features/regularUser/notificationSlice';
+import { getUserProjects } from '../../features/regularUser/projectSlice';
 import type { NotificationState } from '../../types/types';
 import { Button } from '../ui/button';
 import { Check, X } from 'lucide-react';
@@ -24,6 +25,9 @@ function InvitationOptions({ notificationId, onClose }: InvitationOptionsProps):
 
         if (response.meta.requestStatus == 'fulfilled') {
             toast.success(response.payload.message);
+
+            // get projects
+            await dispatch(getUserProjects({}));
 
             // redirect user & close notifications dropdown
             setTimeout(() => {

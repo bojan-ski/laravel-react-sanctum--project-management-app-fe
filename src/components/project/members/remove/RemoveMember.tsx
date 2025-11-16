@@ -45,7 +45,7 @@ function RemoveMember({
             disabled={isLoading}
             onClick={handleRemoveMember}
         >
-            {isLoading ? 'Deleting...' : 'Delete'}
+            {isLoading ? 'Wait...' : 'Remove'}
         </button>
     );
 }

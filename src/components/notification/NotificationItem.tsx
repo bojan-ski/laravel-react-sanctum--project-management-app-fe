@@ -1,45 +1,20 @@
-import { type JSX, type MouseEvent } from 'react';
-import { useNavigate, type NavigateFunction } from 'react-router';
-import { useAppDispatch } from '../../hooks/useRedux';
-import { markNotificationsAsRead } from '../../features/regularUser/notificationSlice';
-import { formatDateAdvance } from '../../utils/helpers';
+import { type JSX } from 'react';
+import type { Notification } from '../../types/types';
 import InvitationOptions from './InvitationOptions';
-import toast from 'react-hot-toast';
+import MarkAsReadOption from './MarkAsReadOption';
+import { formatDateAdvance } from '../../utils/helpers';
 
 type NotificationItemProps = {
-    notification: any;
+    notification: Notification;
     onClose: () => void;
 };
 
-const NotificationItem = ({ notification, onClose }: NotificationItemProps): JSX.Element => {
-    const dispatch = useAppDispatch();
-    const navigate: NavigateFunction = useNavigate();
-
-    const handleMarkAsRead = async (e: MouseEvent<HTMLDivElement>): Promise<void> => {
-        e.stopPropagation();
-
-        // mark as read
-        if (!notification.read_at) {
-            const response = await dispatch(markNotificationsAsRead(notification.id));
-
-            if (response.meta.requestStatus == 'rejected') {
-                toast.error(response.payload);
-            }
-        }
-
-        // navigate based on notification type
-        if (notification.type == 'project_update') {
-            navigate(`/projects/${notification.notifiable_id}`);
-
-            onClose();
-        }
-    }; 
-
+const NotificationItem = ({
+    notification,
+    onClose
+}: NotificationItemProps): JSX.Element => {
     return (
-        <div
-            onClick={handleMarkAsRead}
-            className={`p-4 hover:bg-gray-50 transition-colors ${!notification.read_at ? 'bg-indigo-50/50' : ''}`}
-        >
+        <div className={`p-4 hover:bg-gray-50 transition-colors ${!notification.read_at ? 'bg-indigo-50/50' : ''}`}>
             {/* message */}
             <div className='text-xs mb-3'>
                 <p>
@@ -50,9 +25,17 @@ const NotificationItem = ({ notification, onClose }: NotificationItemProps): JSX
                 </p>
             </div>
 
+            {/* mark as read option */}
+            {(!notification.is_invitation && !notification.read_at) && (
+                <MarkAsReadOption
+                    notification={notification}
+                    onClose={onClose}
+                />
+            )}
+
             {/* invitation action options */}
             {(notification.is_invitation && !notification.action_taken) && (
-                <InvitationOptions 
+                <InvitationOptions
                     notificationId={notification.id}
                     onClose={onClose}
                 />
