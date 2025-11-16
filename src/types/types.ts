@@ -14,6 +14,7 @@ export type ProjectCard = {
     title: string;
     description: string;
     deadline: string;
+    status: string;
     is_owner: boolean;
     owner: {
         avatar: string;

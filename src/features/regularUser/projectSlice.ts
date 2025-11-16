@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { ProjectFormDataErrors, LaravelValidationErrors, ProjectFormData, ProjectState } from "../../types/types";
-import { createProject, deleteProject, getProjects, updateProject } from "../../services/project";
+import type { ProjectFormDataErrors, LaravelValidationErrors, ProjectFormData, ProjectState, ProjectCard } from "../../types/types";
+import { createProject, deleteProject, getProjects, statusChange, updateProject } from "../../services/project";
 
 const initialProjectState: ProjectState = {
     isLoading: false,
@@ -81,6 +81,24 @@ export const updateUserProject = createAsyncThunk('project/updateProject', async
     }
 });
 
+type changeProjectStatusProps = {
+    projectId: number;
+    newProjectStatus: string;
+};
+
+export const changeProjectStatus = createAsyncThunk('project/changeProjectStatus', async (
+    { projectId, newProjectStatus }: changeProjectStatusProps,
+    { rejectWithValue }
+) => {
+    try {
+        const apiCall = await statusChange(projectId, newProjectStatus);
+
+        return apiCall;
+    } catch (error: any) {
+        return rejectWithValue(error.response.statusText || "Error - Change project" );
+    }
+});
+
 export const deleteUserProject = createAsyncThunk('project/deleteUserProject', async (
     projectId: number,
     { rejectWithValue }
@@ -129,7 +147,7 @@ const projectSlice = createSlice({
                 state.error = payload as string;
             })
 
-            // add new project
+            // create new project
             .addCase(createNewProject.pending, (state) => {
                 state.isLoading = true;
             })
@@ -148,7 +166,7 @@ const projectSlice = createSlice({
                 state.isLoading = false;
 
                 const updatedProjectData = payload.data;
-                const updatedProject = state.userProjects.find(project => project.id == updatedProjectData.id);
+                const updatedProject = state.userProjects.find((project: ProjectCard) => project.id == updatedProjectData.id);
 
                 if (updatedProject) {
                     updatedProject.title = updatedProjectData.title;
@@ -160,13 +178,31 @@ const projectSlice = createSlice({
                 state.isLoading = false;
             })
 
+            // change project status
+            .addCase(changeProjectStatus.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(changeProjectStatus.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+
+                const updatedProjectData = payload.data;
+                const updatedProject = state.userProjects.find((project: ProjectCard) => project.id == updatedProjectData.id);
+
+                if (updatedProject) {
+                    updatedProject.status = updatedProjectData.status;
+                }
+            })
+            .addCase(changeProjectStatus.rejected, (state) => {
+                state.isLoading = false;
+            })
+
             // delete project
             .addCase(deleteUserProject.pending, (state) => {
                 state.isLoading = true;
             })
             .addCase(deleteUserProject.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
-                state.userProjects = state.userProjects.filter(project => +project.id !== payload.projectId);
+                state.userProjects = state.userProjects.filter((project: ProjectCard) => project.id !== payload.projectId);
                 state.total -= 1;
             })
             .addCase(deleteUserProject.rejected, (state, { payload }) => {

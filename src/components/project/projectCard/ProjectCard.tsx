@@ -30,6 +30,7 @@ function ProjectCard({ project }: { project: ProjectCardType; }): JSX.Element {
                     isProjectOWner={project.is_owner}
                     projectId={project.id}
                     projectTitle={project.title}
+                    projectStatus={project.status}
                 />
 
                 {/* statistics */}

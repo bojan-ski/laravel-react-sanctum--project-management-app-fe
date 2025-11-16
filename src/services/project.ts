@@ -33,7 +33,7 @@ export const createProject = async (newProjectData: ProjectFormData) => {
 };
 
 export async function getProjectDetails(projectId: number) {
-    const response = await api.get(`/api/projects/${projectId}`);        
+    const response = await api.get(`/api/projects/${projectId}`);
 
     return response.data;
 }
@@ -68,6 +68,17 @@ export async function updateProject(
 
     return response.data;
 }
+
+export const statusChange = async (
+    projectId: number,
+    newProjectStatus: string
+) => {
+     const response = await api.put(`/api/projects/${projectId}/status`, {
+        status: newProjectStatus
+    });   
+
+    return response.data;
+};
 
 export const deleteProject = async (projectId: number) => {
     const response = await api.delete(`/api/projects/${projectId}/destroy`);

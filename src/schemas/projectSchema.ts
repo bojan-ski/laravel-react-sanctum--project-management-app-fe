@@ -26,3 +26,7 @@ export const projectSchema = z.object({
         .optional()
         .or(z.null()),
 });
+
+export const projectStatusSchema = z.enum([
+    "pending", "active", "completed", "closed"
+]);
