@@ -27,6 +27,10 @@ export const projectSchema = z.object({
         .or(z.null()),
 });
 
+export const projectOwnershipSchema = z.enum([
+    "all", "owner", "member"
+]);
+
 export const projectStatusSchema = z.enum([
-    "pending", "active", "completed", "closed"
+    "all", "pending", "active", "completed", "closed"
 ]);

@@ -1,6 +1,6 @@
 import { type JSX } from 'react';
 import { Link } from 'react-router';
-import { Button } from '../ui/button';
+import { Button } from '../../ui/button';
 
 function TotalAndAddProject({ total }: { total: number; }): JSX.Element {
     return (

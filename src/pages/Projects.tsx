@@ -4,9 +4,9 @@ import { useAppDispatch, useAppSelector } from '../hooks/useRedux';
 import { getUserProjects, setUserProjectsPage } from '../features/regularUser/projectSlice';
 import type { ProjectState } from '../types/types';
 import Loading from '../components/global/Loading';
-import TotalAndAddProject from '../components/projectsPage/TotalAndAddProject';
+import TotalAndAddProject from '../components/project/projectsPage/TotalAndAddProject';
 import NoDataMessage from '../components/global/NoDataMessage';
-import FilterOptions from '../components/projectsPage/FilterOptions';
+import FilterOptions from '../components/project/projectsPage/FilterOptions';
 import ProjectsList from '../components/project/ProjectsList';
 import GlobalPagination from '../components/pagination/GlobalPagination';
 
@@ -39,7 +39,7 @@ function Projects(): JSX.Element {
 
             {/* projects container */}
             {userProjects.length == 0 ? (
-                <NoDataMessage message="You have no projects" />
+                <NoDataMessage message="There are no projects" />
             ) : (
                 <>
                     <ProjectsList projects={userProjects} />
