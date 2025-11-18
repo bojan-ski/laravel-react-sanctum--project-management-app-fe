@@ -1,6 +1,7 @@
 import { type JSX } from 'react';
 import { Link } from 'react-router';
 import { Button } from '../../ui/button';
+import { Plus } from 'lucide-react';
 
 function TotalAndAddProject({ total }: { total: number; }): JSX.Element {
     return (
@@ -15,7 +16,8 @@ function TotalAndAddProject({ total }: { total: number; }): JSX.Element {
                 variant="outline"
             >
                 <Link to={'/add_project'}>
-                    +
+                    <Plus/>
+                    <span className='hidden md:block'>Project</span>
                 </Link>
             </Button>
         </section>

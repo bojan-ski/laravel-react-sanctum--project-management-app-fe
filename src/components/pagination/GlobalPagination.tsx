@@ -7,7 +7,11 @@ type GlobalPaginationProps = {
     handlePageChange: (num: number) => void;
 };
 
-function GlobalPagination({ currentPage, lastPage, handlePageChange }: GlobalPaginationProps): JSX.Element {
+function GlobalPagination({
+    currentPage,
+    lastPage,
+    handlePageChange
+}: GlobalPaginationProps): JSX.Element {
     return (
         <section className="flex items-center justify-center gap-2 mb-10">
             <GlobalPaginationOption

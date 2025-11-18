@@ -18,6 +18,7 @@ function ProjectOwner({
     divCss,
     ownerAvatar,
     ownerName,
+    isProjectOWner,
     projectId,
     projectTitle,
     projectStatus,
@@ -26,25 +27,29 @@ function ProjectOwner({
     return (
         <div className={`flex items-center justify-between ${divCss}`}>
             {/* project owner details */}
-            <ProjectOwnerDetails
-                ownerAvatar={ownerAvatar}
-                ownerName={ownerName}
-            />
-
-            {/* change project status */}
-            {onRefresh && (
-                <ChangeProjectStatus
-                    projectId={projectId}
-                    projectStatus={projectStatus}
-                    onRefresh={onRefresh}
+            {!isProjectOWner ? (
+                <ProjectOwnerDetails
+                    ownerAvatar={ownerAvatar}
+                    ownerName={ownerName}
                 />
-            )}
+            ) : (
+                <>
+                    {/* change project status */}
+                    {onRefresh && (
+                        <ChangeProjectStatus
+                            projectId={projectId}
+                            projectStatus={projectStatus}
+                            onRefresh={onRefresh}
+                        />
+                    )}
 
-            {/* edit & delete options */}
-            <ProjectOptions
-                projectId={projectId}
-                projectTitle={projectTitle}
-            />
+                    {/* edit & delete options */}
+                    <ProjectOptions
+                        projectId={projectId}
+                        projectTitle={projectTitle}
+                    />
+                </>
+            )}
         </div>
     );
 }
