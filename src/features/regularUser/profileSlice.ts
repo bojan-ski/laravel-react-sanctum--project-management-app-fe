@@ -1,18 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { changePassword } from "../../services/profile";
-import type { ProfileStateErrors, ChangePasswordFormData, LaravelValidationErrors, ProfileState } from "../../types/types";
+import type { ChangePasswordFormDataErrors, LaravelValidationErrors, ProfileState } from "../../types/types";
+import type { ChangePasswordFormData } from "../../schemas/profileSchema";
 
 const initialProfileState: ProfileState = {
-    isLoading: false,
-    changePasswordFormData: {
-        old_password: '',
-        new_password: '',
-        new_password_confirm: ''
-    },
-    errors: {},
+    isLoading: false
 };
 
-export const userChangePassword = createAsyncThunk('profile/userChangePassword', async (changePasswordFormData: ChangePasswordFormData, { rejectWithValue }) => {
+export const userChangePassword = createAsyncThunk('profile/userChangePassword', async (
+    changePasswordFormData: ChangePasswordFormData,
+    { rejectWithValue }
+) => {
     try {
         const apiCall = await changePassword(changePasswordFormData);
 
@@ -20,10 +18,10 @@ export const userChangePassword = createAsyncThunk('profile/userChangePassword',
     } catch (error: any) {
         if (error.response?.status === 422) {
             const fieldErrors = error?.response?.data?.errors as LaravelValidationErrors;
-            const formattedErrors: ProfileStateErrors = {};
+            const formattedErrors: ChangePasswordFormDataErrors = {};
 
             Object.keys(fieldErrors).forEach((key) => {
-                formattedErrors[key as keyof ProfileStateErrors] = fieldErrors[key][0];
+                formattedErrors[key as keyof ChangePasswordFormDataErrors] = fieldErrors[key][0];
             });
 
             return rejectWithValue(formattedErrors);
@@ -45,14 +43,12 @@ const profileSlice = createSlice({
         builder
             .addCase(userChangePassword.pending, (state) => {
                 state.isLoading = true;
-                state.errors = {};
             })
             .addCase(userChangePassword.fulfilled, (state) => {
                 state.isLoading = false;
             })
-            .addCase(userChangePassword.rejected, (state, { payload }) => {
+            .addCase(userChangePassword.rejected, (state) => {
                 state.isLoading = false;
-                state.errors = payload as ProfileStateErrors;
             });
     },
 });

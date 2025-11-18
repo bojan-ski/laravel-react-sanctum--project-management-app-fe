@@ -1,6 +1,6 @@
 import { type JSX } from 'react';
-import ProfileData from '../components/profilePage/ProfileData';
-import ChangePassword from '../components/profilePage/ChangePassword';
+import ProfileData from '../components/profile/ProfileData';
+import ChangePassword from '../components/profile/ChangePassword';
 
 function Profile(): JSX.Element {
     return (
@@ -11,9 +11,7 @@ function Profile(): JSX.Element {
                 
                 <ChangePassword />
                 
-            </section>
-
-            
+            </section>           
 
         </div >
     );

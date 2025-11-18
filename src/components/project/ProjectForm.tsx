@@ -62,7 +62,7 @@ export default function ProjectForm({
         if (!validation.success) {
             const zodErrors: Record<string, string> = {};
 
-            validation.error.issues.forEach((err: z.ZodIssue) => {
+            validation.error.issues.forEach((err: z.core.$ZodIssue) => {
                 if (err.path[0]) zodErrors[err.path[0].toString()] = err.message;
             });
 

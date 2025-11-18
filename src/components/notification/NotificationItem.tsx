@@ -14,7 +14,9 @@ const NotificationItem = ({
     onClose
 }: NotificationItemProps): JSX.Element => {
     return (
-        <div className={`p-4 hover:bg-gray-50 transition-colors ${!notification.read_at ? 'bg-indigo-50/50' : ''}`}>
+        <div
+            className={`p-4 hover:bg-gray-50 transition-colors ${!notification.read_at ? 'bg-indigo-50/50' : ''}`}
+        >
             {/* message */}
             <div className='text-xs mb-3'>
                 <p>

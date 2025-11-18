@@ -1,9 +1,9 @@
 import { type JSX, type MouseEvent } from 'react';
 import { useThunk } from '../../hooks/useThunk';
 import { declineProjectInvitation } from '../../features/regularUser/notificationSlice';
-import toast from 'react-hot-toast';
 import { Button } from '../ui/button';
 import { X } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 type DeclineInvitationProps = {
     isLoading: boolean;

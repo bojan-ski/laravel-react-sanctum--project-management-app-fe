@@ -12,7 +12,6 @@ function MarkAllAsReadOption({ onClose }: { onClose: () => void; }): JSX.Element
     const { run } = useThunk(markAllNotificationsAsRead);
 
     const handleMarkAllAsRead = async (): Promise<void> => {
-
         const thunkCall = await run(undefined);
 
         if (thunkCall.ok) {

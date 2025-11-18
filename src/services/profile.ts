@@ -1,5 +1,5 @@
 import api from "../api/axios";
-import type { ChangePasswordFormData } from "../types/types";
+import type { ChangePasswordFormData } from "../schemas/profileSchema";
 
 export async function changePassword(formData: ChangePasswordFormData) {
     const response = await api.put('/api/profile/change_password', formData);

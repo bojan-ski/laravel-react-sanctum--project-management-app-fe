@@ -8,7 +8,10 @@ type BellHeaderProps = {
     onClose: () => void;
 };
 
-function BellHeader({ unreadCount, onClose }: BellHeaderProps): JSX.Element {
+function BellHeader({
+    unreadCount,
+    onClose
+}: BellHeaderProps): JSX.Element {
     return (
         <CardHeader className="border-b">
             <div className="flex items-center justify-between">

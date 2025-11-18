@@ -11,7 +11,10 @@ type NotificationDropdownProps = {
     onClose: () => void;
 };
 
-const NotificationDropdown = ({ isOpen, onClose }: NotificationDropdownProps): JSX.Element => {
+const NotificationDropdown = ({
+    isOpen,
+    onClose
+}: NotificationDropdownProps): JSX.Element => {
     const { isLoading, notifications, unreadCount } = useAppSelector<NotificationState>(state => state.notifications);
     const dispatch = useAppDispatch();
     const dropdownRef = useRef<HTMLDivElement | null>(null);

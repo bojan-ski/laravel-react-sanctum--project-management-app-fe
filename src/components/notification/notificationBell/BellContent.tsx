@@ -11,7 +11,11 @@ type BellContentProps = {
     onClose: () => void;
 };
 
-function BellContent({ isLoading, notifications, onClose }: BellContentProps): JSX.Element {
+function BellContent({
+    isLoading,
+    notifications,
+    onClose
+}: BellContentProps): JSX.Element {
     return (
         <CardContent className="p-0 max-h-[500px] overflow-y-auto">
             {isLoading ? (

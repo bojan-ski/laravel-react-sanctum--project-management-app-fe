@@ -121,13 +121,7 @@ export type ProjectMembersState = {
 };
 
 // regularUser/profileSlice
-export type ChangePasswordFormData = {
-    old_password: string;
-    new_password: string;
-    new_password_confirm: string;
-};
-
-export type ProfileStateErrors = {
+export type ChangePasswordFormDataErrors = {
     old_password?: string;
     new_password?: string;
     new_password_confirm?: string;
@@ -136,8 +130,6 @@ export type ProfileStateErrors = {
 
 export type ProfileState = {
     isLoading: boolean;
-    changePasswordFormData: ChangePasswordFormData;
-    errors: ProfileStateErrors;
 };
 
 // adminUser/createUserSlice
