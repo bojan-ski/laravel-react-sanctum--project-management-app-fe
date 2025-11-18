@@ -9,7 +9,10 @@ type InvitationOptionsProps = {
     onClose: () => void;
 };
 
-function InvitationOptions({ notificationId, onClose }: InvitationOptionsProps): JSX.Element {
+function InvitationOptions({
+    notificationId,
+    onClose
+}: InvitationOptionsProps): JSX.Element {
     const { isLoading } = useAppSelector<NotificationState>(state => state.notifications);
 
     return (

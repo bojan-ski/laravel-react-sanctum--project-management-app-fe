@@ -1,6 +1,7 @@
 import { type JSX } from 'react';
+import { useThunk } from '../../hooks/useThunk';
+import { useAppSelector } from '../../hooks/useRedux';
 import { markAllNotificationsAsRead } from '../../features/regularUser/notificationSlice';
-import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
 import type { NotificationState } from '../../types/types';
 import { Button } from '../ui/button';
 import { CheckCheck } from 'lucide-react';
@@ -8,19 +9,18 @@ import toast from 'react-hot-toast';
 
 function MarkAllAsReadOption({ onClose }: { onClose: () => void; }): JSX.Element {
     const { isLoading } = useAppSelector<NotificationState>(state => state.notifications);
-    const dispatch = useAppDispatch();
+    const { run } = useThunk(markAllNotificationsAsRead);
 
     const handleMarkAllAsRead = async (): Promise<void> => {
-        const response = await dispatch(markAllNotificationsAsRead());
-        
-        if (response.meta.requestStatus == 'fulfilled') {
-            toast.success(response.payload.message);
+
+        const thunkCall = await run(undefined);
+
+        if (thunkCall.ok) {
+            toast.success(thunkCall.data.message);
 
             onClose();
-        }
-
-        if (response.meta.requestStatus == 'rejected') {
-            toast.error(response.payload);
+        } else {
+            toast.error(thunkCall.error);
         }
     };
 

@@ -1,6 +1,6 @@
 import { type JSX, type MouseEvent } from 'react';
 import { useNavigate, type NavigateFunction } from 'react-router';
-import { useAppDispatch } from '../../hooks/useRedux';
+import { useThunk } from '../../hooks/useThunk';
 import { markNotificationsAsRead } from '../../features/regularUser/notificationSlice';
 import type { Notification } from '../../types/types';
 import { Button } from '../ui/button';
@@ -15,22 +15,21 @@ function MarkAsReadOption({
     notification,
     onClose
 }: MarkAsReadOptionProps): JSX.Element {
-    const dispatch = useAppDispatch();
+    const { run } = useThunk(markNotificationsAsRead);
     const navigate: NavigateFunction = useNavigate();
 
     const handleMarkAsRead = async (e: MouseEvent<HTMLButtonElement>): Promise<void> => {
         e.stopPropagation();
 
         // mark as read
-        if (!notification.read_at) {
-            const response = await dispatch(markNotificationsAsRead(notification.id));
+        const thunkCall = await run(notification.id);
 
-            if (response.meta.requestStatus == 'rejected') {
-                toast.error(response.payload);
-            }
+        if (!thunkCall.ok){
+            toast.error(thunkCall.error);
+            return;
         }
 
-        // navigate based on notification type
+        // navigate based on notification type and close notification dropdown
         setTimeout(() => {
             if (notification.type == 'project_update') {
                 navigate(`/projects/${notification.notifiable_id}`);
