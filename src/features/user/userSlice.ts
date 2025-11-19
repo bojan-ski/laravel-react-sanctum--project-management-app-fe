@@ -61,9 +61,7 @@ export const deleteUserAccount = createAsyncThunk('user/deleteAccount', async (p
         const apiCall = await deleteAccount(password);
 
         return apiCall;
-    } catch (error: any) {
-        console.log(error);
-        
+    } catch (error: any) {        
         if (error.response?.status === 404) {
             return rejectWithValue({ random: error.response.statusText || "Error - Delete account" });
         }

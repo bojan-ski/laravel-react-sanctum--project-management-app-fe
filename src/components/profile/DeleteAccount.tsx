@@ -1,10 +1,10 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { useAppSelector } from '../../hooks/useRedux';
 import { useThunk } from '../../hooks/useThunk';
+import { useZodValidation } from '../../hooks/useZodValidation';
 import { useNavigate, type NavigateFunction } from 'react-router';
 import { deleteUserAccount } from '../../features/user/userSlice';
-import type z from 'zod';
-import { deleteAccountSchema } from '../../schemas/profileSchema';
+import { deleteAccountSchema, type DeleteAccountFormData } from '../../schemas/profileSchema';
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "../ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import FormWrapper from '../form/FormWrapper';
@@ -15,6 +15,7 @@ import toast from 'react-hot-toast';
 function DeleteAccount() {
     const { isLoading } = useAppSelector(state => state.user);
     const { run } = useThunk(deleteUserAccount);
+    const { validate } = useZodValidation<DeleteAccountFormData>();
     const navigate: NavigateFunction = useNavigate();
     const [password, setPassword] = useState<string>('');
 
@@ -23,18 +24,8 @@ function DeleteAccount() {
 
         if (confirm('Are you sure?')) {
             // zod validation
-            const validation = deleteAccountSchema.safeParse({ password });
-
-            if (!validation.success) {
-                const zodErrors: Record<string, string> = {};
-
-                validation.error.issues.forEach((err: z.core.$ZodIssue) => {
-                    if (err.path[0]) zodErrors[err.path[0].toString()] = err.message;
-                });
-
-                toast.error('Validation error!');
-                return;
-            }
+            const validation = validate(deleteAccountSchema, { password });        
+            if (!validation) return;
 
             // run dispatch call
             const thunkCall = await run(password);

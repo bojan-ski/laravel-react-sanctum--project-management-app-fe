@@ -15,11 +15,11 @@ export const changePasswordSchema = z.object({
         message: "Passwords do not match",
         path: ["new_password_confirm"],
     });
-
 export type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
 
 export const deleteAccountSchema = z.object({
     password: z
         .string()
         .min(6, "Password must be at least 6 characters"),
-})
+});
+export type DeleteAccountFormData = z.infer<typeof deleteAccountSchema>;

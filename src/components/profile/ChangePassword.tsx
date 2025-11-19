@@ -1,9 +1,9 @@
 import { useState, type FormEvent, type JSX } from 'react';
 import { useAppSelector } from '../../hooks/useRedux';
 import { useThunk } from '../../hooks/useThunk';
+import { useZodValidation } from '../../hooks/useZodValidation';
 import { userChangePassword } from '../../features/regularUser/profileSlice';
 import type {  ChangePasswordFormDataErrors, ProfileState } from '../../types/types';
-import type z from 'zod';
 import { changePasswordSchema, type ChangePasswordFormData } from '../../schemas/profileSchema';
 import PageHeader from '../global/PageHeader';
 import FormWrapper from '../form/FormWrapper';
@@ -14,12 +14,12 @@ import toast from 'react-hot-toast';
 function ChangePassword(): JSX.Element {
     const { isLoading } = useAppSelector<ProfileState>(state => state.profile);
     const { run } = useThunk(userChangePassword);
+    const { validate, errors, setErrors } = useZodValidation<ChangePasswordFormDataErrors>();
     const [form, setForm] = useState<ChangePasswordFormData>({
         old_password: '',
         new_password: '',
         new_password_confirm: '',
     });
-    const [errors, setErrors] = useState<ChangePasswordFormDataErrors>({});
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void =>
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -28,21 +28,8 @@ function ChangePassword(): JSX.Element {
         e.preventDefault();
 
         // zod validation
-        const validation = changePasswordSchema.safeParse(form);
-
-        if (!validation.success) {
-            const zodErrors: Record<string, string> = {};
-
-            validation.error.issues.forEach((err: z.core.$ZodIssue) => {
-                if (err.path[0]) zodErrors[err.path[0].toString()] = err.message;
-            });
-
-            setErrors(zodErrors);
-
-            toast.error('Validation error!');
-
-            return;
-        }
+        const validation = validate(changePasswordSchema, form);        
+        if (!validation) return;
 
         // run dispatch call
         const thunkCall = await run(form);
