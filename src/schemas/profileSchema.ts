@@ -17,3 +17,9 @@ export const changePasswordSchema = z.object({
     });
 
 export type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
+
+export const deleteAccountSchema = z.object({
+    password: z
+        .string()
+        .min(6, "Password must be at least 6 characters"),
+})

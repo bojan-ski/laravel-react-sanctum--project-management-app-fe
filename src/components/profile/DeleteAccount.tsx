@@ -1,7 +1,10 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
-import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
+import { useAppSelector } from '../../hooks/useRedux';
+import { useThunk } from '../../hooks/useThunk';
 import { useNavigate, type NavigateFunction } from 'react-router';
 import { deleteUserAccount } from '../../features/user/userSlice';
+import type z from 'zod';
+import { deleteAccountSchema } from '../../schemas/profileSchema';
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "../ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import FormWrapper from '../form/FormWrapper';
@@ -11,25 +14,38 @@ import toast from 'react-hot-toast';
 
 function DeleteAccount() {
     const { isLoading } = useAppSelector(state => state.user);
-    const dispatch = useAppDispatch();
+    const { run } = useThunk(deleteUserAccount);
     const navigate: NavigateFunction = useNavigate();
-
     const [password, setPassword] = useState<string>('');
 
     const handleDeleteAccountSubmit = async (e: FormEvent): Promise<void> => {
         e.preventDefault();
 
         if (confirm('Are you sure?')) {
-            const response = await dispatch(deleteUserAccount(password));        
+            // zod validation
+            const validation = deleteAccountSchema.safeParse({ password });
 
-            if (response.meta.requestStatus == 'fulfilled') {
-                toast.success(response?.payload.message);
+            if (!validation.success) {
+                const zodErrors: Record<string, string> = {};
 
-                navigate('/');
+                validation.error.issues.forEach((err: z.core.$ZodIssue) => {
+                    if (err.path[0]) zodErrors[err.path[0].toString()] = err.message;
+                });
+
+                toast.error('Validation error!');
+                return;
             }
 
-            if (response.meta.requestStatus == 'rejected') {
-                toast.error(response.payload.random || response?.meta.requestStatus);
+            // run dispatch call
+            const thunkCall = await run(password);
+
+            // dispatch response
+            if (thunkCall.ok) {
+                toast.success(thunkCall.data.message);
+
+                navigate('/');
+            } else {
+                toast.error(thunkCall.error.random);
             }
         }
     };
@@ -40,7 +56,10 @@ function DeleteAccount() {
                 Delete account
             </DialogTrigger>
 
-            <DialogContent className="bg-white border-0" aria-describedby={undefined}>
+            <DialogContent
+                className="bg-white border-0"
+                aria-describedby={undefined}
+            >
                 <VisuallyHidden>
                     <DialogTitle>
                         Add User

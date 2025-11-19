@@ -47,7 +47,6 @@ export const logoutUser = createAsyncThunk("user/logoutUser", async (_, { reject
     try {
         const apiCall = await logout();
         console.log(apiCall);
-        
 
         return apiCall;
     } catch (error: any) {
@@ -63,8 +62,10 @@ export const deleteUserAccount = createAsyncThunk('user/deleteAccount', async (p
 
         return apiCall;
     } catch (error: any) {
+        console.log(error);
+        
         if (error.response?.status === 404) {
-            return rejectWithValue({ random: error.response.statusText || "Error - Change Password" });
+            return rejectWithValue({ random: error.response.statusText || "Error - Delete account" });
         }
 
         return rejectWithValue({ random: error.response.data.message });
@@ -112,7 +113,6 @@ const userSlice = createSlice({
             // delete user account
             .addCase(deleteUserAccount.pending, (state) => {
                 state.isLoading = true;
-                state.errors = {};
             })
             .addCase(deleteUserAccount.fulfilled, (state) => {
                 state.isLoading = false;
@@ -120,9 +120,8 @@ const userSlice = createSlice({
 
                 removeUserDataFromLS();
             })
-            .addCase(deleteUserAccount.rejected, (state, { payload }) => {
+            .addCase(deleteUserAccount.rejected, (state) => {
                 state.isLoading = false;
-                state.errors = payload as UserStateErrors;
             });
     }
 });
