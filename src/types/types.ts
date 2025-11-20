@@ -44,6 +44,7 @@ export type LoginFormData = {
 export type UserStateErrors = {
     email?: string;
     password?: string;
+    avatar?: string;
     random?: string;
 };
 

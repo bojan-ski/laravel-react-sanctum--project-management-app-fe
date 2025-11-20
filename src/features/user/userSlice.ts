@@ -2,7 +2,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { login, logout } from "../../services/auth";
 import { getUserDataFromLS, removeUserDataFromLS, setUserDataInLS } from "../../utils/storage";
 import type { LaravelValidationErrors, LoginFormData, UserState, UserStateErrors } from "../../types/types";
-import { deleteAccount } from "../../services/profile";
+import { deleteAccount, uploadAvatar } from "../../services/profile";
+import type { UploadAvatarFormData } from "../../schemas/profileSchema";
 
 const initialUserState: UserState = {
     isLoading: false,
@@ -51,17 +52,45 @@ export const logoutUser = createAsyncThunk("user/logoutUser", async (_, { reject
         return apiCall;
     } catch (error: any) {
         console.log(error);
-        
+
         return rejectWithValue({ random: "Error - Logout" });
     }
 });
 
-export const deleteUserAccount = createAsyncThunk('user/deleteAccount', async (password: string, { rejectWithValue }) => {    
+export const uploadUserAvatar = createAsyncThunk('user/uploadAvatar', async (
+    formData: UploadAvatarFormData,
+    { rejectWithValue }
+) => {
+    try {
+        const apiCall = await uploadAvatar(formData);
+
+        return apiCall;
+    } catch (error: any) {
+        if (error.response?.status === 422) {
+            const fieldErrors = error?.response?.data?.errors as LaravelValidationErrors;
+            const formattedErrors: UserStateErrors = {};
+
+            Object.keys(fieldErrors).forEach((key) => {
+                formattedErrors[key as keyof UserStateErrors] = fieldErrors[key][0];
+            });
+
+            return rejectWithValue(formattedErrors);
+        }
+
+        if (error.response?.status === 404) {
+            return rejectWithValue({ random: error.response.statusText || "Error - Upload avatar" });
+        }
+
+        return rejectWithValue({ random: error.response.data.message });
+    }
+});
+
+export const deleteUserAccount = createAsyncThunk('user/deleteAccount', async (password: string, { rejectWithValue }) => {
     try {
         const apiCall = await deleteAccount(password);
 
         return apiCall;
-    } catch (error: any) {        
+    } catch (error: any) {
         if (error.response?.status === 404) {
             return rejectWithValue({ random: error.response.statusText || "Error - Delete account" });
         }
@@ -106,6 +135,24 @@ const userSlice = createSlice({
             .addCase(logoutUser.rejected, (state, { payload }) => {
                 state.isLoading = false;
                 state.errors = payload as UserStateErrors;
+            })
+
+            // upload avatar
+            .addCase(uploadUserAvatar.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(uploadUserAvatar.fulfilled, (state, { payload }) => {
+                console.log(payload);
+
+                state.isLoading = false;
+                state.user = payload.data;
+
+                setUserDataInLS(payload.data);
+            })
+            .addCase(uploadUserAvatar.rejected, (state, { payload }) => {
+                console.log(payload);
+
+                state.isLoading = false;
             })
 
             // delete user account

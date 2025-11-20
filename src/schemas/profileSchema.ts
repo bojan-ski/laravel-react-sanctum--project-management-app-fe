@@ -1,5 +1,26 @@
 import { z } from "zod";
 
+export const imageSchema = z.object({
+    avatar: validateImageFile(),
+});
+
+function validateImageFile() {
+    const maxUploadSize = 2 * 1024 * 1024;
+    const acceptedFileTypes = ["image/"];
+
+    return z
+        .instanceof(File)
+        .refine((file) => {
+            return !file || file.size <= maxUploadSize;
+        }, "File size must be less than 2MB")
+        .refine((file) => {
+            return (
+                !file || acceptedFileTypes.some((type) => file.type.startsWith(type))
+            );
+        }, "File must be an image");
+}
+export type UploadAvatarFormData = z.infer<typeof imageSchema>;
+
 export const changePasswordSchema = z.object({
     old_password: z
         .string()
