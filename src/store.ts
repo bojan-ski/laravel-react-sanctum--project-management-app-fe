@@ -1,24 +1,35 @@
-import { configureStore } from '@reduxjs/toolkit';
-import userSlice from './features/user/userSlice';
-import notificationSlice from './features/regularUser/notificationSlice';
-import projectSlice from './features/regularUser/projectSlice';
-import documentSlice from './features/document/documentSlice';
-import projectMemberSlice from './features/regularUser/projectMemberSlice';
-import profileSlice from './features/regularUser/profileSlice';
-import usersSlice from './features/adminUser/usersSlice';
-import createUserSlice from './features/adminUser/createUserSlice';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import userReducer, { logoutUser } from './features/user/userSlice';
+import notificationReducer from './features/regularUser/notificationSlice';
+import projectReducer from './features/regularUser/projectSlice';
+import documentReducer from './features/document/documentSlice';
+import projectMemberReducer from './features/regularUser/projectMemberSlice';
+import profileReducer from './features/regularUser/profileSlice';
+import usersReducer from './features/adminUser/usersSlice';
+import createUserReducer from './features/adminUser/createUserSlice';
+
+const appReducer = combineReducers({
+    user: userReducer,
+    notifications: notificationReducer,
+    project: projectReducer,
+    document: documentReducer,
+    projectMembers: projectMemberReducer,
+    profile: profileReducer,
+    users: usersReducer,
+    newUser: createUserReducer,
+});
+
+const rootReducer = (state: any, action: any) => {
+    if (action.type === logoutUser.fulfilled.type) {
+        state = undefined;
+    }
+
+    return appReducer(state, action);
+};
+
 
 export const store = configureStore({
-    reducer: {
-        user: userSlice,
-        notifications: notificationSlice,
-        project: projectSlice,
-        document: documentSlice,
-        projectMembers: projectMemberSlice,
-        profile: profileSlice,
-        users: usersSlice,
-        newUser: createUserSlice,
-    }
+    reducer: rootReducer,
 });
 
 export type RootState = ReturnType<typeof store.getState>;

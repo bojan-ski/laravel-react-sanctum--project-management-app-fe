@@ -116,6 +116,7 @@ const userSlice = createSlice({
                 state.isLoading = false;
                 state.user = payload.data;
 
+                // update storage
                 setUserDataInLS(payload.data);
             })
             .addCase(loginUser.rejected, (state) => {
@@ -128,16 +129,8 @@ const userSlice = createSlice({
             })
             .addCase(logoutUser.fulfilled, (state) => {                
                 state.isLoading = false;
-                state.user = {
-                    id: 0,
-                    name: '',
-                    email: '',
-                    avatar: null,
-                    role: '',
-                    created_at: '',
-                    updated_at: ''
-                };
-
+                
+                // clear storage
                 removeUserDataFromLS();
             })
             .addCase(logoutUser.rejected, (state) => {
@@ -152,6 +145,7 @@ const userSlice = createSlice({
                 state.isLoading = false;
                 state.user = payload.data;
 
+                // update storage
                 setUserDataInLS(payload.data);
             })
             .addCase(uploadUserAvatar.rejected, (state) => {
@@ -164,16 +158,8 @@ const userSlice = createSlice({
             })
             .addCase(deleteUserAccount.fulfilled, (state) => {
                 state.isLoading = false;
-                state.user = {
-                    id: 0,
-                    name: '',
-                    email: '',
-                    avatar: null,
-                    role: '',
-                    created_at: '',
-                    updated_at: ''
-                };
 
+                // clear storage
                 removeUserDataFromLS();
             })
             .addCase(deleteUserAccount.rejected, (state) => {
