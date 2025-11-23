@@ -21,7 +21,7 @@ function ProfileDetails({
                 email: <span className='font-semibold'>{email}</span>
             </p>
             <p className="">
-                account created: <span className='font-semibold'>{formatDate(created)}</span>
+                created: <span className='font-semibold'>{formatDate(created)}</span>
             </p>
         </div>
     );

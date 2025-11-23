@@ -9,7 +9,7 @@ function ProfileData(): JSX.Element {
 
     return (
         <div className='user-profile-data text-sm p-5 border border-yellow-500 rounded-lg mb-5 md:mb-0'>
-            <div className='md:flex items-center justify-between border-b pb-3 mb-3'>
+            <div className='md:flex justify-between border-b pb-3 md:pb-0 mb-3'>
                 {/* avatar */}
                 <ProfileImage
                     isLoading={isLoading}

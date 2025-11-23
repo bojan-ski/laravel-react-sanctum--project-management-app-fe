@@ -36,11 +36,6 @@ export type Member = {
 export type LaravelValidationErrors = Record<string, string[]>;
 
 // user/userSlice
-export type LoginFormData = {
-    email: string;
-    password: string;
-};
-
 export type UserStateErrors = {
     email?: string;
     password?: string;
@@ -51,7 +46,6 @@ export type UserStateErrors = {
 export type UserState = {
     isLoading: boolean;
     user: User;
-    errors: UserStateErrors;
 };
 
 // regularUser/notificationSlice

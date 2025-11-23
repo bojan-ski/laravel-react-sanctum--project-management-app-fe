@@ -68,11 +68,11 @@ function ProfileImage({
     return (
         <div className='user-profile-img mb-3'>
             <Dialog>
-                <DialogTrigger className='font-semibold text-red-700 hover:text-red-900 cursor-pointer'>
+                <DialogTrigger className='font-semibold cursor-pointer'>
                     {profileImage ? (
-                        <img src={`${BASE_URL}/storage/${profileImage}`} className={'border-2 w-25 h-25 rounded-full object-cover'} />
+                        <img src={`${BASE_URL}/storage/${profileImage}`} className={'border-2 w-30 h-30 rounded-full object-cover'} />
                     ) : (
-                        <User className={'border-2 w-25 h-25 rounded-full'} />
+                        <User className={'border-2 w-30 h-30 rounded-full'} />
                     )}
                 </DialogTrigger>
 

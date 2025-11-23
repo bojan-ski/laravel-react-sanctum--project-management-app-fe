@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { login, logout } from "../../services/auth";
-import { getUserDataFromLS, removeUserDataFromLS, setUserDataInLS } from "../../utils/storage";
-import type { LaravelValidationErrors, LoginFormData, UserState, UserStateErrors } from "../../types/types";
 import { deleteAccount, uploadAvatar } from "../../services/profile";
+import type { LaravelValidationErrors, UserState, UserStateErrors } from "../../types/types";
 import type { UploadAvatarFormData } from "../../schemas/profileSchema";
+import type { LoginFormData } from "../../schemas/authSchema";
+import { getUserDataFromLS, removeUserDataFromLS, setUserDataInLS } from "../../utils/storage";
 
 const initialUserState: UserState = {
     isLoading: false,
@@ -15,11 +16,13 @@ const initialUserState: UserState = {
         role: '',
         created_at: '',
         updated_at: ''
-    },
-    errors: {}
+    }
 };
 
-export const loginUser = createAsyncThunk("user/loginUser", async ({ email, password }: LoginFormData, { rejectWithValue }) => {
+export const loginUser = createAsyncThunk("user/loginUser", async (
+    { email, password }: LoginFormData,
+    { rejectWithValue }
+) => {
     try {
         const apiCall = await login(email, password);
 
@@ -44,15 +47,15 @@ export const loginUser = createAsyncThunk("user/loginUser", async ({ email, pass
     }
 });
 
-export const logoutUser = createAsyncThunk("user/logoutUser", async (_, { rejectWithValue }) => {
+export const logoutUser = createAsyncThunk("user/logoutUser", async (
+    _,
+    { rejectWithValue }
+) => {
     try {
         const apiCall = await logout();
-        console.log(apiCall);
 
         return apiCall;
     } catch (error: any) {
-        console.log(error);
-
         return rejectWithValue({ random: "Error - Logout" });
     }
 });
@@ -108,7 +111,6 @@ const userSlice = createSlice({
             // login
             .addCase(loginUser.pending, (state) => {
                 state.isLoading = true;
-                state.errors = {};
             })
             .addCase(loginUser.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
@@ -116,25 +118,30 @@ const userSlice = createSlice({
 
                 setUserDataInLS(payload.data);
             })
-            .addCase(loginUser.rejected, (state, { payload }) => {
+            .addCase(loginUser.rejected, (state) => {
                 state.isLoading = false;
-                state.errors = payload as UserStateErrors;
             })
 
             // logout
             .addCase(logoutUser.pending, (state) => {
                 state.isLoading = true;
-                state.errors = {};
             })
-            .addCase(logoutUser.fulfilled, (state) => {
+            .addCase(logoutUser.fulfilled, (state) => {                
                 state.isLoading = false;
-                state.user = initialUserState.user;
+                state.user = {
+                    id: 0,
+                    name: '',
+                    email: '',
+                    avatar: null,
+                    role: '',
+                    created_at: '',
+                    updated_at: ''
+                };
 
                 removeUserDataFromLS();
             })
-            .addCase(logoutUser.rejected, (state, { payload }) => {
+            .addCase(logoutUser.rejected, (state) => {
                 state.isLoading = false;
-                state.errors = payload as UserStateErrors;
             })
 
             // upload avatar
@@ -142,16 +149,12 @@ const userSlice = createSlice({
                 state.isLoading = true;
             })
             .addCase(uploadUserAvatar.fulfilled, (state, { payload }) => {
-                console.log(payload);
-
                 state.isLoading = false;
                 state.user = payload.data;
 
                 setUserDataInLS(payload.data);
             })
-            .addCase(uploadUserAvatar.rejected, (state, { payload }) => {
-                console.log(payload);
-
+            .addCase(uploadUserAvatar.rejected, (state) => {
                 state.isLoading = false;
             })
 
@@ -161,7 +164,15 @@ const userSlice = createSlice({
             })
             .addCase(deleteUserAccount.fulfilled, (state) => {
                 state.isLoading = false;
-                state.user = initialUserState.user;
+                state.user = {
+                    id: 0,
+                    name: '',
+                    email: '',
+                    avatar: null,
+                    role: '',
+                    created_at: '',
+                    updated_at: ''
+                };
 
                 removeUserDataFromLS();
             })
