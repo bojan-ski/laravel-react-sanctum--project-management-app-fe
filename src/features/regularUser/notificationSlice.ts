@@ -4,19 +4,20 @@ import type { Notification, NotificationState } from "../../types/types";
 
 const initialNotificationState: NotificationState = {
     isLoading: false,
+    unreadNotifications: [],
     notifications: [],
     unreadCount: 0,
     error: '',
 };
 
 export const getUserNotifications = createAsyncThunk('notifications/getUserNotifications', async (
-    _,
+    unread: boolean,
     { rejectWithValue }
 ) => {
     console.log('getUserNotifications');
 
     try {
-        const apiCall = await getNotifications();
+        const apiCall = await getNotifications(unread);
 
         return apiCall;
     } catch (error: any) {
@@ -79,7 +80,7 @@ export const declineProjectInvitation = createAsyncThunk('notifications/declineI
     notificationId: number,
     { rejectWithValue }) => {
     try {
-        const apiCall = await declineInvitation(notificationId);       
+        const apiCall = await declineInvitation(notificationId);
 
         return apiCall;
     } catch (error: any) {
@@ -98,9 +99,17 @@ const notificationSlice = createSlice({
                 state.isLoading = true;
                 state.error = '';
             })
-            .addCase(getUserNotifications.fulfilled, (state, { payload }) => {
+            .addCase(getUserNotifications.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.notifications = payload.data;
+
+                const unreadMode = action.meta.arg;
+                const notifications = action.payload.data;
+
+                if (unreadMode) {
+                    state.unreadNotifications = notifications;
+                } else {
+                    state.notifications = notifications;
+                }
             })
             .addCase(getUserNotifications.rejected, (state, { payload }) => {
                 state.isLoading = false;
@@ -172,7 +181,7 @@ const notificationSlice = createSlice({
 
                 const notification = state.notifications.find((notification: Notification) => notification.id == payload.data.id);
 
-                if (notification) {                    
+                if (notification) {
                     notification.action_taken = 'accepted';
                     notification.read_at = new Date().toISOString();
 

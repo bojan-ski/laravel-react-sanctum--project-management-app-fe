@@ -64,6 +64,7 @@ export type Notification = {
 
 export type NotificationState = {
     isLoading: boolean;
+    unreadNotifications: Notification[];
     notifications: Notification[];
     unreadCount: number;
     error: string;

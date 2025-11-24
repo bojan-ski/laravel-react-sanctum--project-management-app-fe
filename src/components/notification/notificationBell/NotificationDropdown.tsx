@@ -15,7 +15,7 @@ const NotificationDropdown = ({
     isOpen,
     onClose
 }: NotificationDropdownProps): JSX.Element => {
-    const { isLoading, notifications, unreadCount } = useAppSelector<NotificationState>(state => state.notifications);
+    const { isLoading, unreadNotifications, unreadCount } = useAppSelector<NotificationState>(state => state.notifications);
     const dispatch = useAppDispatch();
     const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -23,7 +23,7 @@ const NotificationDropdown = ({
     useEffect(() => {
         if (isOpen) {
             dispatch(fetchUnreadCount());
-            dispatch(getUserNotifications());
+            dispatch(getUserNotifications(true));
         }
     }, [isOpen, dispatch]);
 
@@ -57,7 +57,7 @@ const NotificationDropdown = ({
 
                 <BellContent
                     isLoading={isLoading}
-                    notifications={notifications}
+                    notifications={unreadNotifications}
                     onClose={onClose}
                 />
             </Card>

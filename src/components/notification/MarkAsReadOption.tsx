@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 
 type MarkAsReadOptionProps = {
     notification: Notification;
-    onClose: () => void;
+    onClose?: () => void;
 };
 
 function MarkAsReadOption({
@@ -34,7 +34,7 @@ function MarkAsReadOption({
             if (notification.type == 'project_update') {
                 navigate(`/projects/${notification.notifiable_id}`);
 
-                onClose();
+               if(onClose) onClose();
             }
         }, 1000);
     };

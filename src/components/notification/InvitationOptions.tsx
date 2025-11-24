@@ -6,7 +6,7 @@ import DeclineInvitation from './DeclineInvitation';
 
 type InvitationOptionsProps = {
     notificationId: number;
-    onClose: () => void;
+    onClose?: () => void;
 };
 
 function InvitationOptions({

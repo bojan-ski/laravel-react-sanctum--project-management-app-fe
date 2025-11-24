@@ -11,7 +11,7 @@ import toast from 'react-hot-toast';
 type AcceptInvitationProps = {
     isLoading: boolean;
     notificationId: number;
-    onClose: () => void;
+    onClose?: () => void;
 };
 
 function AcceptInvitation({
@@ -36,7 +36,8 @@ function AcceptInvitation({
 
             // redirect user & close notifications dropdown
             setTimeout(() => {
-                onClose();
+                if (onClose) onClose();
+
                 navigate(`/projects/${thunkCall.data.data.notifiable_id}`);
             }, 1000);
         } else {

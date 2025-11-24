@@ -6,7 +6,7 @@ import { formatDateAdvance } from '../../utils/helpers';
 
 type NotificationItemProps = {
     notification: Notification;
-    onClose: () => void;
+    onClose?: () => void;
 };
 
 const NotificationItem = ({
@@ -15,7 +15,7 @@ const NotificationItem = ({
 }: NotificationItemProps): JSX.Element => {
     return (
         <div
-            className={`p-4 hover:bg-gray-50 transition-colors ${!notification.read_at ? 'bg-indigo-50/50' : ''}`}
+            className={`p-4 border-b-yellow-500 hover:bg-gray-50 transition-colors ${!notification.read_at ? 'bg-indigo-50/50' : ''}`}
         >
             {/* message */}
             <div className='text-xs mb-3'>
