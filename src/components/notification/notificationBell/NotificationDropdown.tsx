@@ -1,22 +1,16 @@
 import { useEffect, useRef, type JSX } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
 import { fetchUnreadCount, getUserNotifications } from '../../../features/regularUser/notificationSlice';
+import { useNotificationBell } from '../../../context/notificationBellProvider';
 import type { NotificationState } from '../../../types/types';
 import BellHeader from './BellHeader';
 import BellContent from './BellContent';
 import { Card } from '../../ui/card';
 
-type NotificationDropdownProps = {
-    isOpen: boolean;
-    onClose: () => void;
-};
-
-const NotificationDropdown = ({
-    isOpen,
-    onClose
-}: NotificationDropdownProps): JSX.Element => {
+const NotificationDropdown = ({ isOpen }: { isOpen: boolean; }): JSX.Element => {
     const { isLoading, unreadNotifications, unreadCount } = useAppSelector<NotificationState>(state => state.notifications);
     const dispatch = useAppDispatch();
+    const { closeDropdown } = useNotificationBell();
     const dropdownRef = useRef<HTMLDivElement | null>(null);
 
     // fetch notifications on dropdown opens
@@ -31,7 +25,7 @@ const NotificationDropdown = ({
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent): void => {
             if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-                onClose();
+                closeDropdown();
             }
         };
 
@@ -42,7 +36,7 @@ const NotificationDropdown = ({
         return () => {
             document.removeEventListener('click', handleClickOutside);
         };
-    }, [isOpen, onClose]);
+    }, [isOpen, closeDropdown]);
 
     return (
         <div
@@ -50,15 +44,11 @@ const NotificationDropdown = ({
             className="absolute right-0 top-12 w-96 max-h-[600px] z-50 shadow-lg"
         >
             <Card>
-                <BellHeader
-                    unreadCount={unreadCount}
-                    onClose={onClose}
-                />
+                <BellHeader unreadCount={unreadCount} />
 
                 <BellContent
                     isLoading={isLoading}
                     notifications={unreadNotifications}
-                    onClose={onClose}
                 />
             </Card>
         </div>

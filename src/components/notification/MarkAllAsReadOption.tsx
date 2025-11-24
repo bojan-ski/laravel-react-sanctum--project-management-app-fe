@@ -2,13 +2,15 @@ import { type JSX } from 'react';
 import { useThunk } from '../../hooks/useThunk';
 import { useAppSelector } from '../../hooks/useRedux';
 import { markAllNotificationsAsRead } from '../../features/regularUser/notificationSlice';
+import { useNotificationBell } from '../../context/notificationBellProvider';
 import type { NotificationState } from '../../types/types';
 import { Button } from '../ui/button';
 import { CheckCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-function MarkAllAsReadOption({ onClose }: { onClose: () => void; }): JSX.Element {
+function MarkAllAsReadOption(): JSX.Element {
     const { isLoading } = useAppSelector<NotificationState>(state => state.notifications);
+    const { closeDropdown } = useNotificationBell();
     const { run } = useThunk(markAllNotificationsAsRead);
 
     const handleMarkAllAsRead = async (): Promise<void> => {
@@ -17,7 +19,7 @@ function MarkAllAsReadOption({ onClose }: { onClose: () => void; }): JSX.Element
         if (thunkCall.ok) {
             toast.success(thunkCall.data.message);
 
-            onClose();
+            closeDropdown();
         } else {
             toast.error(thunkCall.error);
         }

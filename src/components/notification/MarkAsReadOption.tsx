@@ -24,7 +24,7 @@ function MarkAsReadOption({
         // mark as read
         const thunkCall = await run(notification.id);
 
-        if (!thunkCall.ok){
+        if (!thunkCall.ok) {
             toast.error(thunkCall.error);
             return;
         }
@@ -34,7 +34,7 @@ function MarkAsReadOption({
             if (notification.type == 'project_update') {
                 navigate(`/projects/${notification.notifiable_id}`);
 
-               if(onClose) onClose();
+                if (onClose) onClose();
             }
         }, 1000);
     };

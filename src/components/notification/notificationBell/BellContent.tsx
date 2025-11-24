@@ -1,5 +1,6 @@
 import { type JSX } from 'react';
 import type { Notification } from '../../../types/types';
+import { useNotificationBell } from '../../../context/notificationBellProvider';
 import NotificationItem from '../NotificationItem';
 import { CardContent } from '../../ui/card';
 import { Skeleton } from '../../ui/skeleton';
@@ -8,14 +9,14 @@ import { Inbox } from 'lucide-react';
 type BellContentProps = {
     isLoading: boolean;
     notifications: Notification[];
-    onClose: () => void;
 };
 
 function BellContent({
     isLoading,
     notifications,
-    onClose
 }: BellContentProps): JSX.Element {
+    const { closeDropdown } = useNotificationBell();
+
     return (
         <CardContent className="p-0 max-h-[500px] overflow-y-auto">
             {isLoading ? (
@@ -40,7 +41,7 @@ function BellContent({
                         <NotificationItem
                             key={notification.id}
                             notification={notification}
-                            onClose={onClose}
+                            onClose={closeDropdown}
                         />
                     ))}
                 </div>

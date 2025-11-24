@@ -1,6 +1,7 @@
 import { useState, type JSX } from 'react';
 import { useAppSelector } from '../../../hooks/useRedux';
 import useNotification from '../../../hooks/useNotification';
+import { NotificationBellProvider } from '../../../context/notificationBellProvider';
 import type { NotificationState } from '../../../types/types';
 import NotificationDropdown from './NotificationDropdown';
 import { Button } from '../../ui/button';
@@ -32,10 +33,9 @@ const NotificationBell = (): JSX.Element => {
             </Button>
 
             {isOpen && (
-                <NotificationDropdown
-                    isOpen={isOpen}
-                    onClose={() => setIsOpen(false)}
-                />
+                <NotificationBellProvider closeDropdown={() => setIsOpen(false)}>
+                    <NotificationDropdown isOpen={isOpen} />
+                </NotificationBellProvider>
             )}
         </div>
     );
