@@ -199,6 +199,7 @@ const projectSlice = createSlice({
             // delete project
             .addCase(deleteUserProject.pending, (state) => {
                 state.isLoading = true;
+                state.error = '';
             })
             .addCase(deleteUserProject.fulfilled, (state, { payload }) => {
                 state.isLoading = false;

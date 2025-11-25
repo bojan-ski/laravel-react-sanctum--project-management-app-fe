@@ -31,13 +31,10 @@ function Projects(): JSX.Element {
 
     return (
         <div className='projects-page mt-10'>
-            {/* total & add new project */}
             <TotalAndAddProject total={total} />
 
-            {/* filter projects */}
             <FilterOptions />
 
-            {/* projects container */}
             {userProjects.length == 0 ? (
                 <NoDataMessage message="There are no projects" />
             ) : (

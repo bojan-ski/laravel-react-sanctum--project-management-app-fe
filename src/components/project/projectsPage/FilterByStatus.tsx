@@ -1,48 +1,40 @@
 import { type JSX } from 'react';
 import { useNavigate, type NavigateFunction } from 'react-router';
-import { useAppDispatch } from '../../../hooks/useRedux';
-import { projectStatusSchema } from '../../../schemas/projectSchema';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
+import { useThunk } from '../../../hooks/useThunk';
+import { useZodValidation } from '../../../hooks/useZodValidation';
 import { getUserProjects, setFilterStatus } from '../../../features/regularUser/projectSlice';
+import { projectStatusSchema, type ProjectStatusFilter } from '../../../schemas/projectSchema';
+import type { ProjectState } from '../../../types/types';
 import FormSelect from '../../form/FormSelect';
 import toast from 'react-hot-toast';
 
-type FilterByStatusProps = {
-    filterStatus: string;
-    filterOwnership: string;
-};
-
-function FilterByStatus({
-    filterStatus,
-    filterOwnership
-}: FilterByStatusProps): JSX.Element {
+function FilterByStatus(): JSX.Element {
+    const { filterOwnership, filterStatus } = useAppSelector<ProjectState>(state => state.project);
     const dispatch = useAppDispatch();
+    const { run } = useThunk(getUserProjects);
+    const { validate } = useZodValidation<ProjectStatusFilter>();
     const navigate: NavigateFunction = useNavigate();
 
     const handleFilterStatusChange = async (option: string): Promise<void> => {
         // zod validation
-        const validation = projectStatusSchema.safeParse(option);
-
-        if (!validation.success) {
-            toast.error('Invalid filter option!');
-            return;
-        }
+        const validation = validate(projectStatusSchema, option);
+        if (!validation) return;
 
         // update slice
         dispatch(setFilterStatus(option));
 
-        // api call
-        const result = await dispatch(getUserProjects({ ownership: filterOwnership, status: option, page: 1 }));
+        // run dispatch call
+        const thunkCall = await run({ ownership: filterOwnership, status: option, page: 1 });
 
-        // api response
-        if (result.meta.requestStatus == 'fulfilled') {
+        // dispatch response
+        if (thunkCall.ok) {
             navigate(`?ownership=${filterOwnership}&status=${option}&page=1`);
-        }
-
-        if (result.meta.requestStatus == 'rejected') {
-            const errorMsg = result.payload || result?.meta.requestStatus;
-            toast.error(errorMsg as string);
+        } else {
+            toast.error(thunkCall.error);
         }
     };
+
     return (
         <FormSelect
             name="status"
