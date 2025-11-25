@@ -1,7 +1,8 @@
 import { type JSX } from 'react';
-import { useAppDispatch } from '../../../hooks/useRedux';
+import { useZodValidation } from '../../../hooks/useZodValidation';
+import { useThunk } from '../../../hooks/useThunk';
 import { changeProjectStatus } from '../../../features/regularUser/projectSlice';
-import { projectStatusSchema } from '../../../schemas/projectSchema';
+import { projectStatusSchema, type ProjectStatusFilter } from '../../../schemas/projectSchema';
 import FormSelect from '../../form/FormSelect';
 import toast from 'react-hot-toast';
 
@@ -16,34 +17,24 @@ function ChangeProjectStatus({
     projectStatus,
     onRefresh,
 }: ChangeProjectStatusProps): JSX.Element {
-    const dispatch = useAppDispatch();
+    const { run } = useThunk(changeProjectStatus);
+    const { validate } = useZodValidation<ProjectStatusFilter>();
 
     const handleProjectStatusChange = async (option: string): Promise<void> => {
-        // zod validation
-        const validation = projectStatusSchema.safeParse(option);
+        const validation = validate(projectStatusSchema, option);
+        if (!validation) return;
 
-        if (!validation.success) {
-            toast.error('Invalid project status!');
-            return;
-        }
-
-        // api call
-        const result = await dispatch(changeProjectStatus({
+        const thunkCall = await run({
             projectId,
             newProjectStatus: option
-        }));
+        });
 
-        // response
-        if (result.meta.requestStatus == 'fulfilled') {
-            const successMsg = result.payload as { message: string; };
-            toast.success(successMsg.message);
+        if (thunkCall.ok) {
+            toast.success(thunkCall.data.message);
 
             onRefresh();
-        }
-
-        if (result.meta.requestStatus == 'rejected') {
-            const errorMsg = result.payload || result?.meta.requestStatus;
-            toast.error(errorMsg as string);
+        } else {
+            toast.error(thunkCall.error);
         }
     };
 
