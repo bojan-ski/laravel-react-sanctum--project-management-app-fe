@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { ProjectFormDataErrors, LaravelValidationErrors, ProjectFormData, ProjectState, ProjectCard } from "../../types/types";
+import type { ProjectFormDataErrors, LaravelValidationErrors, ProjectState, ProjectCard } from "../../types/types";
 import { createProject, deleteProject, getProjects, statusChange, updateProject } from "../../services/project";
+import type { ProjectFormData } from "../../schemas/projectSchema";
 
 const initialProjectState: ProjectState = {
     isLoading: false,
@@ -34,7 +35,10 @@ export const getUserProjects = createAsyncThunk('projects/getUserProjects', asyn
     }
 });
 
-export const createNewProject = createAsyncThunk('project/createNewProject', async (newProjectFormData: ProjectFormData, { rejectWithValue }) => {
+export const createNewProject = createAsyncThunk('project/createNewProject', async (
+    newProjectFormData: ProjectFormData,
+    { rejectWithValue }
+) => {
     try {
         const apiCall = await createProject(newProjectFormData);
 
@@ -60,7 +64,10 @@ type updateUserProjectProps = {
     updateProjectFormData: ProjectFormData;
 };
 
-export const updateUserProject = createAsyncThunk('project/updateProject', async ({ projectId, updateProjectFormData }: updateUserProjectProps, { rejectWithValue }) => {
+export const updateUserProject = createAsyncThunk('project/updateProject', async (
+    { projectId, updateProjectFormData }: updateUserProjectProps,
+    { rejectWithValue }
+) => {
     try {
         const apiCall = await updateProject(projectId, updateProjectFormData);
 
@@ -95,7 +102,7 @@ export const changeProjectStatus = createAsyncThunk('project/changeProjectStatus
 
         return apiCall;
     } catch (error: any) {
-        return rejectWithValue(error.response.statusText || "Error - Change project" );
+        return rejectWithValue(error.response.statusText || "Error - Change project");
     }
 });
 

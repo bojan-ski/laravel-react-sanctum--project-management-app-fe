@@ -14,9 +14,10 @@ export const projectSchema = z.object({
         .refine(
             (value) => {
                 if (!value) return false;
+                
                 const today = new Date();
                 const deadline = new Date(value);
-                // optional: enforce future date
+
                 return deadline >= today;
             },
             { message: "Deadline must be a valid future date" }
@@ -26,6 +27,7 @@ export const projectSchema = z.object({
         .optional()
         .or(z.null()),
 });
+export type ProjectFormData = z.infer<typeof projectSchema>;
 
 export const projectOwnershipSchema = z.enum([
     "all", "owner", "member"

@@ -1,5 +1,5 @@
 import api from "../api/axios";
-import type { ProjectFormData } from "../types/types";
+import type { ProjectFormData } from "../schemas/projectSchema";
 
 export async function getProjects(
     ownership: string = '',

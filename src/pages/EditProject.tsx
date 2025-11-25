@@ -1,12 +1,13 @@
 import { type JSX } from 'react';
 import { useLoaderData, useNavigate, type NavigateFunction } from 'react-router';
-import { useAppDispatch, useAppSelector } from '../hooks/useRedux';
+import { useAppSelector } from '../hooks/useRedux';
 import { updateUserProject } from '../features/regularUser/projectSlice';
 import { getProjectData } from '../services/project';
-import type { ProjectFormData, ProjectFormSubmit, ProjectState } from '../types/types';
+import { useThunk } from '../hooks/useThunk';
+import type { ProjectFormData } from '../schemas/projectSchema';
+import type { ProjectFormSubmit, ProjectState } from '../types/types';
 import ProjectForm from '../components/project/ProjectForm';
 
-// loader
 export const loader = async ({ params }: { params: any; }): Promise<any> => {
     const projectData: any = await getProjectData(params.id);
 
@@ -14,30 +15,30 @@ export const loader = async ({ params }: { params: any; }): Promise<any> => {
 };
 
 function EditProject(): JSX.Element {
-    const { isLoading, filterOwnership, filterStatus, currentPage } = useAppSelector<ProjectState>(state => state.project);
-    const dispatch = useAppDispatch();
     const { data } = useLoaderData();
+    const { isLoading, filterOwnership, filterStatus, currentPage } = useAppSelector<ProjectState>(state => state.project);
+    const { run } = useThunk(updateUserProject);
     const navigate: NavigateFunction = useNavigate();
 
     const handleUpdateProject = async (formData: ProjectFormData): Promise<ProjectFormSubmit> => {
-        const result = await dispatch(updateUserProject({
+        const thunkCall = await run({
             projectId: data.id,
             updateProjectFormData: formData
-        }));
+        });
 
-        if (result.meta.requestStatus === 'fulfilled') {
+        if (thunkCall.ok) {
             navigate(`/projects?ownership=${filterOwnership}&status=${filterStatus}&page=${currentPage}`);
 
             return {
                 status: 'fulfilled',
-                message: result.payload.message
+                message: thunkCall.data.message
             };
-        }
+        };
 
         return {
             status: 'rejected',
-            message: result.payload.random || result?.meta.requestStatus,
-            errors: result.payload
+            message: thunkCall.error.random || thunkCall?.error.requestStatus,
+            errors: thunkCall.error
         };
     };
 

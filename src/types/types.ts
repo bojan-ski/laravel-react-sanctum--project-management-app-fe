@@ -82,13 +82,6 @@ export type ProjectState = {
     error: string;
 };
 
-export type ProjectFormData = {
-    title: string;
-    description: string;
-    deadline: string;
-    document_path?: File | null;
-};
-
 export type ProjectFormSubmit = {
     status: 'fulfilled' | 'rejected';
     message: string;
@@ -101,12 +94,6 @@ export type ProjectFormDataErrors = {
     deadline?: string;
     document_path?: string;
     random?: string;
-};
-
-export type NewProjectState = {
-    isLoading: boolean;
-    formData: ProjectFormData;
-    errors: ProjectFormDataErrors;
 };
 
 // regularUser/projectMemberSlice

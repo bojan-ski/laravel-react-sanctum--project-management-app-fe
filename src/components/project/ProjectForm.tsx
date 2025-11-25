@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent, type JSX } from 'react';
-import type { ProjectFormData, ProjectFormSubmit } from '../../types/types';
-import type z from 'zod';
-import { projectSchema } from '../../schemas/projectSchema';
+import { useZodValidation } from '../../hooks/useZodValidation';
+import { projectSchema, type ProjectFormData } from '../../schemas/projectSchema';
+import type { ProjectFormSubmit } from '../../types/types';
 import PageHeader from '../global/PageHeader';
 import FormWrapper from '../form/FormWrapper';
 import FormInput from '../form/FormInput';
@@ -33,13 +33,13 @@ export default function ProjectForm({
     headerLabel,
     showExistingFile = false,
 }: ProjectFormProps): JSX.Element {
+    const { validate, errors, setErrors } = useZodValidation<ProjectFormData>();
     const [formData, setFormData] = useState({
         title: initialData?.title || '',
         description: initialData?.description || '',
         deadline: initialData?.deadline?.slice(0, 10) || '',
     });
     const [file, setFile] = useState<File | null>(null);
-    const [errors, setErrors] = useState<Record<string, string>>({});
     const [showDocOptions, setShowDocOptions] = useState<boolean>(showExistingFile);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -57,26 +57,13 @@ export default function ProjectForm({
 
         // zod validation
         const rawFormData = { ...formData, document_path: file };
-        const validation = projectSchema.safeParse(rawFormData);
-
-        if (!validation.success) {
-            const zodErrors: Record<string, string> = {};
-
-            validation.error.issues.forEach((err: z.core.$ZodIssue) => {
-                if (err.path[0]) zodErrors[err.path[0].toString()] = err.message;
-            });
-
-            setErrors(zodErrors);
-
-            toast.error('Validation error!');
-
-            return;
-        }
+        const validation = validate(projectSchema, rawFormData);
+        if (!validation) return;
 
         // run dispatch call
         const result = await onSubmit({ ...formData, document_path: file });
 
-        // toast response
+        // dispatch response
         if (result.status === 'fulfilled') {
             toast.success(result.message);
 
@@ -84,7 +71,7 @@ export default function ProjectForm({
         }
 
         if (result.status === 'rejected') {
-            toast.error(result.message);
+            toast.error(result.message || "Validation error");
 
             setErrors(result.errors);
         }
@@ -107,7 +94,7 @@ export default function ProjectForm({
                         label='enter title *'
                         minLength={3}
                         maxLength={64}
-                        placeholder='min 2, max 64 characters'
+                        placeholder='min 3, max 64 characters'
                         required={true}
                         value={formData.title}
                         onMutate={handleChange}
