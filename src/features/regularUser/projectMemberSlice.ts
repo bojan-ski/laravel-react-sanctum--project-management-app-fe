@@ -4,12 +4,11 @@ import type { ProjectMembersState } from "../../types/types";
 
 const initialProjectMembersState: ProjectMembersState = {
     isLoading: false,
-    availableUsers: [],
-    error: '',
+    availableUsers: []
 };
 
 export const getAllAvailableUsers = createAsyncThunk('projectMembers/fetchAvailableUsers', async (
-    { projectId }: { projectId: number; },
+    projectId: number,
     { rejectWithValue }
 ) => {
     try {
@@ -17,7 +16,7 @@ export const getAllAvailableUsers = createAsyncThunk('projectMembers/fetchAvaila
 
         return apiCall;
     } catch (error: any) {
-        return rejectWithValue(error?.response?.statusText || 'Error - Get all available users');
+        return rejectWithValue(error.response.statusText || 'Error - Get all available users');
     }
 });
 
@@ -35,7 +34,11 @@ export const inviteSelectedUsers = createAsyncThunk('projectMembers/inviteMember
 
         return apiCall;
     } catch (error: any) {
-        return rejectWithValue(error?.response?.statusText || 'Error - Invite members');
+        if (error.response?.status === 500) {
+            return rejectWithValue(error.response.data.message);
+        }
+
+        return rejectWithValue(error.response.statusText || 'Error - Invite members');
     }
 });
 
@@ -71,22 +74,19 @@ const projectMemberSlice = createSlice({
                 state.isLoading = false;
                 state.availableUsers = payload.data;
             })
-            .addCase(getAllAvailableUsers.rejected, (state, { payload }) => {
+            .addCase(getAllAvailableUsers.rejected, (state) => {
                 state.isLoading = false;
-                state.error = payload as string;
             })
 
             // invite selected users to project
             .addCase(inviteSelectedUsers.pending, (state) => {
                 state.isLoading = true;
-
             })
             .addCase(inviteSelectedUsers.fulfilled, (state) => {
                 state.isLoading = false;
             })
-            .addCase(inviteSelectedUsers.rejected, (state, { payload }) => {
+            .addCase(inviteSelectedUsers.rejected, (state) => {
                 state.isLoading = false;
-                state.error = payload as string;
             })
 
             // remove selected member from project
@@ -96,9 +96,8 @@ const projectMemberSlice = createSlice({
             .addCase(removeSelectedMember.fulfilled, (state) => {
                 state.isLoading = false;
             })
-            .addCase(removeSelectedMember.rejected, (state, { payload }) => {
+            .addCase(removeSelectedMember.rejected, (state) => {
                 state.isLoading = false;
-                state.error = payload as string;
             });
     },
 });

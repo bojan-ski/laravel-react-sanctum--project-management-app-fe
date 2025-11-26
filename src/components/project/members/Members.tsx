@@ -6,27 +6,31 @@ import InviteMembersModal from './invite/InviteMembersModal';
 type MembersProps = {
     projectId: number;
     ownerId: number;
+    isProjectOwner: boolean;
     members: Member[];
 };
 
 function Members({
     projectId,
     ownerId,
+    isProjectOwner,
     members,
 }: MembersProps): JSX.Element {
     return (
         <div className='p-4 border rounded-md max-h-[400px] overflow-y-auto'>
             {/* invite members option */}
-            <InviteMembersModal
-                members={members}
-                projectId={projectId}
-            />
+            {isProjectOwner && (
+                <InviteMembersModal
+                    members={members}
+                    projectId={projectId}
+                />
+            )}
 
             {/* members list */}
             {members.length != 0 ? (
                 // {data.members.length > 1 ? (
                 <>
-                    <div className="space-y-1">
+                    <div className="space-y-3">
                         {members.map((member: Member) => (
                             <MemberRow
                                 key={member.id}

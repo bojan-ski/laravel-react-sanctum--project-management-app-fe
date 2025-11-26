@@ -1,5 +1,6 @@
 import { useEffect, useState, type JSX } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../hooks/useRedux';
+import { useThunk } from '../../../../hooks/useThunk';
 import { getAllAvailableUsers, inviteSelectedUsers } from '../../../../features/regularUser/projectMemberSlice';
 import { usePageRefresh } from '../../../../context/pageRefreshProvide';
 import type { Member, ProjectMembersState } from '../../../../types/types';
@@ -9,6 +10,7 @@ import WarningMsg from './WarningMsg';
 import InviteActions from './InviteActions';
 import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogHeader, DialogDescription } from "../../../ui/dialog";
 import { Button } from '../../../ui/button';
+import { UserPlus } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 type InviteMembersModalProps = {
@@ -22,16 +24,17 @@ function InviteMembersModal({
 }: InviteMembersModalProps): JSX.Element {
     const { isLoading, availableUsers } = useAppSelector<ProjectMembersState>(state => state.projectMembers);
     const dispatch = useAppDispatch();
+    const { run } = useThunk(inviteSelectedUsers);
     const { pageRefresh } = usePageRefresh();
     const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
 
     useEffect(() => {
         console.log('useEffect - InviteMembersModal');
 
-        dispatch(getAllAvailableUsers({ projectId }));
+        dispatch(getAllAvailableUsers(projectId));
     }, [members, projectId]);
 
-    const handleToggleUser = (userId: number) => {
+    const handleToggleUser = (userId: number): void => {
         setSelectedUserIds((prevState: number[]) =>
             prevState.includes(userId)
                 ? prevState.filter((id: number) => id !== userId)
@@ -39,7 +42,7 @@ function InviteMembersModal({
         );
     };
 
-    const handleSelectAll = () => {
+    const handleSelectAll = (): void => {
         if (selectedUserIds.length === availableUsers.length) {
             setSelectedUserIds([]);
         } else {
@@ -47,18 +50,16 @@ function InviteMembersModal({
         }
     };
 
-    const handleInvite = async () => {
-        const result = await dispatch(inviteSelectedUsers({ projectId, userIds: selectedUserIds }));
+    const handleInvite = async (): Promise<void> => {
+        const thunkCall = await run({ projectId, userIds: selectedUserIds });    
 
-        if (result.meta.requestStatus == 'fulfilled') {
-            toast.success(result?.payload.message);
+        if (thunkCall.ok) {
+            toast.success(thunkCall.data.message);
 
             setSelectedUserIds([]);
             pageRefresh();
-        }
-
-        if (result.meta.requestStatus == 'rejected') {
-            toast.error(result.payload.random || result?.meta.requestStatus);
+        } else {
+            toast.error(thunkCall.error);
         }
     };
 
@@ -71,9 +72,10 @@ function InviteMembersModal({
             <Dialog>
                 <DialogTrigger asChild>
                     <Button
-                        className='cursor-pointer bg-yellow-500 hover:bg-yellow-700 mb-5'
+                        className='cursor-pointer bg-yellow-500 hover:bg-yellow-600 mb-3'
                     >
-                        Invite
+                        <UserPlus />
+                        <span className='hidden sm:block'>Invite</span>
                     </Button>
                 </DialogTrigger>
 

@@ -110,13 +110,10 @@ export const deleteUserProject = createAsyncThunk('project/deleteUserProject', a
     { rejectWithValue }
 ) => {
     try {
-        const apiCall = await deleteProject(projectId);
-        console.log(apiCall);        
+        const apiCall = await deleteProject(projectId);       
 
         return { projectId, message: apiCall.message };
-    } catch (error: any) {
-        console.log(error);
-        
+    } catch (error: any) {        
         return rejectWithValue(error?.response?.statusText || 'Error - Delete project');
     }
 });

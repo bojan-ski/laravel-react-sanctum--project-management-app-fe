@@ -99,7 +99,6 @@ export type ProjectFormDataErrors = {
 export type ProjectMembersState = {
     isLoading: boolean;
     availableUsers: User[];
-    error: string;
 };
 
 // regularUser/profileSlice

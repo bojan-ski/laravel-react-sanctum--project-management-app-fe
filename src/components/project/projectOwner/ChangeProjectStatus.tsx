@@ -44,6 +44,7 @@ function ChangeProjectStatus({
             defaultValue={projectStatus}
             options={["pending", "active", "completed", "closed"]}
             onMutate={handleProjectStatusChange}
+            selectCss='text-xs'
         />
     );
 }

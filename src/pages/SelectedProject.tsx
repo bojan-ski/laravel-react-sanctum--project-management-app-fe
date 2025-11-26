@@ -70,6 +70,7 @@ function SelectedProject(): JSX.Element {
                     <Members
                         projectId={data.id}
                         ownerId={data.owner.id}
+                        isProjectOwner={data.is_owner}
                         members={data.members}
                     />
                 </section>

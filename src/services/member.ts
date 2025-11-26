@@ -6,7 +6,10 @@ export const getAvailableUsers = async (projectId: number) => {
     return response.data;
 };
 
-export const inviteMembers = async (projectId: number, userIds: number[]) => {
+export const inviteMembers = async (
+    projectId: number,
+    userIds: number[]
+) => {
     const response = await api.post(`/api/projects/${projectId}/members/invite`, {
         user_ids: userIds
     });
@@ -14,7 +17,10 @@ export const inviteMembers = async (projectId: number, userIds: number[]) => {
     return response.data;
 };
 
-export const removeMember = async (projectId: number, memberId: number) => {
+export const removeMember = async (
+    projectId: number,
+    memberId: number
+) => {
     const response = await api.delete(`/api/projects/${projectId}/members/${memberId}`);
 
     return response.data;

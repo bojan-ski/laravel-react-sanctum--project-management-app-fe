@@ -17,7 +17,7 @@ function MemberRow({
     member,
 }: MemberRowProps): JSX.Element {
     return (
-        <div className="flex items-center justify-between p-4  p-4rounded-md hover:bg-gray-50 transition">
+        <div className="border-b pb-3 flex items-center justify-between rounded-md hover:bg-gray-50 transition">
             {/* left side */}
             <div className="flex items-center gap-3">
                 <UserAvatar
