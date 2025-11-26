@@ -56,7 +56,11 @@ export const removeSelectedMember = createAsyncThunk('projectMembers/removeSelec
 
         return apiCall;
     } catch (error: any) {
-        return rejectWithValue(error?.response?.statusText || 'Error - Remove member');
+        if (error.response?.status === 500) {
+            return rejectWithValue(error.response.data.message);
+        }
+
+        return rejectWithValue(error.response.statusText || 'Error - Remove member');
     }
 });
 

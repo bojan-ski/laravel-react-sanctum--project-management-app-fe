@@ -36,6 +36,7 @@ function Members({
                                 key={member.id}
                                 projectId={projectId}
                                 ownerId={ownerId}
+                                isProjectOwner={isProjectOwner}
                                 member={member}
                             />
                         ))}

@@ -1,5 +1,6 @@
 import { type JSX } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../../hooks/useRedux';
+import { useAppSelector } from '../../../../hooks/useRedux';
+import { useThunk } from '../../../../hooks/useThunk';
 import { removeSelectedMember } from '../../../../features/regularUser/projectMemberSlice';
 import { usePageRefresh } from '../../../../context/pageRefreshProvide';
 import type { ProjectMembersState } from '../../../../types/types';
@@ -17,23 +18,19 @@ function RemoveMember({
     memberName,
 }: RemoveMemberProps): JSX.Element {
     const { isLoading } = useAppSelector<ProjectMembersState>(state => state.projectMembers);
-    const dispatch = useAppDispatch();
+    const { run } = useThunk(removeSelectedMember);
     const { pageRefresh } = usePageRefresh();
 
     const handleRemoveMember = async (): Promise<void> => {
         if (confirm(`Remove member: ${memberName}?`)) {
-            const result = await dispatch(removeSelectedMember({ projectId, memberId }));
+            const thunkCall = await run({ projectId, memberId });
 
-            if (result.meta.requestStatus == 'fulfilled') {
-                const successMsg = result.payload as { message: string; };
-                toast.success(successMsg.message);
+            if (thunkCall.ok) {
+                toast.success(thunkCall.data.message);
 
                 pageRefresh();
-            }
-
-            if (result.meta.requestStatus == 'rejected') {
-                const errorMsg = result.payload || result?.meta.requestStatus;
-                toast.error(errorMsg as string);
+            } else {
+                toast.error(thunkCall.error);
             }
         }
     };
@@ -41,7 +38,7 @@ function RemoveMember({
     return (
         <button
             type='button'
-            className="text-red-500 hover:underline cursor-pointer"
+            className="text-red-500 hover:underline transition-all cursor-pointer"
             disabled={isLoading}
             onClick={handleRemoveMember}
         >
