@@ -7,10 +7,13 @@ import { MoreVertical, Edit } from 'lucide-react';
 
 type ProjectOptionsProps = {
     projectId: number;
-    projectTitle: string
-}
+    projectTitle: string;
+};
 
-function ProjectOptions({ projectId, projectTitle }: ProjectOptionsProps): JSX.Element {
+function ProjectOptions({
+    projectId,
+    projectTitle
+}: ProjectOptionsProps): JSX.Element {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -22,7 +25,7 @@ function ProjectOptions({ projectId, projectTitle }: ProjectOptionsProps): JSX.E
             <DropdownMenuContent align="end">
                 {/* edit */}
                 <DropdownMenuItem>
-                    <Link 
+                    <Link
                         className='flex items-center gap-2'
                         to={`/projects/${projectId}/edit`}
                     >

@@ -11,7 +11,6 @@ const initialProjectState: ProjectState = {
     currentPage: 1,
     lastPage: 1,
     total: 0,
-    error: '',
 };
 
 type getUserProjectsProps = {
@@ -112,9 +111,12 @@ export const deleteUserProject = createAsyncThunk('project/deleteUserProject', a
 ) => {
     try {
         const apiCall = await deleteProject(projectId);
+        console.log(apiCall);        
 
         return { projectId, message: apiCall.message };
     } catch (error: any) {
+        console.log(error);
+        
         return rejectWithValue(error?.response?.statusText || 'Error - Delete project');
     }
 });
@@ -140,7 +142,6 @@ const projectSlice = createSlice({
             // get all projects
             .addCase(getUserProjects.pending, (state) => {
                 state.isLoading = true;
-                state.error = '';
             })
             .addCase(getUserProjects.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
@@ -149,9 +150,8 @@ const projectSlice = createSlice({
                 state.lastPage = payload.last_page;
                 state.total = payload.total;
             })
-            .addCase(getUserProjects.rejected, (state, { payload }) => {
+            .addCase(getUserProjects.rejected, (state) => {
                 state.isLoading = false;
-                state.error = payload as string;
             })
 
             // create new project
@@ -206,16 +206,16 @@ const projectSlice = createSlice({
             // delete project
             .addCase(deleteUserProject.pending, (state) => {
                 state.isLoading = true;
-                state.error = '';
             })
             .addCase(deleteUserProject.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
+                console.log(state.userProjects);
+                
                 state.userProjects = state.userProjects.filter((project: ProjectCard) => project.id !== payload.projectId);
                 state.total -= 1;
             })
-            .addCase(deleteUserProject.rejected, (state, { payload }) => {
+            .addCase(deleteUserProject.rejected, (state) => {
                 state.isLoading = false;
-                state.error = payload as string;
             });
     },
 });

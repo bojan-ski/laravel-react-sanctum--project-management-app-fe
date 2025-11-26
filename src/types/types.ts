@@ -79,7 +79,6 @@ export type ProjectState = {
     currentPage: number;
     lastPage: number;
     total: number;
-    error: string;
 };
 
 export type ProjectFormSubmit = {
