@@ -1,6 +1,7 @@
 import { useEffect, useState, type JSX } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../hooks/useRedux';
 import { getAllAvailableUsers, inviteSelectedUsers } from '../../../../features/regularUser/projectMemberSlice';
+import { usePageRefresh } from '../../../../context/pageRefreshProvide';
 import type { Member, ProjectMembersState } from '../../../../types/types';
 import SelectAllUsers from './SelectAllUsers';
 import AvailableUsers from './AvailableUsers';
@@ -13,17 +14,15 @@ import toast from 'react-hot-toast';
 type InviteMembersModalProps = {
     members: Member[];
     projectId: number;
-    onRefresh: () => void;
 };
 
 function InviteMembersModal({
     members,
     projectId,
-    onRefresh
 }: InviteMembersModalProps): JSX.Element {
     const { isLoading, availableUsers } = useAppSelector<ProjectMembersState>(state => state.projectMembers);
     const dispatch = useAppDispatch();
-
+    const { pageRefresh } = usePageRefresh();
     const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
 
     useEffect(() => {
@@ -55,7 +54,7 @@ function InviteMembersModal({
             toast.success(result?.payload.message);
 
             setSelectedUserIds([]);
-            onRefresh();
+            pageRefresh();
         }
 
         if (result.meta.requestStatus == 'rejected') {

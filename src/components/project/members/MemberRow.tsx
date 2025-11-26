@@ -9,14 +9,12 @@ type MemberRowProps = {
     projectId: number;
     ownerId: number;
     member: Member;
-    onRefresh: () => void;
 };
 
 function MemberRow({
     projectId,
     ownerId,
     member,
-    onRefresh
 }: MemberRowProps): JSX.Element {
     return (
         <div className="flex items-center justify-between p-4  p-4rounded-md hover:bg-gray-50 transition">
@@ -53,7 +51,6 @@ function MemberRow({
                         projectId={projectId}
                         memberId={member.id}
                         memberName={member.name}
-                        onRefresh={onRefresh}
                     />
                 )}
             </div>

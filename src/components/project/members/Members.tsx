@@ -7,14 +7,12 @@ type MembersProps = {
     projectId: number;
     ownerId: number;
     members: Member[];
-    onRefresh: () => void;
 };
 
 function Members({
     projectId,
     ownerId,
     members,
-    onRefresh
 }: MembersProps): JSX.Element {
     return (
         <div className='p-4 border rounded-md max-h-[400px] overflow-y-auto'>
@@ -22,7 +20,6 @@ function Members({
             <InviteMembersModal
                 members={members}
                 projectId={projectId}
-                onRefresh={onRefresh}
             />
 
             {/* members list */}
@@ -36,7 +33,6 @@ function Members({
                                 projectId={projectId}
                                 ownerId={ownerId}
                                 member={member}
-                                onRefresh={onRefresh}
                             />
                         ))}
                     </div>

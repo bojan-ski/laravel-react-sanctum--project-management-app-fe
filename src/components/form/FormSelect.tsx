@@ -9,6 +9,7 @@ type FormSelectProps = {
     options: any[];
     disabledOptionLabel?: string;
     required?: boolean;
+    disabled?: boolean;
     onMutate?: (value: any) => void;
     divCss?: string;
     labelCss?: string;
@@ -22,8 +23,9 @@ function FormSelect({
     defaultValue = "",
     options = [],
     disabledOptionLabel,
-    onMutate,
     required = false,
+    disabled,
+    onMutate,
     divCss = "",
     labelCss = "",
     selectCss = "",
@@ -62,6 +64,7 @@ function FormSelect({
                             <SelectItem
                                 key={optionValue}
                                 value={optionValue}
+                                disabled={disabled}
                             >
                                 {optionLabel}
                             </SelectItem>
@@ -70,6 +73,7 @@ function FormSelect({
                             <SelectItem
                                 key={idx}
                                 value={optionLabel}
+                                disabled={disabled}
                             >
                                 {optionLabel}
                             </SelectItem>

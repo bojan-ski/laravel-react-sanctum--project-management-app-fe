@@ -1,6 +1,7 @@
 import { type JSX } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../hooks/useRedux';
 import { removeSelectedMember } from '../../../../features/regularUser/projectMemberSlice';
+import { usePageRefresh } from '../../../../context/pageRefreshProvide';
 import type { ProjectMembersState } from '../../../../types/types';
 import toast from 'react-hot-toast';
 
@@ -8,17 +9,16 @@ type RemoveMemberProps = {
     projectId: number;
     memberId: number;
     memberName: string;
-    onRefresh: () => void;
 };
 
 function RemoveMember({
     projectId,
     memberId,
     memberName,
-    onRefresh
 }: RemoveMemberProps): JSX.Element {
     const { isLoading } = useAppSelector<ProjectMembersState>(state => state.projectMembers);
     const dispatch = useAppDispatch();
+    const { pageRefresh } = usePageRefresh();
 
     const handleRemoveMember = async (): Promise<void> => {
         if (confirm(`Remove member: ${memberName}?`)) {
@@ -28,7 +28,7 @@ function RemoveMember({
                 const successMsg = result.payload as { message: string; };
                 toast.success(successMsg.message);
 
-                onRefresh();
+                pageRefresh();
             }
 
             if (result.meta.requestStatus == 'rejected') {

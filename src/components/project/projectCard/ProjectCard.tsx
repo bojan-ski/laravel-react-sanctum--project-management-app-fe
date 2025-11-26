@@ -2,7 +2,7 @@ import { type JSX } from 'react';
 import { Link } from 'react-router';
 import type { ProjectCard as ProjectCardType } from '../../../types/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
-import ProjectOwner from '../projectOwner/ProjectOwner';
+import ProjectOwnerDetails from '../projectOwner/ProjectOwnerDetails';
 import ProjectStatistics from './ProjectStatistics';
 import ProjectProgress from './ProjectProgress';
 import ProjectDeadline from '../ProjectDeadline';
@@ -22,16 +22,14 @@ function ProjectCard({ project }: { project: ProjectCardType; }): JSX.Element {
             </CardHeader>
 
             <CardContent>
-                {/* project owner & project options */}
-                <ProjectOwner
-                    divCss='mb-3'
-                    ownerAvatar={project.owner?.avatar}
-                    ownerName={project.owner?.name}
-                    isProjectOWner={project.is_owner}
-                    projectId={project.id}
-                    projectTitle={project.title}
-                    projectStatus={project.status}
-                />
+                {/* project owner */}
+                {!project.is_owner && (
+                    <ProjectOwnerDetails
+                        ownerAvatar={project.owner?.avatar}
+                        ownerName={project.owner?.name}
+                        divCss='mb-3'
+                    />
+                )}
 
                 {/* statistics */}
                 <ProjectStatistics />

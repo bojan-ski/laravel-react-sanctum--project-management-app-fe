@@ -4,30 +4,28 @@ import ChangeProjectStatus from './ChangeProjectStatus';
 import ProjectOptions from './ProjectOptions';
 
 type ProjectOwnerProps = {
-    divCss?: string;
     ownerAvatar: string;
     ownerName: string;
-    isProjectOWner: boolean;
+    isProjectOwner: boolean;
     projectId: number;
     projectTitle: string;
     projectStatus: string;
-    onRefresh?: () => void;
+    divCss?: string;
 };
 
 function ProjectOwner({
-    divCss,
     ownerAvatar,
     ownerName,
-    isProjectOWner,
+    isProjectOwner,
     projectId,
     projectTitle,
     projectStatus,
-    onRefresh
+    divCss,
 }: ProjectOwnerProps): JSX.Element {
     return (
         <div className={`flex items-center justify-between ${divCss}`}>
             {/* project owner details */}
-            {!isProjectOWner ? (
+            {!isProjectOwner ? (
                 <ProjectOwnerDetails
                     ownerAvatar={ownerAvatar}
                     ownerName={ownerName}
@@ -35,13 +33,10 @@ function ProjectOwner({
             ) : (
                 <>
                     {/* change project status */}
-                    {onRefresh && (
-                        <ChangeProjectStatus
-                            projectId={projectId}
-                            projectStatus={projectStatus}
-                            onRefresh={onRefresh}
-                        />
-                    )}
+                    <ChangeProjectStatus
+                        projectId={projectId}
+                        projectStatus={projectStatus}
+                    />
 
                     {/* edit & delete options */}
                     <ProjectOptions
