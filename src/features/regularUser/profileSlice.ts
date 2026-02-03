@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { changePassword } from "../../services/profile";
-import type { ChangePasswordFormDataErrors, LaravelValidationErrors, ProfileState } from "../../types/types";
+import type { LaravelValidationErrors } from "../../types/global";
+import type { ChangePasswordFormDataErrors,  ProfileState } from "../../types/types";
 import type { ChangePasswordFormData } from "../../schemas/profileSchema";
 
 const initialProfileState: ProfileState = {

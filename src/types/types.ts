@@ -1,13 +1,6 @@
-// GLOBAL
-export type User = {
-    id: number;
-    name: string;
-    email: string;
-    avatar: string | null;
-    role: string;
-    created_at: string;
-    updated_at: string;
-};
+import type { User } from "./user";
+
+// export type LaravelValidationErrors = Record<string, string[]>;
 
 export type ProjectCard = {
     id: number;
@@ -30,22 +23,6 @@ export type Member = {
     email: string;
     avatar: string | null;
     joined_at: string;
-};
-
-// REDUX SLICES
-export type LaravelValidationErrors = Record<string, string[]>;
-
-// user/userSlice
-export type UserStateErrors = {
-    email?: string;
-    password?: string;
-    avatar?: string;
-    random?: string;
-};
-
-export type UserState = {
-    isLoading: boolean;
-    user: User;
 };
 
 // regularUser/notificationSlice
@@ -92,7 +69,6 @@ export type ProjectFormDataErrors = {
     description?: string;
     deadline?: string;
     document_path?: string;
-    random?: string;
 };
 
 // regularUser/projectMemberSlice

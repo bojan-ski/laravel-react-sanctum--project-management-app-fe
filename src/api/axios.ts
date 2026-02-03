@@ -3,7 +3,7 @@ import axios, { type AxiosInstance } from 'axios';
 const api: AxiosInstance = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
     withCredentials: true,
-    withXSRFToken:true,
+    withXSRFToken: true,
     headers: {
         "Accept": "application/json",
         "Content-Type": "application/json",

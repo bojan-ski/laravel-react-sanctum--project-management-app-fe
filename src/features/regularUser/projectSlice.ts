@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { ProjectFormDataErrors, LaravelValidationErrors, ProjectState, ProjectCard } from "../../types/types";
+import type { LaravelValidationErrors } from "../../types/global";
+import type { ProjectFormDataErrors, ProjectState, ProjectCard } from "../../types/types";
 import { createProject, deleteProject, getProjects, statusChange, updateProject } from "../../services/project";
 import type { ProjectFormData } from "../../schemas/projectSchema";
 

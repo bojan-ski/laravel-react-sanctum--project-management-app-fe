@@ -1,11 +1,9 @@
 import api from '../api/axios';
 
-export async function getCsrfCookie() {
+export async function getCsrfCookie(): Promise<void> {
     try {
-        const response = await api.get('/sanctum/csrf-cookie');
-
-        return response;
+        await api.get('/sanctum/csrf-cookie');
     } catch (error) {
-        throw error;
+        console.log(error);
     }
 }

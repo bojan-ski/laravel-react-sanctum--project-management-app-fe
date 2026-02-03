@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { login, logout } from "../../services/auth";
 import { deleteAccount, uploadAvatar } from "../../services/profile";
-import type { LaravelValidationErrors, UserState, UserStateErrors } from "../../types/types";
-import type { UploadAvatarFormData } from "../../schemas/profileSchema";
-import type { LoginFormData } from "../../schemas/authSchema";
 import { getUserDataFromLS, removeUserDataFromLS, setUserDataInLS } from "../../utils/storage";
+import { handleAsyncThunkError } from "../../utils/reduxErrorHandler";
+import type { UserState, UserStateErrors } from "../../types/user";
+import type { LoginFormData } from "../../schemas/authSchema";
+import type { UploadAvatarFormData } from "../../schemas/profileSchema";
 
 const initialUserState: UserState = {
     isLoading: false,
@@ -13,7 +14,8 @@ const initialUserState: UserState = {
         name: '',
         email: '',
         avatar: null,
-        role: '',
+        role: 'user',
+        is_admin: false,
         created_at: '',
         updated_at: ''
     }
@@ -24,26 +26,11 @@ export const loginUser = createAsyncThunk("user/loginUser", async (
     { rejectWithValue }
 ) => {
     try {
-        const apiCall = await login(email, password);
+        const apiCall = await login(email, password);             
 
         return apiCall;
-    } catch (error: any) {
-        if (error.response?.status === 422) {
-            const fieldErrors = error.response.data.errors as LaravelValidationErrors;
-            const formattedErrors: UserStateErrors = {};
-
-            for (const key in fieldErrors) {
-                formattedErrors[key as keyof UserStateErrors] = fieldErrors[key][0];
-            }
-
-            return rejectWithValue(formattedErrors);
-        }
-
-        if (error.response?.status === 404) {
-            return rejectWithValue({ random: error.response.statusText || "Error - Login" });
-        }
-
-        return rejectWithValue({ random: error.response.data.message });
+    } catch (error: any) {   
+        return handleAsyncThunkError<UserStateErrors>(error, rejectWithValue);
     }
 });
 
@@ -56,7 +43,7 @@ export const logoutUser = createAsyncThunk("user/logoutUser", async (
 
         return apiCall;
     } catch (error: any) {
-        return rejectWithValue({ random: "Error - Logout" });
+        return handleAsyncThunkError<UserStateErrors>(error, rejectWithValue);
     }
 });
 
@@ -66,9 +53,12 @@ export const uploadUserAvatar = createAsyncThunk('user/uploadAvatar', async (
 ) => {
     try {
         const apiCall = await uploadAvatar(formData);
+        console.log(apiCall);        
 
         return apiCall;
     } catch (error: any) {
+        return handleAsyncThunkError<UserStateErrors>(error, rejectWithValue);
+
         if (error.response?.status === 422) {
             const fieldErrors = error?.response?.data?.errors as LaravelValidationErrors;
             const formattedErrors: UserStateErrors = {};
@@ -91,9 +81,12 @@ export const uploadUserAvatar = createAsyncThunk('user/uploadAvatar', async (
 export const deleteUserAccount = createAsyncThunk('user/deleteAccount', async (password: string, { rejectWithValue }) => {
     try {
         const apiCall = await deleteAccount(password);
+        console.log(apiCall);        
 
         return apiCall;
     } catch (error: any) {
+        return handleAsyncThunkError<UserStateErrors>(error, rejectWithValue);
+
         if (error.response?.status === 404) {
             return rejectWithValue({ random: error.response.statusText || "Error - Delete account" });
         }

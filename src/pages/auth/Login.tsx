@@ -4,7 +4,7 @@ import { useAppSelector } from '../../hooks/useRedux';
 import { useThunk } from '../../hooks/useThunk';
 import { useZodValidation } from '../../hooks/useZodValidation';
 import { loginUser } from '../../features/user/userSlice';
-import type { UserState } from '../../types/types';
+import type { UserState } from '../../types/user';
 import { loginSchema, type LoginFormData } from '../../schemas/authSchema';
 import PageHeader from '../../components/global/PageHeader';
 import FormWrapper from '../../components/form/FormWrapper';
@@ -17,13 +17,13 @@ function Login(): JSX.Element {
     const { run } = useThunk(loginUser);
     const { validate, errors, setErrors } = useZodValidation<LoginFormData>();
     const navigate: NavigateFunction = useNavigate();
-    const [form, setForm] = useState<LoginFormData>({
+    const [ form, setForm ] = useState<LoginFormData>({
         email: '',
         password: '',
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void =>
-        setForm({ ...form, [e.target.name]: e.target.value });
+        setForm({ ...form, [ e.target.name ]: e.target.value });
 
     const handleSubmit = async (e: FormEvent): Promise<void> => {
         e.preventDefault();
@@ -46,13 +46,13 @@ function Login(): JSX.Element {
             setErrors({});
 
             // redirect user
-            if (thunkCall.data.data.role == 'user') {
-                navigate('/projects');
-            } else {
+            if (thunkCall.data.data[ 'is_admin' ]) {
                 navigate('/users');
+            } else {
+                navigate('/projects');
             }
         } else {
-            toast.error(thunkCall.error.random || "Validation error");
+            toast.error(thunkCall.error.random || "LOGIN error");
 
             setErrors(thunkCall.error);
         }
@@ -76,9 +76,8 @@ function Login(): JSX.Element {
                     name='email'
                     type='email'
                     label='Enter email *'
-                    minLength={2}
-                    maxLength={48}
-                    placeholder='max 48 characters'
+                    maxLength={64}
+                    placeholder='your login email'
                     required={true}
                     value={form.email}
                     onMutate={handleChange}
@@ -91,8 +90,8 @@ function Login(): JSX.Element {
                     name='password'
                     type='password'
                     label='Enter password *'
-                    minLength={6}
-                    placeholder='min 6 characters'
+                    min={6}
+                    placeholder='your login password'
                     required={true}
                     value={form.password}
                     onMutate={handleChange}

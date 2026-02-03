@@ -1,6 +1,6 @@
 import { type JSX } from 'react';
 import { useAppSelector } from '../../hooks/useRedux';
-import type { UserState } from '../../types/types';
+import type { UserState } from '../../types/user';
 import Logo from '../global/Logo';
 import Navbar from './header/Navbar';
 import LogoutOption from './header/LogoutOption';
