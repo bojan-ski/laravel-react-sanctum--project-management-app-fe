@@ -6,7 +6,7 @@ export type ProfileResponse = {
     data: User;
 };
 
-export type PasswordChangeResponse = {
+export type ChangePasswordResponse = {
     status: 'success';
     message: string;
     data: null;
@@ -22,4 +22,8 @@ export type ChangePasswordFormDataErrors = {
     old_password?: string;
     new_password?: string;
     new_password_confirm?: string;
+};
+
+export type DeleteAccountFormDataError = {
+    password?: string;
 };

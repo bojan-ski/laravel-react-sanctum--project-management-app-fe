@@ -1,6 +1,6 @@
-import type { User } from "./user";
-
 // export type LaravelValidationErrors = Record<string, string[]>;
+
+import type { User } from "./user";
 
 export type ProjectCard = {
     id: number;

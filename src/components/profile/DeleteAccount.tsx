@@ -1,11 +1,9 @@
-import { useState, type ChangeEvent, type FormEvent } from 'react';
-import { useAppSelector } from '../../hooks/useRedux';
+import { useState, type ChangeEvent, type FormEvent, type JSX } from 'react';
 import { useThunk } from '../../hooks/useThunk';
 import { useZodValidation } from '../../hooks/useZodValidation';
 import { useNavigate, type NavigateFunction } from 'react-router';
 import { deleteUserAccount } from '../../features/user/userSlice';
 import { deleteAccountSchema, type DeleteAccountFormData } from '../../schemas/profileSchema';
-import type { UserState } from '../../types/user';
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "../ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import FormWrapper from '../form/FormWrapper';
@@ -13,8 +11,7 @@ import FormInput from '../form/FormInput';
 import FormSubmitButton from '../form/FormSubmitButton';
 import toast from 'react-hot-toast';
 
-function DeleteAccount() {
-    const { isLoading } = useAppSelector<UserState>(state => state.user);
+function DeleteAccount({ isLoading }: { isLoading: boolean; }): JSX.Element {
     const { run } = useThunk(deleteUserAccount);
     const { validate } = useZodValidation<DeleteAccountFormData>();
     const navigate: NavigateFunction = useNavigate();

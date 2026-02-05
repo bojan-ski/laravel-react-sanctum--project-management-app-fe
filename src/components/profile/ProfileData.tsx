@@ -7,11 +7,11 @@ import DeleteAccount from './DeleteAccount';
 
 function ProfileData(): JSX.Element {
     const { data: profileData } = useLoaderData();
-    const { isLoading } = useAppSelector(state => state.user);  
+    const { isLoading } = useAppSelector(state => state.user);
 
     return (
-        <div className='user-profile-data text-xs sm:text-sm p-5 border border-yellow-500 rounded-lg mb-5 md:mb-0'>
-            <div className='md:flex justify-between border-b pb-3 md:pb-0 mb-3'>
+        <div className='user-profile-data h-max text-xs sm:text-sm p-5 border border-yellow-500 rounded-lg mb-5 md:mb-0'>
+            <div className='sm:flex justify-between border-b pb-3 md:pb-0 mb-3'>
                 <ProfileImage
                     isLoading={isLoading}
                     profileImage={profileData.avatar}
@@ -23,7 +23,7 @@ function ProfileData(): JSX.Element {
                 />
             </div>
 
-            <DeleteAccount />
+            <DeleteAccount isLoading={isLoading} />
         </div>
     );
 }

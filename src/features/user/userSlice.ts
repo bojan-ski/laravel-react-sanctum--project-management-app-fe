@@ -1,25 +1,23 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { login, logout } from "../../services/auth";
-import { changePassword, deleteAccount, uploadAvatar } from "../../services/profile";
+import { changePassword, deleteAccount } from "../../services/profile";
+import { updateAvatar } from "../../services/avatar";
 import { getUserDataFromLS, removeUserDataFromLS, setUserDataInLS } from "../../utils/storage";
 import { handleAsyncThunkError } from "../../utils/reduxErrorHandler";
 import type { LoginFormData } from "../../schemas/authSchema";
 import type { ChangePasswordFormData } from "../../schemas/profileSchema";
-import type { UserState, UserStateErrors } from "../../types/user";
-import type { ChangePasswordFormDataErrors } from "../../types/profile";
+import type { AuthState, AuthStateErrors } from "../../types/auth";
+import type { ChangePasswordFormDataErrors, DeleteAccountFormDataError } from "../../types/profile";
+import type { UpdateUserAvatarFormDataError } from "../../types/avatar";
 
-const initialUserState: UserState = {
+const INIT_STATE = {
+    is_admin: false,
+    is_authenticated: false,
+};
+
+const initialUserState: AuthState = {
     isLoading: false,
-    user: getUserDataFromLS() || {
-        id: 0,
-        name: '',
-        email: '',
-        avatar: null,
-        role: 'user',
-        is_admin: false,
-        created_at: '',
-        updated_at: ''
-    }
+    user: getUserDataFromLS() || INIT_STATE
 };
 
 export const loginUser = createAsyncThunk("user/loginUser", async (
@@ -31,7 +29,7 @@ export const loginUser = createAsyncThunk("user/loginUser", async (
 
         return apiCall;
     } catch (error: any) {
-        return handleAsyncThunkError<UserStateErrors>(error, rejectWithValue);
+        return handleAsyncThunkError<AuthStateErrors>(error, rejectWithValue);
     }
 });
 
@@ -44,23 +42,20 @@ export const logoutUser = createAsyncThunk("user/logoutUser", async (
 
         return apiCall;
     } catch (error: any) {
-        return handleAsyncThunkError<UserStateErrors>(error, rejectWithValue);
+        return handleAsyncThunkError(error, rejectWithValue);
     }
 });
 
-export const uploadUserAvatar = createAsyncThunk('user/uploadAvatar', async (
+export const updateUserAvatar = createAsyncThunk('user/updateAvatar', async (
     avatar: File,
     { rejectWithValue }
 ) => {
     try {
-        const apiCall = await uploadAvatar(avatar);
-        console.log(apiCall);
+        const apiCall = await updateAvatar(avatar);
 
         return apiCall;
     } catch (error: any) {
-        console.log(error);
-
-        return handleAsyncThunkError<UserStateErrors>(error, rejectWithValue);
+        return handleAsyncThunkError<UpdateUserAvatarFormDataError>(error, rejectWithValue);
     }
 });
 
@@ -70,12 +65,9 @@ export const userChangePassword = createAsyncThunk('user/userChangePassword', as
 ) => {
     try {
         const apiCall = await changePassword(formData);
-        console.log(apiCall);
 
         return apiCall;
     } catch (error: any) {
-        console.log(error);
-
         return handleAsyncThunkError<ChangePasswordFormDataErrors>(error, rejectWithValue);
     }
 });
@@ -83,13 +75,10 @@ export const userChangePassword = createAsyncThunk('user/userChangePassword', as
 export const deleteUserAccount = createAsyncThunk('user/deleteAccount', async (password: string, { rejectWithValue }) => {
     try {
         const apiCall = await deleteAccount({ password });
-        console.log(apiCall);
 
         return apiCall;
     } catch (error: any) {
-        console.log(error);
-
-        return handleAsyncThunkError<UserStateErrors>(error, rejectWithValue);
+        return handleAsyncThunkError<DeleteAccountFormDataError>(error, rejectWithValue);
     }
 });
 
@@ -120,6 +109,7 @@ const userSlice = createSlice({
             })
             .addCase(logoutUser.fulfilled, (state) => {
                 state.isLoading = false;
+                state.user = INIT_STATE;
 
                 // clear storage
                 removeUserDataFromLS();
@@ -129,17 +119,13 @@ const userSlice = createSlice({
             })
 
             // upload avatar
-            .addCase(uploadUserAvatar.pending, (state) => {
+            .addCase(updateUserAvatar.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(uploadUserAvatar.fulfilled, (state, { payload }) => {
+            .addCase(updateUserAvatar.fulfilled, (state) => {
                 state.isLoading = false;
-                state.user = payload.data;
-
-                // update storage
-                setUserDataInLS(payload.data);
             })
-            .addCase(uploadUserAvatar.rejected, (state) => {
+            .addCase(updateUserAvatar.rejected, (state) => {
                 state.isLoading = false;
             })
 
@@ -160,6 +146,7 @@ const userSlice = createSlice({
             })
             .addCase(deleteUserAccount.fulfilled, (state) => {
                 state.isLoading = false;
+                state.user = INIT_STATE;
 
                 // clear storage
                 removeUserDataFromLS();

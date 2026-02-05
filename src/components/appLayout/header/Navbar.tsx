@@ -1,10 +1,10 @@
 import { type JSX } from 'react';
 import { NavLink } from 'react-router';
 
-function Navbar({ role }: { role: string; }): JSX.Element {
+function Navbar({ isAdmin }: { isAdmin: boolean; }): JSX.Element {
     return (
         <nav className='flex items-center gap-2'>
-            {role == 'admin' ? (
+            {isAdmin ? (
                 <>
                     <NavLink
                         to={'/users'}

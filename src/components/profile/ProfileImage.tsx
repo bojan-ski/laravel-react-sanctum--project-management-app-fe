@@ -2,7 +2,7 @@ import { useRef, useState, type ChangeEvent, type FormEvent, type JSX } from 're
 import { useRevalidator } from 'react-router';
 import { useZodValidation } from '../../hooks/useZodValidation';
 import { useThunk } from '../../hooks/useThunk';
-import { uploadUserAvatar } from '../../features/user/userSlice';
+import { updateUserAvatar } from '../../features/user/userSlice';
 import { imageSchema, type UploadAvatarFormData } from '../../schemas/profileSchema';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '../ui/dialog';
 import FormWrapper from '../form/FormWrapper';
@@ -21,7 +21,7 @@ function ProfileImage({
 }: ProfileImageProps): JSX.Element {
     const BASE_URL = import.meta.env.VITE_API_URL;
 
-    const { run } = useThunk(uploadUserAvatar);
+    const { run } = useThunk(updateUserAvatar);
     const { validate, errors, setErrors } = useZodValidation<UploadAvatarFormData>();
     const revalidator = useRevalidator();
 
@@ -77,7 +77,7 @@ function ProfileImage({
             <Dialog>
                 <DialogTrigger className='font-semibold cursor-pointer'>
                     {profileImage ? (
-                        <img src={`${BASE_URL}/storage/${profileImage}`} className={'border-2 w-30 h-30 rounded-full object-cover'} />
+                        <img src={`${BASE_URL}${profileImage}`} className={'border-2 w-30 md:w-40 h-30 md:h-40 rounded-full object-cover'} />
                     ) : (
                         <User className={'border-2 w-30 h-30 rounded-full'} />
                     )}
@@ -98,10 +98,10 @@ function ProfileImage({
                         {displayedPreviewImage ? (
                             <img
                                 src={displayedPreviewImage}
-                                className="border-2 w-40 h-40 md:w-50 md:h-50 rounded-full object-cover group-hover:opacity-80 transition"
+                                className="border-2 w-50 h-50 md:w-60 md:h-60 rounded-full object-cover group-hover:opacity-80 transition"
                             />
                         ) : (
-                            <User className="border-2 w-40 h-40 md:w-50 md:h-50 rounded-full group-hover:opacity-80 transition" />
+                            <User className="border-2 w-50 h-50 md:w-60 md:h-60 rounded-full group-hover:opacity-80 transition" />
                         )}
                     </div>
 

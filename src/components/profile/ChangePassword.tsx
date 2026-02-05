@@ -3,8 +3,8 @@ import { useAppSelector } from '../../hooks/useRedux';
 import { useThunk } from '../../hooks/useThunk';
 import { useZodValidation } from '../../hooks/useZodValidation';
 import { userChangePassword } from '../../features/user/userSlice';
-import type { UserState } from '../../types/user';
 import { changePasswordSchema, type ChangePasswordFormData } from '../../schemas/profileSchema';
+import type { AuthState } from '../../types/auth';
 import PageHeader from '../global/PageHeader';
 import FormWrapper from '../form/FormWrapper';
 import FormInput from '../form/FormInput';
@@ -12,7 +12,7 @@ import FormSubmitButton from '../form/FormSubmitButton';
 import toast from 'react-hot-toast';
 
 function ChangePassword(): JSX.Element {
-    const { isLoading } = useAppSelector<UserState>(state => state.user);
+    const { isLoading } = useAppSelector<AuthState>(state => state.user);
     const { run } = useThunk(userChangePassword);
     const { validate, errors, setErrors } = useZodValidation<ChangePasswordFormData>();
     const [form, setForm] = useState<ChangePasswordFormData>({

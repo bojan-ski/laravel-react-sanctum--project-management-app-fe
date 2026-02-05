@@ -1,17 +1,17 @@
-import type { User } from "../types/user";
+import type { AuthResponse } from "../types/auth";
 
 const USER_KEY: string = 'user';
 
 // IN PRODUCTION CHANGE TO localStorage !!!
 
-export function getUserDataFromLS(): User | null {
-    const userData: string | null = sessionStorage.getItem(USER_KEY);
+export function getUserDataFromLS(): AuthResponse | null {
+    const data: string | null = sessionStorage.getItem(USER_KEY);
 
-    return userData ? JSON.parse(userData) : null;
+    return data ? JSON.parse(data) : null;
 }
 
-export function setUserDataInLS(userData: User): void {
-    sessionStorage.setItem(USER_KEY, JSON.stringify(userData));
+export function setUserDataInLS(data: AuthResponse): void {
+    sessionStorage.setItem(USER_KEY, JSON.stringify(data));
 }
 
 export function removeUserDataFromLS(): void {

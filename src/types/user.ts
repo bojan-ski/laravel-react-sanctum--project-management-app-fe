@@ -10,14 +10,3 @@ export type User = {
     created_at: string;
     updated_at: string;
 };
-
-export type UserState = {
-    isLoading: boolean;
-    user: User;
-};
-
-export type UserStateErrors = {
-    email?: string;
-    password?: string;
-    avatar?: string;
-};
