@@ -2,8 +2,8 @@ import { useState, type FormEvent, type JSX } from 'react';
 import { useAppSelector } from '../../hooks/useRedux';
 import { useThunk } from '../../hooks/useThunk';
 import { useZodValidation } from '../../hooks/useZodValidation';
-import { userChangePassword } from '../../features/regularUser/profileSlice';
-import type { ProfileState } from '../../types/types';
+import { userChangePassword } from '../../features/user/userSlice';
+import type { UserState } from '../../types/user';
 import { changePasswordSchema, type ChangePasswordFormData } from '../../schemas/profileSchema';
 import PageHeader from '../global/PageHeader';
 import FormWrapper from '../form/FormWrapper';
@@ -12,7 +12,7 @@ import FormSubmitButton from '../form/FormSubmitButton';
 import toast from 'react-hot-toast';
 
 function ChangePassword(): JSX.Element {
-    const { isLoading } = useAppSelector<ProfileState>(state => state.profile);
+    const { isLoading } = useAppSelector<UserState>(state => state.user);
     const { run } = useThunk(userChangePassword);
     const { validate, errors, setErrors } = useZodValidation<ChangePasswordFormData>();
     const [form, setForm] = useState<ChangePasswordFormData>({
@@ -27,14 +27,11 @@ function ChangePassword(): JSX.Element {
     const handleChangePasswordSubmit = async (e: FormEvent): Promise<void> => {
         e.preventDefault();
 
-        // zod validation
         const validation = validate(changePasswordSchema, form);        
         if (!validation) return;
 
-        // run dispatch call
         const thunkCall = await run(form);
 
-        // dispatch response
         if (thunkCall.ok) {
             toast.success(thunkCall.data.message);
 
@@ -53,13 +50,12 @@ function ChangePassword(): JSX.Element {
 
     return (
         <div className='change-password-option p-5 border border-yellow-500 rounded-lg'>
-            {/* Page header */}
-            <PageHeader label='Change password' headerCss='mb-5 text-xl font-semibold' />
+            
+            <PageHeader label='Change password' headerCss='mb-3 text-lg sm:text-xl font-semibold' />
 
             <FormWrapper
                 onSubmit={handleChangePasswordSubmit}
             >
-                {/* old password */}
                 <FormInput
                     name='old_password'
                     type='password'
@@ -73,7 +69,6 @@ function ChangePassword(): JSX.Element {
                     error={errors.old_password}
                 />
 
-                {/* new password */}
                 <FormInput
                     name='new_password'
                     type='password'
@@ -87,7 +82,6 @@ function ChangePassword(): JSX.Element {
                     error={errors.new_password}
                 />
 
-                {/* new password confirm */}
                 <FormInput
                     name='new_password_confirm'
                     type='password'
@@ -101,10 +95,9 @@ function ChangePassword(): JSX.Element {
                     error={errors.new_password_confirm}
                 />
 
-                {/* submit */}
                 <FormSubmitButton
                     loading={isLoading}
-                    btnCss='border rounded-sm py-2 px-5 text-white bg-yellow-500 hover:bg-yellow-600 transition cursor-pointer font-semibold'
+                    btnCss='border rounded-sm text-xs sm:text-sm rounded-sm py-1.5 md:py-2 px-4 md:px-5 text-white bg-yellow-500 hover:bg-yellow-600 transition cursor-pointer font-semibold'
                     btnLabel='Change password'
                 />
             </FormWrapper>

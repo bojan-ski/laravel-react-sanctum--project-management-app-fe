@@ -19,6 +19,7 @@ import SelectedUser from "./pages/admin/SelectedUser";
 // loaders
 import { loader as projectDetailsLoader } from "./pages/SelectedProject";
 import { loader as projectDataLoader } from "./pages/EditProject";
+import { loader as profileDataLoader } from "./pages/Profile";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,7 @@ const router = createBrowserRouter([
       {
         path: '/profile',
         element: <Profile />,
+        loader: profileDataLoader
       },
       // ADMIN USER
       {

@@ -46,7 +46,7 @@ const FormInput = ({
             {label && (
                 <Label
                     htmlFor={name}
-                    className={`block capitalize font-semibold mb-2 ${labelCss}`}
+                    className={`block capitalize text-xs sm:text-sm font-semibold mb-2 ${labelCss}`}
                 >
                     {label}:
                 </Label>
@@ -66,10 +66,10 @@ const FormInput = ({
                 onChange={onMutate}
                 disabled={disabled}
                 required={required}
-                className={`w-full border text-sm bg-white text-gray-800 rounded-md px-3 py-2 focus-visible:ring focus-visible:border-amber-500  ${inputCss}`}
+                className={`w-full border text-xs sm:text-sm bg-white text-gray-800 rounded-md px-3 py-2 focus-visible:ring focus-visible:border-amber-500  ${inputCss}`}
             />
 
-            {error && <p className="text-red-500 text-sm mt-1">
+            {error && <p className="text-red-500 text-xs sm:text-sm mt-1">
                 {error}
             </p>}
         </div>

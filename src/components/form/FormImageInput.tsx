@@ -28,7 +28,7 @@ function FormImageInput({
             {label && (
                 <Label
                     htmlFor={name}
-                    className={`block capitalize font-semibold mb-2 ${labelCss}`}
+                    className={`block capitalize text-xs sm:text-sm font-semibold mb-2 ${labelCss}`}
                 >
                     {label}:
                 </Label>
@@ -44,7 +44,7 @@ function FormImageInput({
                 className={`w-full rounded-md ${inputCss}`}
             />
 
-            {error && <p className="text-red-500 text-sm mt-1">
+            {error && <p className="text-red-500 text-xs sm:text-sm mt-1">
                 {error}
             </p>}
         </div>

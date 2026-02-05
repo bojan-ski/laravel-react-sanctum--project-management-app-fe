@@ -38,7 +38,7 @@ function FormSelect({
             {label && (
                 <Label
                     htmlFor={name}
-                    className={`block capitalize font-semibold mb-2 ${labelCss}`}
+                    className={`block capitalize text-xs sm:text-sm font-semibold mb-2 ${labelCss}`}
                 >
                     {label}
                 </Label>
@@ -52,7 +52,7 @@ function FormSelect({
             >
                 <SelectTrigger
                     id={name}
-                    className={`w-full border text-sm bg-white text-gray-800 rounded-md px-3 py-2 focus:outline-none focus:shadow-md ${selectCss}`}
+                    className={`w-full border text-xs sm:text-sm bg-white text-gray-800 rounded-md px-3 py-2 focus:outline-none focus:shadow-md ${selectCss}`}
                 >
                     <SelectValue placeholder={disabledOptionLabel} />
                 </SelectTrigger>
@@ -82,7 +82,7 @@ function FormSelect({
                 </SelectContent>
             </Select>
 
-            {error && <p className="text-red-500 text-sm mt-1">
+            {error && <p className="text-red-500 text-xs sm:text-sm mt-1">
                 {error}
             </p>}
         </div>

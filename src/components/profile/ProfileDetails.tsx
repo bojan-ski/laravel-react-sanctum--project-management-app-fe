@@ -20,7 +20,7 @@ function ProfileDetails({
             <p className="mb-1">
                 email: <span className='font-semibold'>{email}</span>
             </p>
-            <p className="">
+            <p>
                 created: <span className='font-semibold'>{formatDate(created)}</span>
             </p>
         </div>

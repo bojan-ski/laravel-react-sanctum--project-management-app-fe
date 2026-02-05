@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { login, logout } from "../../services/auth";
-import { deleteAccount, uploadAvatar } from "../../services/profile";
+import { changePassword, deleteAccount, uploadAvatar } from "../../services/profile";
 import { getUserDataFromLS, removeUserDataFromLS, setUserDataInLS } from "../../utils/storage";
 import { handleAsyncThunkError } from "../../utils/reduxErrorHandler";
-import type { UserState, UserStateErrors } from "../../types/user";
 import type { LoginFormData } from "../../schemas/authSchema";
-import type { UploadAvatarFormData } from "../../schemas/profileSchema";
+import type { ChangePasswordFormData } from "../../schemas/profileSchema";
+import type { UserState, UserStateErrors } from "../../types/user";
+import type { ChangePasswordFormDataErrors } from "../../types/profile";
 
 const initialUserState: UserState = {
     isLoading: false,
@@ -26,10 +27,10 @@ export const loginUser = createAsyncThunk("user/loginUser", async (
     { rejectWithValue }
 ) => {
     try {
-        const apiCall = await login(email, password);             
+        const apiCall = await login(email, password);
 
         return apiCall;
-    } catch (error: any) {   
+    } catch (error: any) {
         return handleAsyncThunkError<UserStateErrors>(error, rejectWithValue);
     }
 });
@@ -48,50 +49,47 @@ export const logoutUser = createAsyncThunk("user/logoutUser", async (
 });
 
 export const uploadUserAvatar = createAsyncThunk('user/uploadAvatar', async (
-    formData: UploadAvatarFormData,
+    avatar: File,
     { rejectWithValue }
 ) => {
     try {
-        const apiCall = await uploadAvatar(formData);
-        console.log(apiCall);        
+        const apiCall = await uploadAvatar(avatar);
+        console.log(apiCall);
 
         return apiCall;
     } catch (error: any) {
+        console.log(error);
+
         return handleAsyncThunkError<UserStateErrors>(error, rejectWithValue);
+    }
+});
 
-        if (error.response?.status === 422) {
-            const fieldErrors = error?.response?.data?.errors as LaravelValidationErrors;
-            const formattedErrors: UserStateErrors = {};
+export const userChangePassword = createAsyncThunk('user/userChangePassword', async (
+    formData: ChangePasswordFormData,
+    { rejectWithValue }
+) => {
+    try {
+        const apiCall = await changePassword(formData);
+        console.log(apiCall);
 
-            Object.keys(fieldErrors).forEach((key) => {
-                formattedErrors[key as keyof UserStateErrors] = fieldErrors[key][0];
-            });
+        return apiCall;
+    } catch (error: any) {
+        console.log(error);
 
-            return rejectWithValue(formattedErrors);
-        }
-
-        if (error.response?.status === 404) {
-            return rejectWithValue({ random: error.response.statusText || "Error - Upload avatar" });
-        }
-
-        return rejectWithValue({ random: error.response.data.message });
+        return handleAsyncThunkError<ChangePasswordFormDataErrors>(error, rejectWithValue);
     }
 });
 
 export const deleteUserAccount = createAsyncThunk('user/deleteAccount', async (password: string, { rejectWithValue }) => {
     try {
-        const apiCall = await deleteAccount(password);
-        console.log(apiCall);        
+        const apiCall = await deleteAccount({ password });
+        console.log(apiCall);
 
         return apiCall;
     } catch (error: any) {
+        console.log(error);
+
         return handleAsyncThunkError<UserStateErrors>(error, rejectWithValue);
-
-        if (error.response?.status === 404) {
-            return rejectWithValue({ random: error.response.statusText || "Error - Delete account" });
-        }
-
-        return rejectWithValue({ random: error.response.data.message });
     }
 });
 
@@ -120,9 +118,9 @@ const userSlice = createSlice({
             .addCase(logoutUser.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(logoutUser.fulfilled, (state) => {                
+            .addCase(logoutUser.fulfilled, (state) => {
                 state.isLoading = false;
-                
+
                 // clear storage
                 removeUserDataFromLS();
             })
@@ -142,6 +140,17 @@ const userSlice = createSlice({
                 setUserDataInLS(payload.data);
             })
             .addCase(uploadUserAvatar.rejected, (state) => {
+                state.isLoading = false;
+            })
+
+            // change password
+            .addCase(userChangePassword.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(userChangePassword.fulfilled, (state) => {
+                state.isLoading = false;
+            })
+            .addCase(userChangePassword.rejected, (state) => {
                 state.isLoading = false;
             })
 

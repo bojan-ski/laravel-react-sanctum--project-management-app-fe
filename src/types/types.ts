@@ -77,18 +77,6 @@ export type ProjectMembersState = {
     availableUsers: User[];
 };
 
-// regularUser/profileSlice
-export type ChangePasswordFormDataErrors = {
-    old_password?: string;
-    new_password?: string;
-    new_password_confirm?: string;
-    random?: string;
-};
-
-export type ProfileState = {
-    isLoading: boolean;
-};
-
 // adminUser/createUserSlice
 export type NewUserFormData = {
     name: string;

@@ -43,7 +43,7 @@ function FormTextarea({
             {label && (
                 <Label
                     htmlFor={name}
-                    className={`block capitalize font-semibold mb-2 ${labelCss}`}
+                    className={`block capitalize text-xs sm:text-sm font-semibold mb-2 ${labelCss}`}
                 >
                     {label}:
                 </Label>
@@ -60,10 +60,10 @@ function FormTextarea({
                 onChange={onMutate}
                 disabled={disabled}
                 required={required}
-                className={`resize-none border text-sm bg-white text-gray-800 rounded-md px-3 py-2 focus-visible:ring focus-visible:border-amber-500 ${textareaCss}`}
+                className={`resize-none border text-xs sm:text-sm bg-white text-gray-800 rounded-md px-3 py-2 focus-visible:ring focus-visible:border-amber-500 ${textareaCss}`}
             />
 
-            {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+            {error && <p className="text-red-500 text-xs sm:text-sm mt-1">{error}</p>}
         </div>
     );
 }

@@ -6,7 +6,7 @@ export const imageSchema = z.object({
 
 function validateImageFile() {
     const maxUploadSize = 2 * 1024 * 1024;
-    const acceptedFileTypes = ["image/"];
+    const acceptedFileTypes = [ 'image/jpeg', 'image/jpg', 'image/png', 'image/webp' ];
 
     return z
         .instanceof(File)
@@ -17,7 +17,7 @@ function validateImageFile() {
             return (
                 !file || acceptedFileTypes.some((type) => file.type.startsWith(type))
             );
-        }, "File must be an image");
+        }, "Only JPEG, JPG, PNG, and WebP images are allowed");
 }
 export type UploadAvatarFormData = z.infer<typeof imageSchema>;
 
@@ -34,7 +34,7 @@ export const changePasswordSchema = z.object({
 })
     .refine((data) => data.new_password === data.new_password_confirm, {
         message: "Passwords do not match",
-        path: ["new_password_confirm"],
+        path: [ "new_password_confirm" ],
     });
 export type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
 
