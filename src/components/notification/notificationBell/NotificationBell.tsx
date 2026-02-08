@@ -12,7 +12,7 @@ const NotificationBell = (): JSX.Element => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     // run fetch notifications on 60s
-    useNotification(true, 60000);
+    // useNotification(true, 60000);
 
     return (
         <div className="relative">

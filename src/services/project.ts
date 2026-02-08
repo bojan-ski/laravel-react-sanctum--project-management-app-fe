@@ -1,13 +1,18 @@
 import api from "../api/axios";
 import type { ProjectFormData } from "../schemas/projectSchema";
+import type { GetProjectsResponse } from "../types/project";
 
 export async function getProjects(
     ownership: string = '',
     status: string = '',
     page: number = 1
-) {
-    const response = await api.get(`/api/projects`, {
-        params: { ownership, status, page },
+): Promise<GetProjectsResponse> {
+    const response = await api.get<GetProjectsResponse>(`/api/projects`, {
+        params: {
+            ownership,
+            status,
+            page
+        },
     });
 
     return response.data;
@@ -73,9 +78,9 @@ export const statusChange = async (
     projectId: number,
     newProjectStatus: string
 ) => {
-     const response = await api.put(`/api/projects/${projectId}/status`, {
+    const response = await api.put(`/api/projects/${projectId}/status`, {
         status: newProjectStatus
-    });   
+    });
 
     return response.data;
 };

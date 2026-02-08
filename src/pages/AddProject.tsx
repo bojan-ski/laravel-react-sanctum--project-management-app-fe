@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from '../hooks/useRedux';
 import { createNewProject, getUserProjects } from '../features/regularUser/projectSlice';
 import { useThunk } from '../hooks/useThunk';
 import type { ProjectFormData } from '../schemas/projectSchema';
-import type { ProjectFormSubmit, ProjectState } from '../types/types';
+import type { ProjectFormSubmit, ProjectState } from '../types/project';
 import ProjectForm from '../components/project/ProjectForm';
 
 export default function AddProject(): JSX.Element {

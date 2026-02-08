@@ -1,47 +1,53 @@
 import { type JSX } from 'react';
 import { useNavigate, type NavigateFunction } from 'react-router';
-import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
+import { useAppDispatch } from '../../../hooks/useRedux';
 import { useZodValidation } from '../../../hooks/useZodValidation';
 import { useThunk } from '../../../hooks/useThunk';
 import { getUserProjects, setFilterOwnership } from '../../../features/regularUser/projectSlice';
-import { projectOwnershipSchema, type ProjectOwnershipFilter } from '../../../schemas/projectSchema';
-import type { ProjectState } from '../../../types/types';
+import { filterProjectsByOwnershipSchema, type FilterProjectsByOwnership } from '../../../schemas/projectSchema';
+import type { ProjectsFilters, ProjectsFiltersOwner } from '../../../types/project';
 import FormSelect from '../../form/FormSelect';
 import toast from 'react-hot-toast';
 
-function FilterByOwnership(): JSX.Element {
-    const { filterOwnership, filterStatus } = useAppSelector<ProjectState>(state => state.project);
+function FilterByOwnership({ filters }: { filters: ProjectsFilters; }): JSX.Element {
+    const navigate: NavigateFunction = useNavigate();
     const dispatch = useAppDispatch();
     const { run } = useThunk(getUserProjects);
-    const { validate } = useZodValidation<ProjectOwnershipFilter>();
-    const navigate: NavigateFunction = useNavigate();
+    const { validate, errors, setErrors } = useZodValidation<FilterProjectsByOwnership>();
+
+    const options: ProjectsFiltersOwner[] = [ "all", "owner", "member" ];
 
     const handleFilterOwnershipChange = async (option: string): Promise<void> => {
-        // zod validation
-        const validation = validate(projectOwnershipSchema, option);
+        const validation = validate(filterProjectsByOwnershipSchema, option);
         if (!validation) return;
 
-        // update slice
         dispatch(setFilterOwnership(option));
 
-        // run dispatch call
-        const thunkCall = await run({ ownership: option, status: filterStatus, page: 1 });
+        const thunkCall = await run({
+            ownership: option,
+            status: filters.status,
+            page: 1
+        });
 
-        // dispatch response
         if (thunkCall.ok) {
-            navigate(`?ownership=${option}&status=${filterStatus}&page=1`);
+            navigate(`?ownership=${option}&status=${filters.status}&page=1`);
+
+            setErrors({});
         } else {
-            toast.error(thunkCall.error);
+            toast.error(thunkCall.error.random || "Validation error");
+
+            setErrors(thunkCall.error);
         }
     };
 
     return (
         <FormSelect
             name="ownership"
-            defaultValue={filterOwnership}
+            defaultValue={filters.owner}
             disabledOptionLabel='select ownership'
-            options={["all", "owner", "member"]}
+            options={options}
             onMutate={handleFilterOwnershipChange}
+            error={errors.ownership}
         />
     );
 }

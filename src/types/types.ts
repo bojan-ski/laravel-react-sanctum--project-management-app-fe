@@ -1,21 +1,4 @@
-// export type LaravelValidationErrors = Record<string, string[]>;
-
 import type { User } from "./user";
-
-export type ProjectCard = {
-    id: number;
-    title: string;
-    description: string;
-    deadline: string;
-    status: string;
-    is_owner: boolean;
-    owner: {
-        avatar: string;
-        name: string;
-    };
-    created_at: string;
-    updated_at: string;
-};
 
 export type Member = {
     id: number;
@@ -45,30 +28,6 @@ export type NotificationState = {
     notifications: Notification[];
     unreadCount: number;
     error: string;
-};
-
-// regularUser/projectSlice
-export type ProjectState = {
-    isLoading: boolean;
-    userProjects: ProjectCard[];
-    filterOwnership: string;
-    filterStatus: string;
-    currentPage: number;
-    lastPage: number;
-    total: number;
-};
-
-export type ProjectFormSubmit = {
-    status: 'fulfilled' | 'rejected';
-    message: string;
-    errors?: any;
-};
-
-export type ProjectFormDataErrors = {
-    title?: string;
-    description?: string;
-    deadline?: string;
-    document_path?: string;
 };
 
 // regularUser/projectMemberSlice

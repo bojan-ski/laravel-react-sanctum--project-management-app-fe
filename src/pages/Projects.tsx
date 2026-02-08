@@ -1,8 +1,8 @@
 import { useEffect, type JSX } from 'react';
-import { useNavigate, type NavigateFunction } from 'react-router';
+import { useNavigate, useSearchParams, type NavigateFunction } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../hooks/useRedux';
-import { getUserProjects, setUserProjectsPage } from '../features/regularUser/projectSlice';
-import type { ProjectState } from '../types/types';
+import { getUserProjects, setFilterOwnership, setFilterStatus, setUserProjectsPage } from '../features/regularUser/projectSlice';
+import type { ProjectsFiltersOwner, ProjectsFiltersStatus, ProjectsState } from '../types/project';
 import Loading from '../components/global/Loading';
 import TotalAndAddProject from '../components/project/projectsPage/TotalAndAddProject';
 import NoDataMessage from '../components/global/NoDataMessage';
@@ -11,20 +11,40 @@ import ProjectsList from '../components/project/ProjectsList';
 import GlobalPagination from '../components/pagination/GlobalPagination';
 
 function Projects(): JSX.Element {
-    const { isLoading, userProjects, filterOwnership, filterStatus, currentPage, lastPage, total } = useAppSelector<ProjectState>(state => state.project);
-    const dispatch = useAppDispatch();
+    const [ searchParams ] = useSearchParams();
     const navigate: NavigateFunction = useNavigate();
+    const {
+        isLoading,
+        projects,
+        filters,
+        pagination,
+        total
+    } = useAppSelector<ProjectsState>(state => state.project);
+    const dispatch = useAppDispatch();
 
     useEffect((): void => {
-        console.log('useEffect - Projects');
-        if (userProjects.length == 0) dispatch(getUserProjects({}));
+        const urlOwnership = searchParams.get('ownership') as ProjectsFiltersOwner || 'all';
+        const urlStatus = searchParams.get('status') as ProjectsFiltersStatus || 'all';
+        const urlPage = parseInt(searchParams.get('page') || '1', 10);
+
+        if (urlOwnership !== filters.owner) dispatch(setFilterOwnership(urlOwnership));
+        if (urlStatus !== filters.status) dispatch(setFilterStatus(urlStatus));
+        if (urlPage !== pagination.currentPage) dispatch(setUserProjectsPage(urlPage));
+
+        if (projects.length == 0) {
+            dispatch(getUserProjects({
+                ownership: urlOwnership,
+                status: urlStatus,
+                page: urlPage
+            }));
+        }
     }, []);
 
     const handleProjectsPageChange = (newPage: number): void => {
         dispatch(setUserProjectsPage(newPage));
-        dispatch(getUserProjects({ ownership: filterOwnership, status: filterStatus, page: newPage }));
+        dispatch(getUserProjects({ ownership: filters.owner, status: filters.status, page: newPage }));
 
-        navigate(`?ownership=${filterOwnership}&status=${filterStatus}&page=${newPage}`);
+        navigate(`?ownership=${filters.owner}&status=${filters.status}&page=${newPage}`);
     };
 
     if (isLoading) return <Loading />;
@@ -35,21 +55,23 @@ function Projects(): JSX.Element {
 
             <FilterOptions />
 
-            {userProjects.length == 0 ? (
+            {projects.length == 0 ? (
                 <NoDataMessage message="There are no projects" />
             ) : (
                 <>
-                    <ProjectsList projects={userProjects} />
+                    <ProjectsList projects={projects} />
 
                     <GlobalPagination
-                        currentPage={currentPage}
-                        lastPage={lastPage}
+                        currentPage={pagination.currentPage}
+                        lastPage={pagination.lastPage}
                         handlePageChange={handleProjectsPageChange}
                     />
                 </>
             )}
         </div>
     );
+
+    return <div></div>;
 }
 
 export default Projects;

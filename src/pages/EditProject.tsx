@@ -5,7 +5,7 @@ import { updateUserProject } from '../features/regularUser/projectSlice';
 import { getProjectData } from '../services/project';
 import { useThunk } from '../hooks/useThunk';
 import type { ProjectFormData } from '../schemas/projectSchema';
-import type { ProjectFormSubmit, ProjectState } from '../types/types';
+import type { ProjectFormSubmit, ProjectState } from '../types/project';
 import ProjectForm from '../components/project/ProjectForm';
 
 export const loader = async ({ params }: { params: any; }): Promise<any> => {

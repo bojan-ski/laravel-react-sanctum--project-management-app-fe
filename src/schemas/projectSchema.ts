@@ -29,10 +29,10 @@ export const projectSchema = z.object({
 });
 export type ProjectFormData = z.infer<typeof projectSchema>;
 
-export const projectOwnershipSchema = z.enum([
-    "all", "owner", "member"
+export const filterProjectsByOwnershipSchema = z.enum([
+    "all", "owner", "member",
 ]);
-export type ProjectOwnershipFilter = z.infer<typeof projectOwnershipSchema>;
+export type FilterProjectsByOwnership = z.infer<typeof filterProjectsByOwnershipSchema>;
 
 export const projectStatusSchema = z.enum([
     "all", "pending", "active", "completed", "closed"

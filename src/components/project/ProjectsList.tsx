@@ -1,5 +1,5 @@
 import { type JSX } from 'react';
-import type { ProjectCard as ProjectCardType } from '../../types/types';
+import type { ProjectCard as ProjectCardType } from '../../types/project';
 import ProjectCard from './projectCard/ProjectCard';
 
 function ProjectsList({ projects }: { projects: ProjectCardType[]; }): JSX.Element {

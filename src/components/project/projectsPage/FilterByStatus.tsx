@@ -1,47 +1,53 @@
 import { type JSX } from 'react';
 import { useNavigate, type NavigateFunction } from 'react-router';
-import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
+import { useAppDispatch } from '../../../hooks/useRedux';
 import { useThunk } from '../../../hooks/useThunk';
 import { useZodValidation } from '../../../hooks/useZodValidation';
 import { getUserProjects, setFilterStatus } from '../../../features/regularUser/projectSlice';
 import { projectStatusSchema, type ProjectStatusFilter } from '../../../schemas/projectSchema';
-import type { ProjectState } from '../../../types/types';
+import type { ProjectsFilters, ProjectsFiltersStatus } from '../../../types/project';
 import FormSelect from '../../form/FormSelect';
 import toast from 'react-hot-toast';
 
-function FilterByStatus(): JSX.Element {
-    const { filterOwnership, filterStatus } = useAppSelector<ProjectState>(state => state.project);
+function FilterByStatus({ filters }: { filters: ProjectsFilters; }): JSX.Element {
+    const navigate: NavigateFunction = useNavigate();
     const dispatch = useAppDispatch();
     const { run } = useThunk(getUserProjects);
-    const { validate } = useZodValidation<ProjectStatusFilter>();
-    const navigate: NavigateFunction = useNavigate();
+    const { validate, errors, setErrors } = useZodValidation<ProjectStatusFilter>();
+
+    const options: ProjectsFiltersStatus[] = [ "all", "pending", "active", "completed", "closed" ];
 
     const handleFilterStatusChange = async (option: string): Promise<void> => {
-        // zod validation
         const validation = validate(projectStatusSchema, option);
         if (!validation) return;
 
-        // update slice
         dispatch(setFilterStatus(option));
 
-        // run dispatch call
-        const thunkCall = await run({ ownership: filterOwnership, status: option, page: 1 });
+        const thunkCall = await run({
+            ownership: filters.owner,
+            status: option,
+            page: 1
+        });
 
-        // dispatch response
         if (thunkCall.ok) {
-            navigate(`?ownership=${filterOwnership}&status=${option}&page=1`);
+            navigate(`?ownership=${filters.owner}&status=${option}&page=1`);
+
+            setErrors({});
         } else {
-            toast.error(thunkCall.error);
+            toast.error(thunkCall.error.random || "Validation error");
+
+            setErrors(thunkCall.error);
         }
     };
 
     return (
         <FormSelect
             name="status"
-            defaultValue={filterStatus}
+            defaultValue={filters.status}
             disabledOptionLabel='select status'
-            options={["all", "pending", "active", "completed", "closed"]}
+            options={options}
             onMutate={handleFilterStatusChange}
+            error={errors.status}
         />
     );
 }

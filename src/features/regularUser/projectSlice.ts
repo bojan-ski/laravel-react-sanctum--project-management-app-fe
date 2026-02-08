@@ -1,17 +1,21 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { LaravelValidationErrors } from "../../types/global";
-import type { ProjectFormDataErrors, ProjectState, ProjectCard } from "../../types/types";
+import { handleAsyncThunkError } from "../../utils/reduxErrorHandler";
 import { createProject, deleteProject, getProjects, statusChange, updateProject } from "../../services/project";
 import type { ProjectFormData } from "../../schemas/projectSchema";
+import type { ProjectFormDataErrors, ProjectsState, ProjectCard, GetProjectsResponseErrors } from "../../types/project";
 
-const initialProjectState: ProjectState = {
+const initialProjectState: ProjectsState = {
     isLoading: false,
-    userProjects: [],
-    filterOwnership: '',
-    filterStatus: '',
-    currentPage: 1,
-    lastPage: 1,
-    total: 0,
+    projects: [],
+    filters: {
+        owner: 'all',
+        status: 'all'
+    },
+    pagination: {
+        currentPage: 1,
+        lastPage: 1,
+    },
+    total: 0
 };
 
 type getUserProjectsProps = {
@@ -25,13 +29,13 @@ export const getUserProjects = createAsyncThunk('projects/getUserProjects', asyn
     { rejectWithValue }
 ) => {
     console.log('getUserProjects');
-
+    
     try {
         const apiCall = await getProjects(ownership, status, page);
 
         return apiCall.data;
     } catch (error: any) {
-        return rejectWithValue(error?.response?.statusText || 'Error - Fetch user projects');
+        return handleAsyncThunkError<GetProjectsResponseErrors>(error, rejectWithValue);
     }
 });
 
@@ -44,18 +48,7 @@ export const createNewProject = createAsyncThunk('project/createNewProject', asy
 
         return apiCall;
     } catch (error: any) {
-        if (error.response?.status === 422) {
-            const fieldErrors = error?.response?.data?.errors as LaravelValidationErrors;
-            const formattedErrors: ProjectFormDataErrors = {};
-
-            Object.keys(fieldErrors).forEach((key) => {
-                formattedErrors[key as keyof ProjectFormDataErrors] = fieldErrors[key][0];
-            });
-
-            return rejectWithValue(formattedErrors);
-        } else {
-            return rejectWithValue({ random: error.response.statusText || "Error - Create new project" });
-        }
+        return handleAsyncThunkError<ProjectFormDataErrors>(error, rejectWithValue);
     }
 });
 
@@ -73,18 +66,7 @@ export const updateUserProject = createAsyncThunk('project/updateProject', async
 
         return apiCall;
     } catch (error: any) {
-        if (error.response?.status === 422) {
-            const fieldErrors = error?.response?.data?.errors as LaravelValidationErrors;
-            const formattedErrors: ProjectFormDataErrors = {};
-
-            Object.keys(fieldErrors).forEach((key) => {
-                formattedErrors[key as keyof ProjectFormDataErrors] = fieldErrors[key][0];
-            });
-
-            return rejectWithValue(formattedErrors);
-        } else {
-            return rejectWithValue({ random: error.response.statusText || "Error - Update project" });
-        }
+        return handleAsyncThunkError<ProjectFormDataErrors>(error, rejectWithValue);
     }
 });
 
@@ -102,7 +84,7 @@ export const changeProjectStatus = createAsyncThunk('project/changeProjectStatus
 
         return apiCall;
     } catch (error: any) {
-        return rejectWithValue(error.response.statusText || "Error - Change project");
+        return handleAsyncThunkError<ProjectFormDataErrors>(error, rejectWithValue);
     }
 });
 
@@ -111,11 +93,11 @@ export const deleteUserProject = createAsyncThunk('project/deleteUserProject', a
     { rejectWithValue }
 ) => {
     try {
-        const apiCall = await deleteProject(projectId);       
+        const apiCall = await deleteProject(projectId);
 
         return { projectId, message: apiCall.message };
-    } catch (error: any) {        
-        return rejectWithValue(error?.response?.statusText || 'Error - Delete project');
+    } catch (error: any) {
+        return handleAsyncThunkError<ProjectFormDataErrors>(error, rejectWithValue);
     }
 });
 
@@ -124,15 +106,15 @@ const projectSlice = createSlice({
     initialState: initialProjectState,
     reducers: {
         setFilterOwnership: (state, { payload }): void => {
-            state.filterOwnership = payload;
-            state.currentPage = 1;
+            state.filters.owner = payload;
+            state.pagination.currentPage = 1;
         },
         setFilterStatus: (state, { payload }): void => {
-            state.filterStatus = payload;
-            state.currentPage = 1;
+            state.filters.status = payload;
+            state.pagination.currentPage = 1;
         },
         setUserProjectsPage: (state, { payload }): void => {
-            state.currentPage = payload;
+            state.pagination.currentPage = payload;
         }
     },
     extraReducers: (builder) => {
@@ -142,14 +124,16 @@ const projectSlice = createSlice({
                 state.isLoading = true;
             })
             .addCase(getUserProjects.fulfilled, (state, { payload }) => {
+                console.log(payload);
+
                 state.isLoading = false;
-                state.userProjects = payload.data;
-                state.currentPage = payload.current_page;
-                state.lastPage = payload.last_page;
+                state.projects = payload.data;
+                state.pagination.currentPage = payload.current_page;
+                state.pagination.lastPage = payload.last_page;
                 state.total = payload.total;
             })
             .addCase(getUserProjects.rejected, (state) => {
-                state.isLoading = false;
+                state.isLoading = false;              
             })
 
             // create new project
@@ -171,7 +155,7 @@ const projectSlice = createSlice({
                 state.isLoading = false;
 
                 const updatedProjectData = payload.data;
-                const updatedProject = state.userProjects.find((project: ProjectCard) => project.id == updatedProjectData.id);
+                const updatedProject = state.projects.find((project: ProjectCard) => project.id == updatedProjectData.id);
 
                 if (updatedProject) {
                     updatedProject.title = updatedProjectData.title;
@@ -191,7 +175,7 @@ const projectSlice = createSlice({
                 state.isLoading = false;
 
                 const updatedProjectData = payload.data;
-                const updatedProject = state.userProjects.find((project: ProjectCard) => project.id == updatedProjectData.id);
+                const updatedProject = state.projects.find((project: ProjectCard) => project.id == updatedProjectData.id);
 
                 if (updatedProject) {
                     updatedProject.status = updatedProjectData.status;
@@ -207,9 +191,9 @@ const projectSlice = createSlice({
             })
             .addCase(deleteUserProject.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
-                console.log(state.userProjects);
-                
-                state.userProjects = state.userProjects.filter((project: ProjectCard) => project.id !== payload.projectId);
+                console.log(state.projects);
+
+                state.projects = state.projects.filter((project: ProjectCard) => project.id !== payload.projectId);
                 state.total -= 1;
             })
             .addCase(deleteUserProject.rejected, (state) => {

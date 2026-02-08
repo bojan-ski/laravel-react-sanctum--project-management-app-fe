@@ -6,8 +6,13 @@ import { Plus } from 'lucide-react';
 function TotalAndAddProject({ total }: { total: number; }): JSX.Element {
     return (
         <section className='flex items-center justify-between mb-5'>
-            <p className="font-semibold">
-                Projects: {total} project{total !== 1 ? 's' : ''}
+            <p className="font-semibold flex gap-1">
+                <span className='text-gray-700'>
+                    Total:
+                </span>
+                <span className='text-black'>
+                    {total} project{total !== 1 ? 's' : ''}
+                </span>
             </p>
 
             <Button
@@ -16,7 +21,7 @@ function TotalAndAddProject({ total }: { total: number; }): JSX.Element {
                 variant="outline"
             >
                 <Link to={'/add_project'}>
-                    <Plus/>
+                    <Plus />
                     <span className='hidden md:block'>Project</span>
                 </Link>
             </Button>

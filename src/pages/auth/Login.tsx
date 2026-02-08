@@ -4,7 +4,7 @@ import { useAppSelector } from '../../hooks/useRedux';
 import { useThunk } from '../../hooks/useThunk';
 import { useZodValidation } from '../../hooks/useZodValidation';
 import { loginUser } from '../../features/user/userSlice';
-import type { UserState } from '../../types/user';
+import type { AuthState } from '../../types/auth';
 import { loginSchema, type LoginFormData } from '../../schemas/authSchema';
 import PageHeader from '../../components/global/PageHeader';
 import FormWrapper from '../../components/form/FormWrapper';
@@ -13,7 +13,7 @@ import FormSubmitButton from '../../components/form/FormSubmitButton';
 import toast from 'react-hot-toast';
 
 function Login(): JSX.Element {
-    const { isLoading } = useAppSelector<UserState>(state => state.user);
+    const { isLoading } = useAppSelector<AuthState>(state => state.user);
     const { run } = useThunk(loginUser);
     const { validate, errors, setErrors } = useZodValidation<LoginFormData>();
     const navigate: NavigateFunction = useNavigate();

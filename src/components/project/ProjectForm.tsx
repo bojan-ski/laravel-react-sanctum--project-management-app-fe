@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent, type JSX } from 'react';
 import { useZodValidation } from '../../hooks/useZodValidation';
 import { projectSchema, type ProjectFormData } from '../../schemas/projectSchema';
-import type { ProjectFormSubmit } from '../../types/types';
+import type { ProjectFormSubmit } from '../../types/project';
 import PageHeader from '../global/PageHeader';
 import FormWrapper from '../form/FormWrapper';
 import FormInput from '../form/FormInput';
