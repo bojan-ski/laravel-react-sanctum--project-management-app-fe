@@ -1,4 +1,16 @@
+import type { Member } from "./member";
+
 export type ProjectStatus = 'pending' | 'active' | 'completed' | 'closed';
+
+export type Project = {
+    id: number;
+    title: string;
+    description: string;
+    status: ProjectStatus;
+    deadline: string;
+    created_at: string;
+    updated_at: string;
+};
 
 export type ProjectOwner = {
     avatar: string;
@@ -6,16 +18,16 @@ export type ProjectOwner = {
 };
 
 export type ProjectCard = {
-    id: number;
-    title: string;
-    description: string;
-    deadline: string;
-    status: ProjectStatus;
-    is_owner: boolean;
     owner: ProjectOwner;
-    created_at: string;
-    updated_at: string;
-};
+    is_owner: boolean;
+} & Project;
+
+export type SelectedProject = {
+    document_path: string | null;
+    owner: ProjectOwner;
+    is_owner: boolean;
+    members: Member[];
+} & Project;
 
 // api response
 export type GetProjectsResponse = {
@@ -24,9 +36,28 @@ export type GetProjectsResponse = {
     data: ProjectCard[];
 };
 
+export type SelectedProjectDataResponse = {
+    status: 'success';
+    message: string;
+    data: Project;
+};
+
+export type SelectedProjectDetailsResponse = {
+    status: 'success';
+    message: string;
+    data: SelectedProject;
+};
+
 export type GetProjectsResponseErrors = {
     ownership?: string;
     status?: string;
+};
+
+export type ProjectFormDataErrors = {
+    title?: string;
+    description?: string;
+    deadline?: string;
+    document_path?: string;
 };
 
 // project slice
@@ -52,15 +83,15 @@ export type ProjectsState = {
 };
 
 // create/update project
-export type ProjectFormSubmit = {
-    status: 'fulfilled' | 'rejected';
-    message: string;
-    errors?: any;
+export type ProjectFormSubmitStatus = 'success' | 'error';
+export type ProjectFormErrors = ProjectFormDataErrors & {
+    random: string;
 };
 
-export type ProjectFormDataErrors = {
-    title?: string;
-    description?: string;
-    deadline?: string;
-    document_path?: string;
+export type ProjectFormSubmitResult = {
+    status: ProjectFormSubmitStatus;
+    message: string;
+    errors?: {
+        random: string;
+    } & ProjectFormDataErrors;
 };

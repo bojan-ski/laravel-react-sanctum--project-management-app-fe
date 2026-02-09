@@ -1,13 +1,5 @@
 import type { User } from "./user";
 
-export type Member = {
-    id: number;
-    name: string;
-    email: string;
-    avatar: string | null;
-    joined_at: string;
-};
-
 // regularUser/notificationSlice
 export type Notification = {
     id: number;

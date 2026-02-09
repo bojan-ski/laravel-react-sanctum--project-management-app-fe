@@ -18,18 +18,18 @@ const initialProjectState: ProjectsState = {
     total: 0
 };
 
-type getUserProjectsProps = {
+type GetUserProjectsProps = {
     ownership?: string;
     status?: string;
     page?: number;
 };
 
 export const getUserProjects = createAsyncThunk('projects/getUserProjects', async (
-    { ownership, status, page }: getUserProjectsProps,
+    { ownership, status, page }: GetUserProjectsProps,
     { rejectWithValue }
 ) => {
     console.log('getUserProjects');
-    
+
     try {
         const apiCall = await getProjects(ownership, status, page);
 
@@ -40,11 +40,11 @@ export const getUserProjects = createAsyncThunk('projects/getUserProjects', asyn
 });
 
 export const createNewProject = createAsyncThunk('project/createNewProject', async (
-    newProjectFormData: ProjectFormData,
+    formData: ProjectFormData,
     { rejectWithValue }
 ) => {
     try {
-        const apiCall = await createProject(newProjectFormData);
+        const apiCall = await createProject(formData);
 
         return apiCall;
     } catch (error: any) {
@@ -52,13 +52,13 @@ export const createNewProject = createAsyncThunk('project/createNewProject', asy
     }
 });
 
-type updateUserProjectProps = {
+type UpdateUserProjectProps = {
     projectId: number;
     updateProjectFormData: ProjectFormData;
 };
 
 export const updateUserProject = createAsyncThunk('project/updateProject', async (
-    { projectId, updateProjectFormData }: updateUserProjectProps,
+    { projectId, updateProjectFormData }: UpdateUserProjectProps,
     { rejectWithValue }
 ) => {
     try {
@@ -70,21 +70,23 @@ export const updateUserProject = createAsyncThunk('project/updateProject', async
     }
 });
 
-type changeProjectStatusProps = {
+type ChangeProjectStatusProps = {
     projectId: number;
     newProjectStatus: string;
 };
 
 export const changeProjectStatus = createAsyncThunk('project/changeProjectStatus', async (
-    { projectId, newProjectStatus }: changeProjectStatusProps,
+    { projectId, newProjectStatus }: ChangeProjectStatusProps,
     { rejectWithValue }
 ) => {
     try {
         const apiCall = await statusChange(projectId, newProjectStatus);
+        console.log(apiCall);
 
         return apiCall;
     } catch (error: any) {
-        return handleAsyncThunkError<ProjectFormDataErrors>(error, rejectWithValue);
+        console.log(error);
+        return handleAsyncThunkError(error, rejectWithValue);
     }
 });
 
@@ -94,10 +96,12 @@ export const deleteUserProject = createAsyncThunk('project/deleteUserProject', a
 ) => {
     try {
         const apiCall = await deleteProject(projectId);
+        console.log(apiCall);
 
         return { projectId, message: apiCall.message };
     } catch (error: any) {
-        return handleAsyncThunkError<ProjectFormDataErrors>(error, rejectWithValue);
+        console.log(error);
+        return handleAsyncThunkError(error, rejectWithValue);
     }
 });
 
@@ -124,8 +128,6 @@ const projectSlice = createSlice({
                 state.isLoading = true;
             })
             .addCase(getUserProjects.fulfilled, (state, { payload }) => {
-                console.log(payload);
-
                 state.isLoading = false;
                 state.projects = payload.data;
                 state.pagination.currentPage = payload.current_page;
@@ -133,7 +135,7 @@ const projectSlice = createSlice({
                 state.total = payload.total;
             })
             .addCase(getUserProjects.rejected, (state) => {
-                state.isLoading = false;              
+                state.isLoading = false;
             })
 
             // create new project

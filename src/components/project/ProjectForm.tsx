@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent, type JSX } from 'react';
 import { useZodValidation } from '../../hooks/useZodValidation';
 import { projectSchema, type ProjectFormData } from '../../schemas/projectSchema';
-import type { ProjectFormSubmit } from '../../types/project';
+import type { ProjectFormSubmitResult } from '../../types/project';
 import PageHeader from '../global/PageHeader';
 import FormWrapper from '../form/FormWrapper';
 import FormInput from '../form/FormInput';
@@ -19,7 +19,7 @@ type ProjectFormProps = {
         document_path?: string | null;
     };
     isLoading: boolean;
-    onSubmit: (formData: ProjectFormData) => Promise<ProjectFormSubmit>;
+    onSubmit: (formData: ProjectFormData) => Promise<ProjectFormSubmitResult>;
     submitLabel: string;
     headerLabel: string;
     showExistingFile?: boolean;
@@ -55,46 +55,39 @@ export default function ProjectForm({
     const handleSubmit = async (e: FormEvent): Promise<void> => {
         e.preventDefault();
 
-        // zod validation
         const rawFormData = { ...formData, document_path: file };
         const validation = validate(projectSchema, rawFormData);
         if (!validation) return;
 
-        // run dispatch call
-        const result = await onSubmit({ ...formData, document_path: file });
+        const result = await onSubmit({ ...formData, document_path: file });               
 
-        // dispatch response
-        if (result.status === 'fulfilled') {
+        if (result.status === 'success') {
             toast.success(result.message);
 
             setErrors({});
         }
 
-        if (result.status === 'rejected') {
+        if (result.status === 'error') {
             toast.error(result.message || "Validation error");
 
-            setErrors(result.errors);
+            setErrors(result.errors ?? {});
         }
     };
 
     return (
         <div className="project-form my-10">
-            {/* Page header */}
             <PageHeader
                 label={headerLabel}
-                headerCss='mb-7 text-center font-bold text-4xl'
+                headerCss='mb-7 text-center font-bold text-3xl md:text-4xl'
             />
 
-            {/* Form - form wrapper */}
             <div className="lg:w-1/2 mx-auto">
                 <FormWrapper onSubmit={handleSubmit}>
-                    {/* title */}
                     <FormInput
                         name='title'
                         label='enter title *'
-                        minLength={3}
                         maxLength={64}
-                        placeholder='min 3, max 64 characters'
+                        placeholder='max 64 characters'
                         required={true}
                         value={formData.title}
                         onMutate={handleChange}
@@ -102,13 +95,11 @@ export default function ProjectForm({
                         error={errors.title}
                     />
 
-                    {/* description */}
                     <FormTextarea
                         name='description'
                         label='enter description *'
-                        minLength={10}
                         maxLength={3000}
-                        placeholder='min 10, max 3000 characters'
+                        placeholder='max 3000 characters'
                         required={true}
                         value={formData.description}
                         onMutate={handleChange}
@@ -117,7 +108,6 @@ export default function ProjectForm({
                         error={errors.description}
                     />
 
-                    {/* deadline */}
                     <FormInput
                         name='deadline'
                         type='date'
@@ -129,7 +119,6 @@ export default function ProjectForm({
                         error={errors.deadline}
                     />
 
-                    {/* if document, show document options */}
                     {showDocOptions && initialData?.document_path && (
                         <DocumentOptions
                             documentPath={initialData?.document_path}
@@ -138,7 +127,6 @@ export default function ProjectForm({
                         />
                     )}
 
-                    {/* document */}
                     <FormInput
                         name='document_path'
                         type='file'
@@ -149,10 +137,9 @@ export default function ProjectForm({
                         error={errors.document_path}
                     />
 
-                    {/* submit */}
                     <FormSubmitButton
                         loading={isLoading}
-                        btnCss="border rounded-sm py-2 px-5 text-white bg-yellow-500 hover:bg-yellow-600 transition cursor-pointer font-semibold"
+                        btnCss="border rounded-sm text-xs sm:text-sm rounded-sm py-1.5 md:py-2 px-4 md:px-5 text-white bg-yellow-500 hover:bg-yellow-600 transition cursor-pointer font-semibold"
                         btnLabel={submitLabel}
                     />
                 </FormWrapper>

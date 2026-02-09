@@ -5,7 +5,7 @@ import { updateUserProject } from '../features/regularUser/projectSlice';
 import { getProjectData } from '../services/project';
 import { useThunk } from '../hooks/useThunk';
 import type { ProjectFormData } from '../schemas/projectSchema';
-import type { ProjectFormSubmit, ProjectState } from '../types/project';
+import type { ProjectFormSubmitResult, ProjectsState } from '../types/project';
 import ProjectForm from '../components/project/ProjectForm';
 
 export const loader = async ({ params }: { params: any; }): Promise<any> => {
@@ -15,29 +15,29 @@ export const loader = async ({ params }: { params: any; }): Promise<any> => {
 };
 
 function EditProject(): JSX.Element {
-    const { data } = useLoaderData();
-    const { isLoading, filterOwnership, filterStatus, currentPage } = useAppSelector<ProjectState>(state => state.project);
-    const { run } = useThunk(updateUserProject);
     const navigate: NavigateFunction = useNavigate();
+    const { data: project } = useLoaderData();
+    const { isLoading } = useAppSelector<ProjectsState>(state => state.project);
+    const { run } = useThunk(updateUserProject);
 
-    const handleUpdateProject = async (formData: ProjectFormData): Promise<ProjectFormSubmit> => {
+    const handleUpdateProject = async (formData: ProjectFormData): Promise<ProjectFormSubmitResult> => {
         const thunkCall = await run({
-            projectId: data.id,
+            projectId: project.id,
             updateProjectFormData: formData
         });
 
         if (thunkCall.ok) {
-            navigate(`/projects?ownership=${filterOwnership}&status=${filterStatus}&page=${currentPage}`);
+            navigate(`/projects/${project.id}`);
 
             return {
-                status: 'fulfilled',
+                status: 'success',
                 message: thunkCall.data.message
             };
         };
 
         return {
-            status: 'rejected',
-            message: thunkCall.error.random || thunkCall?.error.requestStatus,
+            status: 'error',
+            message: thunkCall.error.random,
             errors: thunkCall.error
         };
     };
@@ -45,11 +45,11 @@ function EditProject(): JSX.Element {
     return (
         <ProjectForm
             isLoading={isLoading}
-            initialData={data}
+            initialData={project}
             headerLabel="Edit project"
             submitLabel="Update project"
             onSubmit={handleUpdateProject}
-            showExistingFile={!!data.document_path}
+            showExistingFile={!!project.document_path}
         />
     );
 }

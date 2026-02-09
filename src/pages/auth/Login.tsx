@@ -13,10 +13,10 @@ import FormSubmitButton from '../../components/form/FormSubmitButton';
 import toast from 'react-hot-toast';
 
 function Login(): JSX.Element {
+    const navigate: NavigateFunction = useNavigate();
     const { isLoading } = useAppSelector<AuthState>(state => state.user);
     const { run } = useThunk(loginUser);
     const { validate, errors, setErrors } = useZodValidation<LoginFormData>();
-    const navigate: NavigateFunction = useNavigate();
     const [ form, setForm ] = useState<LoginFormData>({
         email: '',
         password: '',

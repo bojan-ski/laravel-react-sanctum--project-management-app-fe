@@ -8,22 +8,23 @@ type DocumentOptionsProps = {
     setShowDocOptions: (show: boolean) => void;
 };
 
-function DocumentOptions({ documentPath, setShowDocOptions, projectId }: DocumentOptionsProps): JSX.Element {
+function DocumentOptions({
+    documentPath,
+    setShowDocOptions,
+    projectId
+}: DocumentOptionsProps): JSX.Element {
     return (
-        <div className='mb-3 text-end'>
-            <p className="text-sm font-semibold">
-                Available documentation:
+        <div className='text-end'>
+            <p className="text-xs md:text-sm font-semibold">
+                Documentation:
             </p>
 
-            <div className='flex items-center justify-end gap-4 text-sm font-semibold'>
-
+            <div className='flex items-center justify-end gap-4 text-xs md:text-sm font-semibold'>
                 <DownloadDocument documentPath={documentPath} />
-
                 <DeleteDocument
                     projectId={projectId}
                     setShowDocOptions={setShowDocOptions}
                 />
-
             </div>
         </div>
     );
