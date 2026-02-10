@@ -1,4 +1,5 @@
 import type { Member } from "./member";
+import type { Document } from "./document";
 
 export type ProjectStatus = 'pending' | 'active' | 'completed' | 'closed';
 
@@ -22,12 +23,15 @@ export type ProjectCard = {
     is_owner: boolean;
 } & Project;
 
-export type SelectedProject = {
-    document_path: string | null;
+export type ProjectData = {
+    document: Document;
+} & Project;
+
+export type ProjectDetails = {
     owner: ProjectOwner;
     is_owner: boolean;
     members: Member[];
-} & Project;
+} & ProjectData;
 
 // api response
 export type GetProjectsResponse = {
@@ -39,13 +43,13 @@ export type GetProjectsResponse = {
 export type SelectedProjectDataResponse = {
     status: 'success';
     message: string;
-    data: Project;
+    data: ProjectData;
 };
 
 export type SelectedProjectDetailsResponse = {
     status: 'success';
     message: string;
-    data: SelectedProject;
+    data: ProjectDetails;
 };
 
 export type GetProjectsResponseErrors = {

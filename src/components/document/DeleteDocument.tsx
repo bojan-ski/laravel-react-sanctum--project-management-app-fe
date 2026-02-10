@@ -1,31 +1,32 @@
 import { type JSX } from 'react';
-import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
-import { deleteProjectDocument } from '../../features/document/documentSlice';
+import { useThunk } from '../../hooks/useThunk';
+import { useAppSelector } from '../../hooks/useRedux';
+import { deleteSelectedDocument } from '../../features/document/documentSlice';
+import type { Document, DocumentState } from '../../types/document';
 import toast from 'react-hot-toast';
 
 type DeleteDocumentProps = {
-    projectId: number;
+    document: Document;
     setShowDocOptions: (show: boolean) => void;
 };
 
-function DeleteDocument({ projectId, setShowDocOptions }: DeleteDocumentProps): JSX.Element {
-    const { isLoading } = useAppSelector(state => state.document);
-    const dispatch = useAppDispatch();
+function DeleteDocument({
+    document,
+    setShowDocOptions
+}: DeleteDocumentProps): JSX.Element {
+    const { isLoading } = useAppSelector<DocumentState>(state => state.document);
+    const { run } = useThunk(deleteSelectedDocument);
 
     const handleDelete = async (): Promise<void> => {
         if (confirm(`Delete document?`)) {
-            const result = await dispatch(deleteProjectDocument(projectId));
+            const thunkCall = await run(document.id);
 
-            if (result.meta.requestStatus == 'fulfilled') {
-                const successMsg = result.payload as { message: string; };
-                toast.success(successMsg.message);
+            if (thunkCall.ok) {
+                toast.success(thunkCall.data.message);
 
                 setShowDocOptions(false);
-            }
-
-            if (result.meta.requestStatus == 'rejected') {
-                const errorMsg = result.payload || result?.meta.requestStatus;
-                toast.error(errorMsg as string);
+            } else {
+                toast.error(thunkCall.error.random || "Delete Document Error");
             }
         }
     };
@@ -37,7 +38,7 @@ function DeleteDocument({ projectId, setShowDocOptions }: DeleteDocumentProps): 
             disabled={isLoading}
             onClick={handleDelete}
         >
-            {isLoading ? 'Deleting...' : 'Delete'}
+            Delete
         </button>
     );
 }

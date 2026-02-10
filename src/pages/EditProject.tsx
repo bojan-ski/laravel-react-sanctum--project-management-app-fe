@@ -5,13 +5,13 @@ import { updateUserProject } from '../features/regularUser/projectSlice';
 import { getProjectData } from '../services/project';
 import { useThunk } from '../hooks/useThunk';
 import type { ProjectFormData } from '../schemas/projectSchema';
-import type { ProjectFormSubmitResult, ProjectsState } from '../types/project';
+import type { ProjectFormSubmitResult, ProjectsState, SelectedProjectDataResponse } from '../types/project';
 import ProjectForm from '../components/project/ProjectForm';
 
-export const loader = async ({ params }: { params: any; }): Promise<any> => {
-    const projectData: any = await getProjectData(params.id);
+export const loader = async ({ params }: { params: any; }): Promise<SelectedProjectDataResponse> => {
+    const project: SelectedProjectDataResponse = await getProjectData(params.id);
 
-    return projectData;
+    return project;
 };
 
 function EditProject(): JSX.Element {
@@ -49,7 +49,7 @@ function EditProject(): JSX.Element {
             headerLabel="Edit project"
             submitLabel="Update project"
             onSubmit={handleUpdateProject}
-            showExistingFile={!!project.document_path}
+            showExistingFile={!!project.document}
         />
     );
 }

@@ -1,25 +1,33 @@
 import { type JSX } from 'react';
+import { useAppSelector } from '../../hooks/useRedux';
+import { useThunk } from '../../hooks/useThunk';
+import { downloadSelectedDocument } from '../../features/document/documentSlice';
+import type { Document, DocumentState } from '../../types/document';
 import toast from 'react-hot-toast';
 
-function DownloadDocument({ documentPath }: { documentPath: string; }): JSX.Element {
+function DownloadDocument({ document }: { document: Document; }): JSX.Element {
+    const { isLoading } = useAppSelector<DocumentState>(state => state.document);
+    const { run } = useThunk(downloadSelectedDocument);
+
+    const handleDownload = async (): Promise<void> => {
+        const thunkCall = await run({
+            documentId: document.id,
+            filename: document.doc_name
+        });
+
+        if (thunkCall.ok) {
+            toast.success("Download Success");
+        } else {
+            toast.error(thunkCall.error.random || "Download Document Error");
+        }
+    };
+
     return (
         <button
             type='button'
             className="text-blue-500 hover:underline cursor-pointer"
-            onClick={async () => {
-                try {
-                    const response = await fetch(documentPath);
-                    const blob = await response.blob();
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement("a");
-                    a.href = url;
-                    a.download = documentPath.split("/").pop() ?? 'document';
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                } catch (error) {
-                    toast.error("Error downloading file");
-                }
-            }}
+            disabled={isLoading}
+            onClick={handleDownload}
         >
             Download
         </button>

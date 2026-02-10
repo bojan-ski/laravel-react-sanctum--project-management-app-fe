@@ -22,12 +22,6 @@ export type NotificationState = {
     error: string;
 };
 
-// regularUser/projectMemberSlice
-export type ProjectMembersState = {
-    isLoading: boolean;
-    availableUsers: User[];
-};
-
 // adminUser/createUserSlice
 export type NewUserFormData = {
     name: string;

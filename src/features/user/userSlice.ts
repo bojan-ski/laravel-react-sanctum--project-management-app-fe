@@ -68,6 +68,8 @@ export const userChangePassword = createAsyncThunk('user/userChangePassword', as
 
         return apiCall;
     } catch (error: any) {
+        console.log(error);
+        
         return handleAsyncThunkError<ChangePasswordFormDataErrors>(error, rejectWithValue);
     }
 });

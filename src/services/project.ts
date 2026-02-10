@@ -41,11 +41,13 @@ export const createProject = async (newProjectData: ProjectFormData): Promise<Nu
 export async function getProjectDetails(projectId: number): Promise<SelectedProjectDetailsResponse> {
     const response = await api.get(`/api/projects/${projectId}`);
     console.log(response);
+
     return response.data;
 }
 
 export async function getProjectData(projectId: number): Promise<SelectedProjectDataResponse> {
     const response = await api.get(`/api/projects/${projectId}/edit`);
+    console.log(response);
 
     return response.data;
 }

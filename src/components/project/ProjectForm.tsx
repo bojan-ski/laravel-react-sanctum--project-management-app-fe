@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent, type JSX } from 'react';
 import { useZodValidation } from '../../hooks/useZodValidation';
 import { projectSchema, type ProjectFormData } from '../../schemas/projectSchema';
-import type { ProjectFormSubmitResult } from '../../types/project';
+import type { ProjectData, ProjectFormSubmitResult } from '../../types/project';
 import PageHeader from '../global/PageHeader';
 import FormWrapper from '../form/FormWrapper';
 import FormInput from '../form/FormInput';
@@ -11,13 +11,7 @@ import FormSubmitButton from '../form/FormSubmitButton';
 import toast from 'react-hot-toast';
 
 type ProjectFormProps = {
-    initialData?: {
-        id: number;
-        title: string;
-        description: string;
-        deadline: string;
-        document_path?: string | null;
-    };
+    initialData?: ProjectData;
     isLoading: boolean;
     onSubmit: (formData: ProjectFormData) => Promise<ProjectFormSubmitResult>;
     submitLabel: string;
@@ -40,7 +34,7 @@ export default function ProjectForm({
         deadline: initialData?.deadline?.slice(0, 10) || '',
     });
     const [file, setFile] = useState<File | null>(null);
-    const [showDocOptions, setShowDocOptions] = useState<boolean>(showExistingFile);
+    const [showDocOptions, setShowDocOptions] = useState<boolean>(showExistingFile);    
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
         const { name, type, files, value } = e.target;
@@ -72,7 +66,7 @@ export default function ProjectForm({
 
             setErrors(result.errors ?? {});
         }
-    };
+    };    
 
     return (
         <div className="project-form my-10">
@@ -119,10 +113,9 @@ export default function ProjectForm({
                         error={errors.deadline}
                     />
 
-                    {showDocOptions && initialData?.document_path && (
+                    {showDocOptions && initialData?.document && (
                         <DocumentOptions
-                            documentPath={initialData?.document_path}
-                            projectId={initialData.id}
+                            document={initialData?.document}
                             setShowDocOptions={setShowDocOptions}
                         />
                     )}

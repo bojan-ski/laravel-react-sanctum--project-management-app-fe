@@ -1,20 +1,42 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { deleteDocument } from "../../services/document";
+import { deleteDocument, downloadDocument } from "../../services/document";
+import { handleAsyncThunkError } from "../../utils/reduxErrorHandler";
+import type { DocumentState } from "../../types/document";
 
-const initialDocumentState = {
+const initialDocumentState: DocumentState = {
     isLoading: false,
 };
 
-export const deleteProjectDocument = createAsyncThunk('document/deleteUserProject', async (
-    projectId: number,
+type DownloadSelectedDocumentProps = {
+    documentId: number;
+    filename: string;
+};
+
+export const downloadSelectedDocument = createAsyncThunk('document/downloadSelectedDocument', async (
+    { documentId, filename }: DownloadSelectedDocumentProps,
     { rejectWithValue }
 ) => {
     try {
-        const apiCall = await deleteDocument(projectId);       
+        const apiCall = await downloadDocument(documentId, filename);
 
-        return { projectId, message: apiCall.message };
-    } catch (error: any) {        
-        return rejectWithValue(error?.response?.statusText || 'Error - Delete project');
+        return apiCall;
+    } catch (error: any) {
+        return handleAsyncThunkError(error, rejectWithValue);
+    }
+});
+
+export const deleteSelectedDocument = createAsyncThunk('document/deleteSelectedDocument', async (
+    documentId: number,
+    { rejectWithValue }
+) => {
+    try {
+        const apiCall = await deleteDocument(documentId);  
+
+        return apiCall;
+    } catch (error: any) {
+        console.log(error);
+        
+        return handleAsyncThunkError(error, rejectWithValue);
     }
 });
 
@@ -24,16 +46,27 @@ const documentSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(deleteProjectDocument.pending, (state) => {
+            // download document
+            .addCase(downloadSelectedDocument.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(deleteProjectDocument.fulfilled, (state) => {
+            .addCase(downloadSelectedDocument.fulfilled, (state) => {
                 state.isLoading = false;
             })
-            .addCase(deleteProjectDocument.rejected, (state) => {                
+            .addCase(downloadSelectedDocument.rejected, (state) => {
                 state.isLoading = false;
             })
 
+            // delete document
+            .addCase(deleteSelectedDocument.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(deleteSelectedDocument.fulfilled, (state) => {
+                state.isLoading = false;
+            })
+            .addCase(deleteSelectedDocument.rejected, (state) => {
+                state.isLoading = false;
+            });
     },
 });
 
