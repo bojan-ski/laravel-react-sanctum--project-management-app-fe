@@ -52,7 +52,7 @@ function FormSelect({
             >
                 <SelectTrigger
                     id={name}
-                    className={`w-full border text-xs sm:text-sm bg-white text-gray-800 rounded-md px-3 py-2 focus:outline-none focus:shadow-md ${selectCss}`}
+                    className={`w-full border text-xs sm:text-sm bg-white text-gray-800 rounded-md px-2 md:px-3 py-1.5 md:py-2 focus:outline-none focus:shadow-md ${selectCss}`}
                 >
                     <SelectValue placeholder={disabledOptionLabel} />
                 </SelectTrigger>

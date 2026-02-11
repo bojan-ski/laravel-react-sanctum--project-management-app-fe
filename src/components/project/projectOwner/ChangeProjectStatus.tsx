@@ -2,7 +2,6 @@ import { type JSX } from 'react';
 import { useZodValidation } from '../../../hooks/useZodValidation';
 import { useThunk } from '../../../hooks/useThunk';
 import { changeProjectStatus } from '../../../features/regularUser/projectSlice';
-import { usePageRefresh } from '../../../context/pageRefreshProvide';
 import { projectStatusSchema, type ProjectStatusFilter } from '../../../schemas/projectSchema';
 import FormSelect from '../../form/FormSelect';
 import toast from 'react-hot-toast';
@@ -17,8 +16,9 @@ function ChangeProjectStatus({
     projectStatus,
 }: ChangeProjectStatusProps): JSX.Element {
     const { run } = useThunk(changeProjectStatus);
-    const { validate } = useZodValidation<ProjectStatusFilter>();
-    const { pageRefresh } = usePageRefresh();
+    const { validate, errors, setErrors } = useZodValidation<ProjectStatusFilter>();
+
+    const options: ProjectStatusFilter[] = [ "pending", "active", "completed", "closed" ];
 
     const handleProjectStatusChange = async (option: string): Promise<void> => {
         const validation = validate(projectStatusSchema, option);
@@ -32,9 +32,11 @@ function ChangeProjectStatus({
         if (thunkCall.ok) {
             toast.success(thunkCall.data.message);
 
-            pageRefresh();
+            setErrors({});
         } else {
-            toast.error(thunkCall.error);
+            toast.error(thunkCall.error.random || "Validation error");
+
+            setErrors(thunkCall.error);
         }
     };
 
@@ -42,9 +44,10 @@ function ChangeProjectStatus({
         <FormSelect
             name="status"
             defaultValue={projectStatus}
-            options={["pending", "active", "completed", "closed"]}
+            options={options}
             onMutate={handleProjectStatusChange}
             selectCss='text-xs'
+            error={errors.status}
         />
     );
 }

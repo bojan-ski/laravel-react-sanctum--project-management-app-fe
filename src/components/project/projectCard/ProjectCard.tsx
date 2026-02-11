@@ -16,7 +16,7 @@ function ProjectCard({ project }: { project: ProjectCardType; }): JSX.Element {
                 <CardTitle className="mb-1">
                     {project.title}
                 </CardTitle>
-                <CardDescription className="line-clamp-5">
+                <CardDescription>
                     {project.description}
                 </CardDescription>
             </CardHeader>
@@ -30,6 +30,11 @@ function ProjectCard({ project }: { project: ProjectCardType; }): JSX.Element {
                         divCss='mb-3'
                     />
                 )}
+
+                <div className='text-end text-xs md:text-sm font-semibold'>
+                    <span className='mr-1 text-gray-500'>Status:</span>
+                    <span>{project.status}</span>
+                </div>
 
                 {/* statistics */}
                 <ProjectStatistics />

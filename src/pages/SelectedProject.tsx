@@ -46,13 +46,15 @@ function SelectedProject(): JSX.Element {
                         </p>
 
                         <div className='flex items-center justify-between'>
-                            <div className='flex gap-2 text-sm'>
-                                <p className="text-sm font-semibold">
-                                    Available file:
-                                </p>
+                            {data.document && (
+                                <div className='flex gap-2 text-sm'>
+                                    <p className="text-sm font-semibold">
+                                        Document:
+                                    </p>
 
-                                <DownloadDocument documentPath={data.document_path} />
-                            </div>
+                                    <DownloadDocument document={data.document} />
+                                </div>
+                            )}
 
                             <ProjectDeadline deadline={data.deadline} />
                         </div>

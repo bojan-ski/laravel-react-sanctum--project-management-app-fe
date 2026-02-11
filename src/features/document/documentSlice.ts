@@ -33,9 +33,7 @@ export const deleteSelectedDocument = createAsyncThunk('document/deleteSelectedD
         const apiCall = await deleteDocument(documentId);  
 
         return apiCall;
-    } catch (error: any) {
-        console.log(error);
-        
+    } catch (error: any) {        
         return handleAsyncThunkError(error, rejectWithValue);
     }
 });

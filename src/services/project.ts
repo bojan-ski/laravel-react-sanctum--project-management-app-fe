@@ -40,14 +40,12 @@ export const createProject = async (newProjectData: ProjectFormData): Promise<Nu
 
 export async function getProjectDetails(projectId: number): Promise<SelectedProjectDetailsResponse> {
     const response = await api.get(`/api/projects/${projectId}`);
-    console.log(response);
 
     return response.data;
 }
 
 export async function getProjectData(projectId: number): Promise<SelectedProjectDataResponse> {
     const response = await api.get(`/api/projects/${projectId}/edit`);
-    console.log(response);
 
     return response.data;
 }
@@ -83,14 +81,12 @@ export const statusChange = async (
     const response = await api.put(`/api/projects/${projectId}/status`, {
         status: newProjectStatus
     });
-    console.log(response);
 
     return response.data;
 };
 
 export const deleteProject = async (projectId: number): Promise<NullDataApiResponse> => {
     const response = await api.delete(`/api/projects/${projectId}/destroy`);
-    console.log(response);
 
     return response.data;
 };

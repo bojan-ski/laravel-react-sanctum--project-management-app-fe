@@ -81,11 +81,9 @@ export const changeProjectStatus = createAsyncThunk('project/changeProjectStatus
 ) => {
     try {
         const apiCall = await statusChange(projectId, newProjectStatus);
-        console.log(apiCall);
 
         return apiCall;
     } catch (error: any) {
-        console.log(error);
         return handleAsyncThunkError(error, rejectWithValue);
     }
 });
@@ -96,11 +94,9 @@ export const deleteUserProject = createAsyncThunk('project/deleteUserProject', a
 ) => {
     try {
         const apiCall = await deleteProject(projectId);
-        console.log(apiCall);
 
-        return { projectId, message: apiCall.message };
+        return apiCall;
     } catch (error: any) {
-        console.log(error);
         return handleAsyncThunkError(error, rejectWithValue);
     }
 });
@@ -193,7 +189,6 @@ const projectSlice = createSlice({
             })
             .addCase(deleteUserProject.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
-                console.log(state.projects);
 
                 state.projects = state.projects.filter((project: ProjectCard) => project.id !== payload.projectId);
                 state.total -= 1;

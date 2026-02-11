@@ -39,7 +39,7 @@ export function handleAsyncThunkError<T extends BaseStateErrors>(
 
     if (error.response?.status >= 500) {
         return rejectWithValue({ 
-            random: "Server error" 
+            random: error.response.data.message || "Server error" 
         } as T);
     }
 

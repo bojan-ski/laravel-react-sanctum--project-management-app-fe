@@ -3,7 +3,7 @@ import { useNavigate, type NavigateFunction } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
 import { useThunk } from '../../../hooks/useThunk';
 import { deleteUserProject, getUserProjects } from '../../../features/regularUser/projectSlice';
-import type { ProjectState } from '../../../types/types';
+import type { ProjectsState } from '../../../types/project';
 import { DropdownMenuItem } from '../../ui/dropdown-menu';
 import { Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -17,38 +17,38 @@ function DeleteProject({
     projectId,
     projectTitle
 }: DeleteProjectProps): JSX.Element {
-    const { isLoading, filterOwnership, filterStatus, currentPage } = useAppSelector<ProjectState>(state => state.project);
+    const navigate: NavigateFunction = useNavigate();
+    const { isLoading, filters, pagination } = useAppSelector<ProjectsState>(state => state.project);
     const { run } = useThunk(deleteUserProject);
     const dispatch = useAppDispatch();
-    const navigate: NavigateFunction = useNavigate();
 
     const handleDelete = async (): Promise<void> => {
-        if (confirm(`Delete project ${projectTitle}?`)) {
+        if (confirm(`Delete project - ${projectTitle}?`)) {
             const thunkCall = await run(projectId);
 
             if (thunkCall.ok) {
                 toast.success(thunkCall.data.message);
 
                 dispatch(getUserProjects({
-                    ownership: filterOwnership,
-                    status: filterStatus,
-                    page: currentPage
+                    ownership: filters.owner,
+                    status: filters.status,
+                    page: pagination.currentPage
                 }));
 
-                navigate(`/projects?ownership=${filterOwnership}&status=${filterStatus}&page=${currentPage}`);
+                navigate(`/projects?ownership=${filters.owner}&status=${filters.status}&page=${pagination.currentPage}`);
             } else {
-                toast.error(thunkCall.error);
+                toast.error(thunkCall.error.random || "Delete Project Error");
             }
         }
     };
 
     return (
         <DropdownMenuItem
-            className="text-red-600 focus:text-red-600 flex items-center gap-2"
+            className="text-xs md:text-sm text-red-600 focus:text-red-600 flex items-center gap-2"
             onClick={handleDelete}
             disabled={isLoading}
         >
-            <Trash2 className="h-4 w-4" />
+            <Trash2 className="h-3 w-3 md:h-4 md:w-4" />
             {isLoading ? 'Deleting...' : 'Delete Project'}
         </DropdownMenuItem>
     );
