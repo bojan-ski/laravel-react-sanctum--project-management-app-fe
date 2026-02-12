@@ -1,36 +1,33 @@
 import { type JSX } from 'react';
-import type { Member } from '../../../types/types';
+import type { Member } from '../../../types/member';
+import { formatDate } from '../../../utils/helpers';
 import UserAvatar from '../../global/UserAvatar';
 import RemoveMember from './remove/RemoveMember';
 import { Badge } from '../../ui/badge';
-import { formatDate } from '../../../utils/helpers';
 
 type MemberRowProps = {
     projectId: number;
-    ownerId: number;
     isProjectOwner: boolean;
     member: Member;
 };
 
 function MemberRow({
     projectId,
-    ownerId,
     isProjectOwner,
     member,
 }: MemberRowProps): JSX.Element {
     return (
-        <div className="border-b py-3 flex items-center justify-between rounded-md hover:bg-gray-50 transition">
-            {/* left side */}
+        <div className="text-xs border-b last:border-0 py-3 flex items-center justify-between rounded-md hover:bg-gray-50 transition-colors">
             <div className="flex items-center gap-3">
                 <UserAvatar
                     name={member.name}
                     avatar={member.avatar}
                 />
 
-                <div className='text-xs'>
+                <div>
                     <p>
                         {member.name}
-                        {member.id == ownerId && (
+                        {member.is_owner && (
                             <Badge variant="secondary" className="ml-2">
                                 Owner
                             </Badge>
@@ -42,13 +39,12 @@ function MemberRow({
                 </div>
             </div>
 
-            {/* right side */}
-            <div className='text-end text-xs'>
+            <div className='text-end'>
                 <p className="text-gray-600">
                     Joined: {formatDate(member.joined_at)}
                 </p>
 
-                {(isProjectOwner && ownerId != member.id) && (
+                {(isProjectOwner && !member.is_owner) && (
                     <RemoveMember
                         projectId={projectId}
                         memberId={member.id}

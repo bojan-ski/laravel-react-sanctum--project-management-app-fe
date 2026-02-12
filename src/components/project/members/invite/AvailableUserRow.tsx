@@ -32,16 +32,16 @@ function AvailableUserRow({
             />
 
             <UserAvatar 
-                avatarCss='h-10 w-10'
+                avatarCss='hidden sm:block sm:h-10 sm:w-10'
                 name={userName}
                 avatar={userAvatar}
             />            
 
             <div>
-                <p className="font-medium text-sm">
+                <p className="font-medium text-xs md:text-sm">
                     {userName}
                 </p>
-                <p className="text-sm text-gray-600">
+                <p className="text-xs md:text-sm text-gray-600">
                     {userEmail}
                 </p>
             </div>

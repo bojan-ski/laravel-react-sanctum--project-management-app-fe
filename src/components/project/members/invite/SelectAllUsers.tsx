@@ -20,13 +20,13 @@ function SelectAllUsers({
                     checked={selectedUserIdsLength === availableUsersLength && availableUsersLength > 0}
                     onCheckedChange={onSelectAll}
                 />
-                <label htmlFor="select-all" className="text-sm font-semibold cursor-pointer">
+                <label htmlFor="select-all" className="text-xs md:text-sm font-semibold cursor-pointer">
                     Select All ({availableUsersLength})
                 </label>
             </div>
 
             {selectedUserIdsLength > 0 && (
-                <span className="text-sm font-semibold">
+                <span className="text-xs md:text-sm font-semibold">
                     {selectedUserIdsLength} selected
                 </span>
             )}

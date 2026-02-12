@@ -53,7 +53,7 @@ export async function getProjectData(projectId: number): Promise<SelectedProject
 export async function updateProject(
     projectId: number,
     updateProjectData: ProjectFormData
-): Promise<SelectedProjectDetailsResponse> {
+): Promise<SelectedProjectDataResponse> {
     const formData = new FormData();
     formData.append('title', updateProjectData.title);
     formData.append('description', updateProjectData.description);

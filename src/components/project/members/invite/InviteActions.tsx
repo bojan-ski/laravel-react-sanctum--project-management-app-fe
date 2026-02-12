@@ -18,7 +18,7 @@ function InviteActions({
         <div className="flex justify-end gap-3 pt-4 border-t">
             <Button
                 variant="outline"
-                className='cursor-pointer'
+                className='text-xs md:text-sm cursor-pointer'
                 onClick={onCancel}
                 disabled={isLoading}
             >
@@ -26,7 +26,7 @@ function InviteActions({
             </Button>
 
             <Button
-                className='bg-yellow-500 hover:bg-yellow-600 transition cursor-pointer'
+                className='text-xs md:text-sm bg-yellow-500 hover:bg-yellow-600 transition cursor-pointer'
                 onClick={onInvite}
                 disabled={isLoading || selectedUserIdsLength === 0}
             >

@@ -31,6 +31,7 @@ export type ProjectDetails = {
     owner: ProjectOwner;
     is_owner: boolean;
     members: Member[];
+    members_limit: number;
 } & ProjectData;
 
 // api response

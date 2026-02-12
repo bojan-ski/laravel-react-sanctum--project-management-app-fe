@@ -1,52 +1,45 @@
 import { type JSX } from 'react';
-import type { Member } from '../../../types/types';
-import MemberRow from './MemberRow';
+import { useAppSelector } from '../../../hooks/useRedux';
+import type { Member, ProjectMembersState } from '../../../types/member';
+import LeaveProject from './leave/LeaveProject';
 import InviteMembersModal from './invite/InviteMembersModal';
+import MemberRow from './MemberRow';
 
 type MembersProps = {
     projectId: number;
-    ownerId: number;
     isProjectOwner: boolean;
-    members: Member[];
 };
 
 function Members({
     projectId,
-    ownerId,
     isProjectOwner,
-    members,
 }: MembersProps): JSX.Element {
-    return (
-        <div className='p-4 border rounded-md max-h-[400px] overflow-y-auto'>
-            {/* invite members option */}
-            {isProjectOwner && (
-                <InviteMembersModal
-                    members={members}
-                    projectId={projectId}
-                />
-            )}
+    const { members, membersLimit } = useAppSelector<ProjectMembersState>(state => state.projectMembers);
 
-            {/* members list */}
-            {members.length != 0 ? (
-                // {data.members.length > 1 ? (
-                <>
-                    <div className="space-y-3">
-                        {members.map((member: Member) => (
-                            <MemberRow
-                                key={member.id}
-                                projectId={projectId}
-                                ownerId={ownerId}
-                                isProjectOwner={isProjectOwner}
-                                member={member}
-                            />
-                        ))}
-                    </div>
-                </>
-            ) : (
-                <p className="text-center font-semibold py-4">
-                    No members yet
-                </p>
-            )}
+    return (
+        <div className='p-4 border rounded-md'>
+            <div className='flex items-center justify-between'>
+                <div className='text-xs md:text-sm font-medium'>
+                    Limit: <span>{members.length}</span>/<span>{membersLimit}</span>
+                </div>
+
+                {!isProjectOwner && <LeaveProject projectId={projectId} />}
+
+                {(isProjectOwner && members.length < membersLimit) && (
+                    <InviteMembersModal projectId={projectId} />
+                )}
+            </div>
+
+            <div className="space-y-3">
+                {members.map((member: Member) => (
+                    <MemberRow
+                        key={member.id}
+                        projectId={projectId}
+                        isProjectOwner={isProjectOwner}
+                        member={member}
+                    />
+                ))}
+            </div>
         </div>
     );
 }

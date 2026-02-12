@@ -1,7 +1,8 @@
-import { type JSX } from 'react';
+import { useEffect, type JSX } from 'react';
 import { useLoaderData } from 'react-router';
+import { useAppDispatch } from '../hooks/useRedux';
 import { getProjectDetails } from '../services/project';
-import { PageRefreshProvider } from '../context/pageRefreshProvide';
+import { setMembers } from '../features/regularUser/projectMemberSlice';
 import ProjectOwner from '../components/project/projectOwner/ProjectOwner';
 import ProjectDeadline from '../components/project/ProjectDeadline';
 import DownloadDocument from '../components/document/DownloadDocument';
@@ -17,66 +18,72 @@ export const loader = async ({ params }: { params: any; }): Promise<any> => {
 
 function SelectedProject(): JSX.Element {
     const { data } = useLoaderData();
+    const dispatch = useAppDispatch();
     console.log(data);
+
+    useEffect(() => {
+        console.log('useEffect - SelectedProject');
+
+        dispatch(setMembers({
+            members: data.members,
+            membersLimit: data.members_limit,
+        }));
+    }, [ data.id, dispatch ]);    
 
     return (
         <div className='selected-project-page my-10 grid lg:grid-cols-2 gap-4'>
-            <PageRefreshProvider>
-                {/* Section One */}
-                <section>
-                    {/* project owner details & features */}
-                    <ProjectOwner
-                        ownerAvatar={data.owner.avatar}
-                        ownerName={data.owner.name}
-                        isProjectOwner={data.is_owner}
-                        projectId={data.id}
-                        projectTitle={data.title}
-                        projectStatus={data.status}
-                        divCss='p-4 border rounded-md mb-5'
-                    />
+            {/* Section One */}
+            <section>
+                {/* project owner details & features */}
+                <ProjectOwner
+                    ownerAvatar={data.owner.avatar}
+                    ownerName={data.owner.name}
+                    isProjectOwner={data.is_owner}
+                    projectId={data.id}
+                    projectTitle={data.title}
+                    projectStatus={data.status}
+                    divCss='p-4 border rounded-md mb-5'
+                />
 
-                    {/* project data */}
-                    <div className='p-4 border rounded-md'>
-                        <h2 className='font-semibold text-lg mb-3'>
-                            {data.title}
-                        </h2>
+                {/* project data */}
+                <div className='p-4 border rounded-md'>
+                    <h2 className='font-semibold text-lg mb-3'>
+                        {data.title}
+                    </h2>
 
-                        <p className='mb-3 text-sm text-justify'>
-                            {data.description}
-                        </p>
+                    <p className='mb-3 text-sm text-justify'>
+                        {data.description}
+                    </p>
 
-                        <div className='flex items-center justify-between'>
-                            {data.document && (
-                                <div className='flex gap-2 text-sm'>
-                                    <p className="text-sm font-semibold">
-                                        Document:
-                                    </p>
+                    <div className='flex items-center justify-between'>
+                        {data.document && (
+                            <div className='flex gap-2 text-sm'>
+                                <p className="text-sm font-semibold">
+                                    Document:
+                                </p>
 
-                                    <DownloadDocument document={data.document} />
-                                </div>
-                            )}
+                                <DownloadDocument document={data.document} />
+                            </div>
+                        )}
 
-                            <ProjectDeadline deadline={data.deadline} />
-                        </div>
+                        <ProjectDeadline deadline={data.deadline} />
                     </div>
-                </section>
+                </div>
+            </section>
 
-                {/* Section Two */}
-                <section>
-                    {/* project statistics */}
-                    <div className='p-4 border rounded-md mb-5'>
-                        Project statistics
-                    </div>
+            {/* Section Two */}
+            <section>
+                {/* project statistics */}
+                <div className='p-4 border rounded-md mb-5'>
+                    Project statistics
+                </div>
 
-                    {/* project members */}
-                    <Members
-                        projectId={data.id}
-                        ownerId={data.owner.id}
-                        isProjectOwner={data.is_owner}
-                        members={data.members}
-                    />
-                </section>
-            </PageRefreshProvider>
+                {/* project members */}
+                <Members
+                    projectId={data.id}
+                    isProjectOwner={data.is_owner}
+                />
+            </section>
         </div>
     );
 }

@@ -1,22 +1,28 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { handleAsyncThunkError } from "../../utils/reduxErrorHandler";
 import { getAvailableUsers, inviteMembers, removeMember } from "../../services/member";
-import type { ProjectMembersState } from "../../types/types";
+import type { Member, ProjectMembersState } from "../../types/member";
+import type { User } from "../../types/user";
 
 const initialProjectMembersState: ProjectMembersState = {
     isLoading: false,
-    availableUsers: []
+    availableUsers: [],
+    members: [],
+    membersLimit: 0,
 };
 
 export const getAllAvailableUsers = createAsyncThunk('projectMembers/fetchAvailableUsers', async (
     projectId: number,
     { rejectWithValue }
 ) => {
+    console.log('getAllAvailableUsers');
+
     try {
         const apiCall = await getAvailableUsers(projectId);
 
         return apiCall;
     } catch (error: any) {
-        return rejectWithValue(error.response.statusText || 'Error - Get all available users');
+        return handleAsyncThunkError(error, rejectWithValue);
     }
 });
 
@@ -34,11 +40,7 @@ export const inviteSelectedUsers = createAsyncThunk('projectMembers/inviteMember
 
         return apiCall;
     } catch (error: any) {
-        if (error.response?.status === 500) {
-            return rejectWithValue(error.response.data.message);
-        }
-
-        return rejectWithValue(error.response.statusText || 'Error - Invite members');
+        return handleAsyncThunkError(error, rejectWithValue);
     }
 });
 
@@ -56,18 +58,19 @@ export const removeSelectedMember = createAsyncThunk('projectMembers/removeSelec
 
         return apiCall;
     } catch (error: any) {
-        if (error.response?.status === 500) {
-            return rejectWithValue(error.response.data.message);
-        }
-
-        return rejectWithValue(error.response.statusText || 'Error - Remove member');
+        return handleAsyncThunkError(error, rejectWithValue);
     }
 });
 
 const projectMemberSlice = createSlice({
     name: 'projectMembers',
     initialState: initialProjectMembersState,
-    reducers: {},
+    reducers: {
+        setMembers(state, { payload }) {
+            state.members = payload.members;
+            state.membersLimit = payload.membersLimit;
+        },
+    },
     extraReducers: (builder) => {
         builder
             // get available users
@@ -86,8 +89,11 @@ const projectMemberSlice = createSlice({
             .addCase(inviteSelectedUsers.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(inviteSelectedUsers.fulfilled, (state) => {
+            .addCase(inviteSelectedUsers.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
+                state.availableUsers = state.availableUsers.filter(
+                    (user: User) => !payload.data.user_ids.includes(user.id)
+                );
             })
             .addCase(inviteSelectedUsers.rejected, (state) => {
                 state.isLoading = false;
@@ -97,8 +103,9 @@ const projectMemberSlice = createSlice({
             .addCase(removeSelectedMember.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(removeSelectedMember.fulfilled, (state) => {
+            .addCase(removeSelectedMember.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
+                state.members = state.members.filter((member: Member) => member.id !== payload.data.member_id);
             })
             .addCase(removeSelectedMember.rejected, (state) => {
                 state.isLoading = false;
@@ -106,4 +113,5 @@ const projectMemberSlice = createSlice({
     },
 });
 
+export const { setMembers } = projectMemberSlice.actions;
 export default projectMemberSlice.reducer;

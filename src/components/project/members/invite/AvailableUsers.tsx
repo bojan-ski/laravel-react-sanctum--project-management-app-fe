@@ -1,5 +1,5 @@
 import { type JSX } from 'react';
-import type { User } from '../../../../types/types';
+import type { User } from '../../../../types/user';
 import AvailableUserRow from './AvailableUserRow';
 
 type AvailableUsersProps = {

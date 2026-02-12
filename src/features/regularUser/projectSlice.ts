@@ -1,8 +1,20 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { handleAsyncThunkError } from "../../utils/reduxErrorHandler";
-import { createProject, deleteProject, getProjects, statusChange, updateProject } from "../../services/project";
+import {
+    createProject,
+    deleteProject,
+    getProjects,
+    statusChange,
+    updateProject
+} from "../../services/project";
+import { leaveProject } from "../../services/member";
 import type { ProjectFormData } from "../../schemas/projectSchema";
-import type { ProjectFormDataErrors, ProjectsState, ProjectCard, GetProjectsResponseErrors } from "../../types/project";
+import type {
+    ProjectFormDataErrors,
+    ProjectsState,
+    ProjectCard,
+    GetProjectsResponseErrors
+} from "../../types/project";
 
 const initialProjectState: ProjectsState = {
     isLoading: false,
@@ -101,6 +113,19 @@ export const deleteUserProject = createAsyncThunk('project/deleteUserProject', a
     }
 });
 
+export const memberLeaveProject = createAsyncThunk('project/memberLeaveProject', async (
+    projectId: number,
+    { rejectWithValue }
+) => {
+    try {
+        const apiCall = await leaveProject(projectId);
+
+        return apiCall;
+    } catch (error: any) {
+        return handleAsyncThunkError(error, rejectWithValue);
+    }
+});
+
 const projectSlice = createSlice({
     name: 'project',
     initialState: initialProjectState,
@@ -153,7 +178,9 @@ const projectSlice = createSlice({
                 state.isLoading = false;
 
                 const updatedProjectData = payload.data;
-                const updatedProject = state.projects.find((project: ProjectCard) => project.id == updatedProjectData.id);
+                const updatedProject = state.projects.find(
+                    (project: ProjectCard) => project.id == updatedProjectData.id
+                );
 
                 if (updatedProject) {
                     updatedProject.title = updatedProjectData.title;
@@ -173,7 +200,9 @@ const projectSlice = createSlice({
                 state.isLoading = false;
 
                 const updatedProjectData = payload.data;
-                const updatedProject = state.projects.find((project: ProjectCard) => project.id == updatedProjectData.id);
+                const updatedProject = state.projects.find(
+                    (project: ProjectCard) => project.id == updatedProjectData.id
+                );
 
                 if (updatedProject) {
                     updatedProject.status = updatedProjectData.status;
@@ -187,13 +216,26 @@ const projectSlice = createSlice({
             .addCase(deleteUserProject.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(deleteUserProject.fulfilled, (state, { payload }) => {
+            .addCase(deleteUserProject.fulfilled, (state) => {
                 state.isLoading = false;
-
-                state.projects = state.projects.filter((project: ProjectCard) => project.id !== payload.projectId);
-                state.total -= 1;
             })
             .addCase(deleteUserProject.rejected, (state) => {
+                state.isLoading = false;
+            })
+
+            // user leave project
+            .addCase(memberLeaveProject.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(memberLeaveProject.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+
+                state.projects = state.projects.filter(
+                    (project: ProjectCard) => project.id !== payload.data.project_id
+                );
+                state.total -= 1;
+            })
+            .addCase(memberLeaveProject.rejected, (state) => {
                 state.isLoading = false;
             });
     },

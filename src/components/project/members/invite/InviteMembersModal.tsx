@@ -1,44 +1,42 @@
-import { useEffect, useState, type JSX } from 'react';
+import { useState, type JSX } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../hooks/useRedux';
 import { useThunk } from '../../../../hooks/useThunk';
-import { getAllAvailableUsers, inviteSelectedUsers } from '../../../../features/regularUser/projectMemberSlice';
-import { usePageRefresh } from '../../../../context/pageRefreshProvide';
-import type { Member, ProjectMembersState } from '../../../../types/types';
+import {
+    getAllAvailableUsers,
+    inviteSelectedUsers
+} from '../../../../features/regularUser/projectMemberSlice';
+import type { ProjectMembersState } from '../../../../types/member';
 import SelectAllUsers from './SelectAllUsers';
 import AvailableUsers from './AvailableUsers';
 import WarningMsg from './WarningMsg';
 import InviteActions from './InviteActions';
-import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogHeader, DialogDescription } from "../../../ui/dialog";
+import {
+    Dialog,
+    DialogContent,
+    DialogTrigger,
+    DialogTitle,
+    DialogHeader,
+    DialogDescription
+} from "../../../ui/dialog";
 import { Button } from '../../../ui/button';
 import { UserPlus } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-type InviteMembersModalProps = {
-    members: Member[];
-    projectId: number;
-};
-
-function InviteMembersModal({
-    members,
-    projectId,
-}: InviteMembersModalProps): JSX.Element {
+function InviteMembersModal({ projectId }: { projectId: number; }): JSX.Element {
     const { isLoading, availableUsers } = useAppSelector<ProjectMembersState>(state => state.projectMembers);
     const dispatch = useAppDispatch();
     const { run } = useThunk(inviteSelectedUsers);
-    const { pageRefresh } = usePageRefresh();
-    const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
+    const [ selectedUserIds, setSelectedUserIds ] = useState<number[]>([]);
 
-    useEffect(() => {
-        console.log('useEffect - InviteMembersModal');
-
+    const handleGetAllAvailableUsers = (projectId: number): void => {
         dispatch(getAllAvailableUsers(projectId));
-    }, [members, projectId]);
+    };
 
     const handleToggleUser = (userId: number): void => {
         setSelectedUserIds((prevState: number[]) =>
             prevState.includes(userId)
                 ? prevState.filter((id: number) => id !== userId)
-                : [...prevState, userId]
+                : [ ...prevState, userId ]
         );
     };
 
@@ -51,15 +49,14 @@ function InviteMembersModal({
     };
 
     const handleInvite = async (): Promise<void> => {
-        const thunkCall = await run({ projectId, userIds: selectedUserIds });    
+        const thunkCall = await run({ projectId, userIds: selectedUserIds });
 
         if (thunkCall.ok) {
             toast.success(thunkCall.data.message);
 
             setSelectedUserIds([]);
-            pageRefresh();
         } else {
-            toast.error(thunkCall.error);
+            toast.error(thunkCall.error.random || "Invite Members Error");
         }
     };
 
@@ -72,7 +69,8 @@ function InviteMembersModal({
             <Dialog>
                 <DialogTrigger asChild>
                     <Button
-                        className='cursor-pointer bg-yellow-500 hover:bg-yellow-600 mb-3'
+                        onClick={() => handleGetAllAvailableUsers(projectId)}
+                        className='cursor-pointer bg-yellow-500 hover:bg-yellow-600'
                     >
                         <UserPlus />
                         <span className='hidden sm:block'>Invite</span>
@@ -80,39 +78,35 @@ function InviteMembersModal({
                 </DialogTrigger>
 
                 <DialogContent aria-describedby={undefined}>
-                    {availableUsers.length != 0 ? (
+                    {availableUsers.length !== 0 ? (
                         <>
                             <DialogHeader>
-                                <DialogTitle>
+                                <DialogTitle className='text-base md:text-lg'>
                                     Invite Members
                                 </DialogTitle>
-                                <DialogDescription>
+                                <DialogDescription className='text-xs md:text-sm'>
                                     Select users to invite to this project. They will receive an email notification.
                                 </DialogDescription>
                             </DialogHeader>
 
                             <div className="space-y-4">
-                                {/* select all */}
                                 <SelectAllUsers
                                     selectedUserIdsLength={selectedUserIds.length}
                                     availableUsersLength={availableUsers.length}
                                     onSelectAll={handleSelectAll}
                                 />
 
-                                {/* available users */}
                                 <AvailableUsers
                                     selectedUserIds={selectedUserIds}
                                     availableUsers={availableUsers}
                                     onToggleUser={handleToggleUser}
                                 />
 
-                                {/* warning for large selections */}
-                                {selectedUserIds.length > 20 && (
+                                {selectedUserIds.length >= 3 && (
                                     <WarningMsg selectedUserIdsLength={selectedUserIds.length} />
                                 )}
                             </div>
 
-                            {/* actions */}
                             <InviteActions
                                 isLoading={isLoading}
                                 selectedUserIdsLength={selectedUserIds.length}
