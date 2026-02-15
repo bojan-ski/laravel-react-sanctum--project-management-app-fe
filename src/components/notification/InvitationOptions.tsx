@@ -1,6 +1,6 @@
 import { type JSX } from 'react';
 import { useAppSelector } from '../../hooks/useRedux';
-import type { NotificationState } from '../../types/types';
+import type { NotificationState } from '../../types/notification';
 import AcceptInvitation from './AcceptInvitation';
 import DeclineInvitation from './DeclineInvitation';
 
@@ -17,14 +17,11 @@ function InvitationOptions({
 
     return (
         <div className="flex items-center justify-end gap-2">
-            {/* accept */}
             <AcceptInvitation
                 isLoading={isLoading}
                 notificationId={notificationId}
                 onClose={onClose}
             />
-
-            {/* decline */}
             <DeclineInvitation
                 isLoading={isLoading}
                 notificationId={notificationId}

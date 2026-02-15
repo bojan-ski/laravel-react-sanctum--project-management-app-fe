@@ -1,26 +1,5 @@
 import type { User } from "./user";
 
-// regularUser/notificationSlice
-export type Notification = {
-    id: number;
-    type: string;
-    notifiable_id: number;
-    notifiable_type: string;
-    data: any;
-    action_taken: string | null;
-    is_invitation: boolean;
-    is_pending: boolean;
-    read_at: string | null;
-    created_at: string;
-};
-
-export type NotificationState = {
-    isLoading: boolean;
-    unreadNotifications: Notification[];
-    notifications: Notification[];
-    unreadCount: number;
-    error: string;
-};
 
 // adminUser/createUserSlice
 export type NewUserFormData = {

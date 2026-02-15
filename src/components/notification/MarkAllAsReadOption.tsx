@@ -3,7 +3,7 @@ import { useThunk } from '../../hooks/useThunk';
 import { useAppSelector } from '../../hooks/useRedux';
 import { markAllNotificationsAsRead } from '../../features/regularUser/notificationSlice';
 import { useNotificationBell } from '../../context/notificationBellProvider';
-import type { NotificationState } from '../../types/types';
+import type { NotificationState } from '../../types/notification';
 import { Button } from '../ui/button';
 import { CheckCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -15,13 +15,14 @@ function MarkAllAsReadOption(): JSX.Element {
 
     const handleMarkAllAsRead = async (): Promise<void> => {
         const thunkCall = await run(undefined);
-
+        console.log(thunkCall); 
+        
         if (thunkCall.ok) {
             toast.success(thunkCall.data.message);
 
             closeDropdown();
         } else {
-            toast.error(thunkCall.error);
+            toast.error(thunkCall.error.random || "Mark All As Read Error");
         }
     };
 
@@ -34,7 +35,7 @@ function MarkAllAsReadOption(): JSX.Element {
             disabled={isLoading}
         >
             <CheckCheck className="h-3 w-3 mr-1" />
-            {isLoading ? 'Wait...' : 'Mark all read'}
+            <span className='hidden md:block'>{isLoading ? 'Wait...' : 'Mark all read'}</span>
         </Button>
     );
 }

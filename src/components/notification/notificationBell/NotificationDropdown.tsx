@@ -2,10 +2,10 @@ import { useEffect, useRef, type JSX } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
 import { fetchUnreadCount, getUserNotifications } from '../../../features/regularUser/notificationSlice';
 import { useNotificationBell } from '../../../context/notificationBellProvider';
-import type { NotificationState } from '../../../types/types';
+import type { NotificationState } from '../../../types/notification';
+import { Card } from '../../ui/card';
 import BellHeader from './BellHeader';
 import BellContent from './BellContent';
-import { Card } from '../../ui/card';
 
 const NotificationDropdown = ({ isOpen }: { isOpen: boolean; }): JSX.Element => {
     const { isLoading, unreadNotifications, unreadCount } = useAppSelector<NotificationState>(state => state.notifications);
@@ -13,7 +13,6 @@ const NotificationDropdown = ({ isOpen }: { isOpen: boolean; }): JSX.Element => 
     const { closeDropdown } = useNotificationBell();
     const dropdownRef = useRef<HTMLDivElement | null>(null);
 
-    // fetch notifications on dropdown opens
     useEffect(() => {
         if (isOpen) {
             dispatch(fetchUnreadCount());
@@ -21,7 +20,6 @@ const NotificationDropdown = ({ isOpen }: { isOpen: boolean; }): JSX.Element => 
         }
     }, [isOpen, dispatch]);
 
-    // close dropdown on clicking outside
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent): void => {
             if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -41,11 +39,10 @@ const NotificationDropdown = ({ isOpen }: { isOpen: boolean; }): JSX.Element => 
     return (
         <div
             ref={dropdownRef}
-            className="absolute right-0 top-12 w-96 max-h-[600px] z-50 shadow-lg"
+            className="absolute -right-20 md:-right-40 top-12 w-64 md:w-96 max-h-[600px] z-50 shadow-lg"
         >
-            <Card>
+            <Card className='p-0 gap-0'>
                 <BellHeader unreadCount={unreadCount} />
-
                 <BellContent
                     isLoading={isLoading}
                     notifications={unreadNotifications}

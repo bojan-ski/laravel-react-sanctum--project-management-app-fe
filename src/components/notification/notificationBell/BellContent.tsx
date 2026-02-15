@@ -1,5 +1,5 @@
 import { type JSX } from 'react';
-import type { Notification } from '../../../types/types';
+import type { Notification } from '../../../types/notification';
 import { useNotificationBell } from '../../../context/notificationBellProvider';
 import NotificationItem from '../NotificationItem';
 import { CardContent } from '../../ui/card';
@@ -29,9 +29,9 @@ function BellContent({
                     ))}
                 </div>
             ) : notifications.length == 0 ? (
-                <div className="text-center py-8">
-                    <Inbox className="h-12 w-12 mx-auto mb-3" />
-                    <p>
+                <div className="text-center space-y-3 py-6 md:py-8">
+                    <Inbox className="h-8 w-8 md:h-12 md:w-12 mx-auto" />
+                    <p className='text-sm md:text-base'>
                         No notifications yet
                     </p>
                 </div>

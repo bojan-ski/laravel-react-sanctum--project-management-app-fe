@@ -1,7 +1,7 @@
 import { useEffect, type JSX } from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks/useRedux';
 import { getUserNotifications } from '../features/regularUser/notificationSlice';
-import type { Notification, NotificationState } from '../types/types';
+import type { Notification, NotificationState } from '../types/notification';
 import Loading from '../components/global/Loading';
 import NoDataMessage from '../components/global/NoDataMessage';
 import NotificationItem from '../components/notification/NotificationItem';
@@ -23,11 +23,11 @@ function Notifications(): JSX.Element {
         <NoDataMessage message="You have no notifications" />
       ) : (
         <>
-          <h2 className='text-center font-semibold text-xl mb-5'>
+          <h2 className='text-center font-semibold text-xl md:text-2xl mb-5'>
             You have {unreadCount} unread message{unreadCount > 1 && 's'}
           </h2>
 
-          <section className="divide-y mb-5">
+          <section className="divide-y">
             {notifications.map((notification: Notification) => (
               <NotificationItem
                 key={notification.id}

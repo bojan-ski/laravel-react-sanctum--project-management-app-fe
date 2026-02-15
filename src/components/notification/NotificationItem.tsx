@@ -1,5 +1,5 @@
 import { type JSX } from 'react';
-import type { Notification } from '../../types/types';
+import type { Notification } from '../../types/notification';
 import InvitationOptions from './InvitationOptions';
 import MarkAsReadOption from './MarkAsReadOption';
 import { formatDateAdvance } from '../../utils/helpers';
@@ -15,19 +15,17 @@ const NotificationItem = ({
 }: NotificationItemProps): JSX.Element => {
     return (
         <div
-            className={`p-4 border-b-yellow-500 hover:bg-gray-50 transition-colors ${!notification.read_at ? 'bg-indigo-50/50' : ''}`}
+            className={`px-4 py-2 hover:bg-gray-50 transition-colors ${!notification.read_at ? 'bg-indigo-50/50' : ''}`}
         >
-            {/* message */}
-            <div className='text-xs mb-3'>
+            <div className='text-xs mb-1'>
                 <p>
                     {notification.data.message}
                 </p>
-                <p className="text-gray-500 mt-2">
+                <p className="text-gray-600 mt-2">
                     {formatDateAdvance(notification.created_at)}
                 </p>
             </div>
 
-            {/* mark as read option */}
             {(!notification.is_invitation && !notification.read_at) && (
                 <MarkAsReadOption
                     notification={notification}
@@ -35,7 +33,6 @@ const NotificationItem = ({
                 />
             )}
 
-            {/* invitation action options */}
             {(notification.is_invitation && !notification.action_taken) && (
                 <InvitationOptions
                     notificationId={notification.id}

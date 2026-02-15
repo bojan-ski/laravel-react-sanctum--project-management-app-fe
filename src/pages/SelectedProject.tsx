@@ -28,7 +28,7 @@ function SelectedProject(): JSX.Element {
             members: data.members,
             membersLimit: data.members_limit,
         }));
-    }, [ data.id, dispatch ]);    
+    }, [ data.id, dispatch ]);
 
     return (
         <div className='selected-project-page my-10 grid lg:grid-cols-2 gap-4'>

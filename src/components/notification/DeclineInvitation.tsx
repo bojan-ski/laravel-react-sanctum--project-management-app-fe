@@ -20,11 +20,12 @@ function DeclineInvitation({
         e.stopPropagation();
 
         const thunkCall = await run(notificationId);
+        console.log(thunkCall); 
 
         if (thunkCall.ok) {
             toast.success(thunkCall.data.message);
         } else {
-            toast.error(thunkCall.error);
+            toast.error(thunkCall.error.random || "Decline Invitation Error");
         }
     };
 

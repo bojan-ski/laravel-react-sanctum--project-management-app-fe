@@ -19,14 +19,15 @@ function AcceptInvitation({
     notificationId,
     onClose
 }: AcceptInvitationProps): JSX.Element {
+    const navigate: NavigateFunction = useNavigate();
     const dispatch = useAppDispatch();
     const { run } = useThunk(acceptProjectInvitation);
-    const navigate: NavigateFunction = useNavigate();
 
     const handleAcceptInvitation = async (e: MouseEvent<HTMLButtonElement>): Promise<void> => {
         e.stopPropagation();
 
         const thunkCall = await run(notificationId);
+        console.log(thunkCall); 
 
         if (thunkCall.ok) {
             toast.success(thunkCall.data.message);
@@ -41,7 +42,7 @@ function AcceptInvitation({
                 navigate(`/projects/${thunkCall.data.data.notifiable_id}`);
             }, 1000);
         } else {
-            toast.error(thunkCall.error);
+            toast.error(thunkCall.error.random || "Accept Invitation Error");
         }
     };
 

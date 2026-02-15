@@ -2,7 +2,7 @@ import { type JSX, type MouseEvent } from 'react';
 import { useNavigate, type NavigateFunction } from 'react-router';
 import { useThunk } from '../../hooks/useThunk';
 import { markNotificationsAsRead } from '../../features/regularUser/notificationSlice';
-import type { Notification } from '../../types/types';
+import type { Notification } from '../../types/notification';
 import { Button } from '../ui/button';
 import toast from 'react-hot-toast';
 
@@ -15,18 +15,19 @@ function MarkAsReadOption({
     notification,
     onClose
 }: MarkAsReadOptionProps): JSX.Element {
-    const { run } = useThunk(markNotificationsAsRead);
     const navigate: NavigateFunction = useNavigate();
+    const { run } = useThunk(markNotificationsAsRead);    
 
     const handleMarkAsRead = async (e: MouseEvent<HTMLButtonElement>): Promise<void> => {
         e.stopPropagation();
 
-        // mark as read
         const thunkCall = await run(notification.id);
+        console.log(thunkCall);        
 
-        if (!thunkCall.ok) {
-            toast.error(thunkCall.error);
-            return;
+        if (thunkCall.ok) {
+            toast.success(thunkCall.data.message);
+        } else {
+            toast.error(thunkCall.error.random || "Mark As Read Error");
         }
 
         // navigate based on notification type and close notification dropdown

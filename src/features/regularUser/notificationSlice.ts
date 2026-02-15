@@ -1,13 +1,20 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { acceptInvitation, declineInvitation, getNotifications, getUnreadCount, markAllAsRead, markAsRead } from "../../services/notification";
-import type { Notification, NotificationState } from "../../types/types";
+import {
+    acceptInvitation,
+    declineInvitation,
+    getNotifications,
+    getUnreadCount,
+    markAllAsRead,
+    markAsRead
+} from "../../services/notification";
+import { handleAsyncThunkError } from "../../utils/reduxErrorHandler";
+import type { Notification, NotificationState } from "../../types/notification";
 
 const initialNotificationState: NotificationState = {
     isLoading: false,
     unreadNotifications: [],
     notifications: [],
     unreadCount: 0,
-    error: '',
 };
 
 export const getUserNotifications = createAsyncThunk('notifications/getUserNotifications', async (
@@ -18,10 +25,12 @@ export const getUserNotifications = createAsyncThunk('notifications/getUserNotif
 
     try {
         const apiCall = await getNotifications(unread);
+        console.log(apiCall);
 
         return apiCall;
     } catch (error: any) {
-        return rejectWithValue(error?.response?.statusText || 'Error - Get user notifications');
+        console.log(error);
+        return handleAsyncThunkError(error, rejectWithValue);
     }
 });
 
@@ -31,10 +40,12 @@ export const fetchUnreadCount = createAsyncThunk('notifications/fetchUnreadCount
 ) => {
     try {
         const apiCall = await getUnreadCount();
+        console.log(apiCall);
 
         return apiCall;
     } catch (error: any) {
-        return rejectWithValue(error?.response?.statusText || 'Error - Fetch unread count');
+        console.log(error);
+        return handleAsyncThunkError(error, rejectWithValue);
     }
 });
 
@@ -43,10 +54,13 @@ export const markNotificationsAsRead = createAsyncThunk('notifications/markAsRea
     { rejectWithValue }) => {
     try {
         const apiCall = await markAsRead(notificationId);
+        console.log(apiCall);
+
 
         return apiCall;
     } catch (error: any) {
-        return rejectWithValue(error?.response?.statusText || 'Error - Mark as read');
+        console.log(error);
+        return handleAsyncThunkError(error, rejectWithValue);
     }
 });
 
@@ -56,10 +70,12 @@ export const markAllNotificationsAsRead = createAsyncThunk('notifications/markAl
 ) => {
     try {
         const apiCall = await markAllAsRead();
+        console.log(apiCall);
 
         return apiCall;
     } catch (error: any) {
-        return rejectWithValue(error?.response?.statusText || 'Error - Mark all messages as read');
+        console.log(error);
+        return handleAsyncThunkError(error, rejectWithValue);
     }
 });
 
@@ -69,10 +85,12 @@ export const acceptProjectInvitation = createAsyncThunk('notifications/acceptInv
 ) => {
     try {
         const apiCall = await acceptInvitation(notificationId);
+        console.log(apiCall);
 
         return apiCall;
     } catch (error: any) {
-        return rejectWithValue(error?.response?.statusText || 'Error - Accept Invitation');
+        console.log(error);
+        return handleAsyncThunkError(error, rejectWithValue);
     }
 });
 
@@ -81,10 +99,12 @@ export const declineProjectInvitation = createAsyncThunk('notifications/declineI
     { rejectWithValue }) => {
     try {
         const apiCall = await declineInvitation(notificationId);
+        console.log(apiCall);
 
         return apiCall;
     } catch (error: any) {
-        return rejectWithValue(error?.response?.statusText || 'Error - Decline Invitation');
+        console.log(error);
+        return handleAsyncThunkError(error, rejectWithValue);
     }
 });
 
@@ -97,7 +117,6 @@ const notificationSlice = createSlice({
             // get user notifications
             .addCase(getUserNotifications.pending, (state) => {
                 state.isLoading = true;
-                state.error = '';
             })
             .addCase(getUserNotifications.fulfilled, (state, action) => {
                 state.isLoading = false;
@@ -111,29 +130,25 @@ const notificationSlice = createSlice({
                     state.notifications = notifications;
                 }
             })
-            .addCase(getUserNotifications.rejected, (state, { payload }) => {
+            .addCase(getUserNotifications.rejected, (state) => {
                 state.isLoading = false;
-                state.error = payload as string;
             })
 
             // fetch unread count
             .addCase(fetchUnreadCount.pending, (state) => {
                 state.isLoading = true;
-                state.error = '';
             })
             .addCase(fetchUnreadCount.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
                 state.unreadCount = payload.data.count;
             })
-            .addCase(fetchUnreadCount.rejected, (state, { payload }) => {
+            .addCase(fetchUnreadCount.rejected, (state) => {
                 state.isLoading = false;
-                state.error = payload as string;
             })
 
             // mark notifications as read
             .addCase(markNotificationsAsRead.pending, (state) => {
                 state.isLoading = true;
-                state.error = '';
             })
             .addCase(markNotificationsAsRead.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
@@ -146,15 +161,13 @@ const notificationSlice = createSlice({
                     state.unreadCount = Math.max(0, state.unreadCount - 1);
                 }
             })
-            .addCase(markNotificationsAsRead.rejected, (state, { payload }) => {
+            .addCase(markNotificationsAsRead.rejected, (state) => {
                 state.isLoading = false;
-                state.error = payload as string;
             })
 
             // mark all notifications as read
             .addCase(markAllNotificationsAsRead.pending, (state) => {
                 state.isLoading = true;
-                state.error = '';
             })
             .addCase(markAllNotificationsAsRead.fulfilled, (state) => {
                 state.isLoading = false;
@@ -166,15 +179,13 @@ const notificationSlice = createSlice({
                 });
                 state.unreadCount = 0;
             })
-            .addCase(markAllNotificationsAsRead.rejected, (state, { payload }) => {
+            .addCase(markAllNotificationsAsRead.rejected, (state) => {
                 state.isLoading = false;
-                state.error = payload as string;
             })
 
             // accept project invitation
             .addCase(acceptProjectInvitation.pending, (state) => {
                 state.isLoading = true;
-                state.error = '';
             })
             .addCase(acceptProjectInvitation.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
@@ -190,20 +201,19 @@ const notificationSlice = createSlice({
                     }
                 }
             })
-            .addCase(acceptProjectInvitation.rejected, (state, { payload }) => {
+            .addCase(acceptProjectInvitation.rejected, (state) => {
                 state.isLoading = false;
-                state.error = payload as string;
             })
 
             // decline project invitation
             .addCase(declineProjectInvitation.pending, (state) => {
                 state.isLoading = true;
-                state.error = '';
             })
             .addCase(declineProjectInvitation.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
 
                 const notification = state.notifications.find((notification: Notification) => notification.id === payload.data.id);
+
                 if (notification) {
                     notification.action_taken = 'declined';
                     notification.read_at = new Date().toISOString();
@@ -213,9 +223,8 @@ const notificationSlice = createSlice({
                     }
                 }
             })
-            .addCase(declineProjectInvitation.rejected, (state, { payload }) => {
+            .addCase(declineProjectInvitation.rejected, (state) => {
                 state.isLoading = false;
-                state.error = payload as string;
             });
     },
 });
