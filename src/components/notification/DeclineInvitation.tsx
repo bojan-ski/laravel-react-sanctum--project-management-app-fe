@@ -20,7 +20,6 @@ function DeclineInvitation({
         e.stopPropagation();
 
         const thunkCall = await run(notificationId);
-        console.log(thunkCall); 
 
         if (thunkCall.ok) {
             toast.success(thunkCall.data.message);

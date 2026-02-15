@@ -18,7 +18,7 @@ const NotificationDropdown = ({ isOpen }: { isOpen: boolean; }): JSX.Element => 
             dispatch(fetchUnreadCount());
             dispatch(getUserNotifications(true));
         }
-    }, [isOpen, dispatch]);
+    }, [ isOpen, dispatch ]);
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent): void => {
@@ -34,7 +34,7 @@ const NotificationDropdown = ({ isOpen }: { isOpen: boolean; }): JSX.Element => 
         return () => {
             document.removeEventListener('click', handleClickOutside);
         };
-    }, [isOpen, closeDropdown]);
+    }, [ isOpen, closeDropdown ]);
 
     return (
         <div

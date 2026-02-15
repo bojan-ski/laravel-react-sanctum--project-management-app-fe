@@ -11,6 +11,7 @@ import type { ChangePasswordFormDataErrors, DeleteAccountFormDataError } from ".
 import type { UpdateUserAvatarFormDataError } from "../../types/avatar";
 
 const INIT_STATE = {
+    id: null,
     is_admin: false,
     is_authenticated: false,
 };

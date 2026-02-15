@@ -21,7 +21,7 @@ function BellContent({
         <CardContent className="p-0 max-h-[500px] overflow-y-auto">
             {isLoading ? (
                 <div className="p-4 space-y-3">
-                    {[...Array(3)].map((_, i) => (
+                    {[ ...Array(3) ].map((_, i) => (
                         <div key={i} className="space-y-2">
                             <Skeleton className="h-4 w-full" />
                             <Skeleton className="h-3 w-2/3" />

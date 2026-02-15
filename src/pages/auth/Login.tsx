@@ -1,9 +1,10 @@
 import { useState, type FormEvent, type JSX } from 'react';
 import { useNavigate, type NavigateFunction } from 'react-router';
-import { useAppSelector } from '../../hooks/useRedux';
+import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
 import { useThunk } from '../../hooks/useThunk';
 import { useZodValidation } from '../../hooks/useZodValidation';
 import { loginUser } from '../../features/user/userSlice';
+import { fetchUnreadCount } from '../../features/regularUser/notificationSlice';
 import type { AuthState } from '../../types/auth';
 import { loginSchema, type LoginFormData } from '../../schemas/authSchema';
 import PageHeader from '../../components/global/PageHeader';
@@ -15,6 +16,7 @@ import toast from 'react-hot-toast';
 function Login(): JSX.Element {
     const navigate: NavigateFunction = useNavigate();
     const { isLoading } = useAppSelector<AuthState>(state => state.user);
+    const dispatch = useAppDispatch();
     const { run } = useThunk(loginUser);
     const { validate, errors, setErrors } = useZodValidation<LoginFormData>();
     const [ form, setForm ] = useState<LoginFormData>({
@@ -28,14 +30,11 @@ function Login(): JSX.Element {
     const handleSubmit = async (e: FormEvent): Promise<void> => {
         e.preventDefault();
 
-        // zod validation
         const validation = validate(loginSchema, form);
         if (!validation) return;
 
-        // run dispatch call
         const thunkCall = await run(form);
 
-        // dispatch response
         if (thunkCall.ok) {
             toast.success(thunkCall.data.message);
 
@@ -45,7 +44,8 @@ function Login(): JSX.Element {
             });
             setErrors({});
 
-            // redirect user
+            dispatch(fetchUnreadCount());
+
             if (thunkCall.data.data[ 'is_admin' ]) {
                 navigate('/users');
             } else {
@@ -60,18 +60,15 @@ function Login(): JSX.Element {
 
     return (
         <div className='login-page mt-20'>
-            {/* Page header */}
             <PageHeader
                 label='Login'
                 headerCss='mb-5 text-center text-4xl font-semibold'
             />
 
-            {/* Login form */}
             <FormWrapper
                 onSubmit={handleSubmit}
                 formCss={'mx-auto lg:w-1/2'}
             >
-                {/* email */}
                 <FormInput
                     name='email'
                     type='email'
@@ -85,7 +82,6 @@ function Login(): JSX.Element {
                     error={errors.email}
                 />
 
-                {/* password */}
                 <FormInput
                     name='password'
                     type='password'
@@ -99,7 +95,6 @@ function Login(): JSX.Element {
                     error={errors.password}
                 />
 
-                {/* submit */}
                 <FormSubmitButton
                     loading={isLoading}
                     btnCss='border rounded-sm py-2 px-5 text-white bg-yellow-500 hover:bg-yellow-600 transition cursor-pointer font-semibold'

@@ -27,15 +27,12 @@ function AcceptInvitation({
         e.stopPropagation();
 
         const thunkCall = await run(notificationId);
-        console.log(thunkCall); 
 
         if (thunkCall.ok) {
             toast.success(thunkCall.data.message);
 
-            // get projects
-            await dispatch(getUserProjects({}));
+            dispatch(getUserProjects({}));
 
-            // redirect user & close notifications dropdown
             setTimeout(() => {
                 if (onClose) onClose();
 

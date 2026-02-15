@@ -16,13 +16,12 @@ function MarkAsReadOption({
     onClose
 }: MarkAsReadOptionProps): JSX.Element {
     const navigate: NavigateFunction = useNavigate();
-    const { run } = useThunk(markNotificationsAsRead);    
+    const { run } = useThunk(markNotificationsAsRead);
 
     const handleMarkAsRead = async (e: MouseEvent<HTMLButtonElement>): Promise<void> => {
         e.stopPropagation();
 
         const thunkCall = await run(notification.id);
-        console.log(thunkCall);        
 
         if (thunkCall.ok) {
             toast.success(thunkCall.data.message);
@@ -30,7 +29,6 @@ function MarkAsReadOption({
             toast.error(thunkCall.error.random || "Mark As Read Error");
         }
 
-        // navigate based on notification type and close notification dropdown
         setTimeout(() => {
             if (notification.type == 'project_update') {
                 navigate(`/projects/${notification.notifiable_id}`);

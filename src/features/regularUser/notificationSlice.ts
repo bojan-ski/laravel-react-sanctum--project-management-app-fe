@@ -25,11 +25,9 @@ export const getUserNotifications = createAsyncThunk('notifications/getUserNotif
 
     try {
         const apiCall = await getNotifications(unread);
-        console.log(apiCall);
 
         return apiCall;
     } catch (error: any) {
-        console.log(error);
         return handleAsyncThunkError(error, rejectWithValue);
     }
 });
@@ -40,11 +38,9 @@ export const fetchUnreadCount = createAsyncThunk('notifications/fetchUnreadCount
 ) => {
     try {
         const apiCall = await getUnreadCount();
-        console.log(apiCall);
 
         return apiCall;
     } catch (error: any) {
-        console.log(error);
         return handleAsyncThunkError(error, rejectWithValue);
     }
 });
@@ -54,12 +50,9 @@ export const markNotificationsAsRead = createAsyncThunk('notifications/markAsRea
     { rejectWithValue }) => {
     try {
         const apiCall = await markAsRead(notificationId);
-        console.log(apiCall);
-
 
         return apiCall;
     } catch (error: any) {
-        console.log(error);
         return handleAsyncThunkError(error, rejectWithValue);
     }
 });
@@ -70,11 +63,9 @@ export const markAllNotificationsAsRead = createAsyncThunk('notifications/markAl
 ) => {
     try {
         const apiCall = await markAllAsRead();
-        console.log(apiCall);
 
         return apiCall;
     } catch (error: any) {
-        console.log(error);
         return handleAsyncThunkError(error, rejectWithValue);
     }
 });
@@ -85,11 +76,9 @@ export const acceptProjectInvitation = createAsyncThunk('notifications/acceptInv
 ) => {
     try {
         const apiCall = await acceptInvitation(notificationId);
-        console.log(apiCall);
 
         return apiCall;
     } catch (error: any) {
-        console.log(error);
         return handleAsyncThunkError(error, rejectWithValue);
     }
 });
@@ -99,11 +88,9 @@ export const declineProjectInvitation = createAsyncThunk('notifications/declineI
     { rejectWithValue }) => {
     try {
         const apiCall = await declineInvitation(notificationId);
-        console.log(apiCall);
 
         return apiCall;
     } catch (error: any) {
-        console.log(error);
         return handleAsyncThunkError(error, rejectWithValue);
     }
 });
@@ -111,7 +98,13 @@ export const declineProjectInvitation = createAsyncThunk('notifications/declineI
 const notificationSlice = createSlice({
     name: 'notifications',
     initialState: initialNotificationState,
-    reducers: {},
+    reducers: {
+        addNotification: (state, { payload }): void => {
+            state.unreadNotifications.unshift(payload);
+            state.notifications.unshift(payload);
+            state.unreadCount += 1;
+        },
+    },
     extraReducers: (builder) => {
         builder
             // get user notifications
@@ -153,13 +146,18 @@ const notificationSlice = createSlice({
             .addCase(markNotificationsAsRead.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
 
-                const notification = state.notifications.find((notification: Notification): boolean => notification.id === payload.data);
+                const notification = state.notifications.find(
+                    (notification: Notification): boolean => notification.id === payload.data.id
+                );
 
                 if (notification && !notification.read_at) {
                     notification.read_at = new Date().toISOString();
-
                     state.unreadCount = Math.max(0, state.unreadCount - 1);
                 }
+
+                state.unreadNotifications = state.unreadNotifications.filter(
+                    (notification: Notification) => notification.id !== payload.data.id
+                );
             })
             .addCase(markNotificationsAsRead.rejected, (state) => {
                 state.isLoading = false;
@@ -177,6 +175,8 @@ const notificationSlice = createSlice({
                         notification.read_at = new Date().toISOString();
                     }
                 });
+
+                state.unreadNotifications = [];
                 state.unreadCount = 0;
             })
             .addCase(markAllNotificationsAsRead.rejected, (state) => {
@@ -190,16 +190,22 @@ const notificationSlice = createSlice({
             .addCase(acceptProjectInvitation.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
 
-                const notification = state.notifications.find((notification: Notification) => notification.id == payload.data.id);
+                const notification = state.notifications.find(
+                    (notification: Notification) => notification.id == payload.data.id
+                );
 
                 if (notification) {
-                    notification.action_taken = 'accepted';
-                    notification.read_at = new Date().toISOString();
-
                     if (!notification.read_at) {
                         state.unreadCount = Math.max(0, state.unreadCount - 1);
                     }
+
+                    notification.action_taken = 'accepted';
+                    notification.read_at = new Date().toISOString();
                 }
+
+                state.unreadNotifications = state.unreadNotifications.filter(
+                    (notification: Notification) => notification.id !== payload.data.id
+                );
             })
             .addCase(acceptProjectInvitation.rejected, (state) => {
                 state.isLoading = false;
@@ -212,16 +218,22 @@ const notificationSlice = createSlice({
             .addCase(declineProjectInvitation.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
 
-                const notification = state.notifications.find((notification: Notification) => notification.id === payload.data.id);
+                const notification = state.notifications.find(
+                    (notification: Notification) => notification.id === payload.data.id
+                );
 
                 if (notification) {
-                    notification.action_taken = 'declined';
-                    notification.read_at = new Date().toISOString();
-
                     if (!notification.read_at) {
                         state.unreadCount = Math.max(0, state.unreadCount - 1);
                     }
+
+                    notification.action_taken = 'declined';
+                    notification.read_at = new Date().toISOString();
                 }
+
+                state.unreadNotifications = state.unreadNotifications.filter(
+                    (notification: Notification) => notification.id !== payload.data.id
+                );
             })
             .addCase(declineProjectInvitation.rejected, (state) => {
                 state.isLoading = false;
@@ -229,4 +241,7 @@ const notificationSlice = createSlice({
     },
 });
 
+export const {
+    addNotification
+} = notificationSlice.actions;
 export default notificationSlice.reducer;

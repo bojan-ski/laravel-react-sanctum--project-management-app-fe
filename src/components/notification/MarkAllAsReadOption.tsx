@@ -15,8 +15,7 @@ function MarkAllAsReadOption(): JSX.Element {
 
     const handleMarkAllAsRead = async (): Promise<void> => {
         const thunkCall = await run(undefined);
-        console.log(thunkCall); 
-        
+
         if (thunkCall.ok) {
             toast.success(thunkCall.data.message);
 

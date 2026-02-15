@@ -1,4 +1,5 @@
 export type AuthResponse = {
+    id: number | null;
     is_admin: boolean;
     is_authenticated: boolean;
 };

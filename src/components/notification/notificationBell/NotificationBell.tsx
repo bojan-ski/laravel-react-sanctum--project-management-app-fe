@@ -1,6 +1,6 @@
 import { useState, type JSX } from 'react';
 import { useAppSelector } from '../../../hooks/useRedux';
-import useNotification from '../../../hooks/useNotification';
+import useRealtimeNotifications from '../../../hooks/useRealtimeNotifications';
 import { NotificationBellProvider } from '../../../context/notificationBellProvider';
 import type { NotificationState } from '../../../types/notification';
 import NotificationDropdown from './NotificationDropdown';
@@ -9,10 +9,9 @@ import { Bell } from 'lucide-react';
 
 const NotificationBell = (): JSX.Element => {
     const { unreadCount } = useAppSelector<NotificationState>(state => state.notifications);
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [ isOpen, setIsOpen ] = useState<boolean>(false);
 
-    // run fetch notifications on 60s
-    useNotification(true, 60000);
+    useRealtimeNotifications();
 
     return (
         <div className="relative">
