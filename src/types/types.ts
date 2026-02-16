@@ -1,6 +1,5 @@
 import type { User } from "./user";
 
-
 // adminUser/createUserSlice
 export type NewUserFormData = {
     name: string;

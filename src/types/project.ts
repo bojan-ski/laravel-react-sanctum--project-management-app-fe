@@ -18,9 +18,18 @@ export type ProjectOwner = {
     name: string;
 };
 
+export type ProjectStatistics = {
+    total_tasks: number;
+    completed_tasks: number;
+    pending_tasks: number;
+    completion_percentage: number;
+    total_members: number;
+};
+
 export type ProjectCard = {
     owner: ProjectOwner;
     is_owner: boolean;
+    statistics: ProjectStatistics;
 } & Project;
 
 export type ProjectData = {
@@ -30,6 +39,7 @@ export type ProjectData = {
 export type ProjectDetails = {
     owner: ProjectOwner;
     is_owner: boolean;
+    statistics: ProjectStatistics;
     members: Member[];
     members_limit: number;
 } & ProjectData;

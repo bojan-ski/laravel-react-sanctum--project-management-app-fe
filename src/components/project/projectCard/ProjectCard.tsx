@@ -6,10 +6,11 @@ import ProjectOwnerDetails from '../projectOwner/ProjectOwnerDetails';
 import ProjectStatistics from './ProjectStatistics';
 import ProjectProgress from './ProjectProgress';
 import ProjectDeadline from '../ProjectDeadline';
+import ProjectStatus from './ProjectStatus';
 
 function ProjectCard({ project }: { project: ProjectCardType; }): JSX.Element {
-    // console.log(project);
-
+    console.log(project);
+    
     return (
         <Card className="hover:shadow-md transition-shadow">
             <CardHeader>
@@ -22,7 +23,6 @@ function ProjectCard({ project }: { project: ProjectCardType; }): JSX.Element {
             </CardHeader>
 
             <CardContent>
-                {/* project owner */}
                 {!project.is_owner && (
                     <ProjectOwnerDetails
                         ownerAvatar={project.owner?.avatar}
@@ -31,22 +31,22 @@ function ProjectCard({ project }: { project: ProjectCardType; }): JSX.Element {
                     />
                 )}
 
-                <div className='text-end text-xs md:text-sm font-semibold'>
-                    <span className='mr-1 text-gray-500'>Status:</span>
-                    <span>{project.status}</span>
+                <ProjectStatistics
+                    totalMembers={project.statistics?.total_members || 0}
+                    completedTasks={project.statistics?.completed_tasks || 0}
+                    totalTasks={project.statistics?.total_tasks || 0}
+                />
+
+                {project.statistics?.total_tasks > 0 && (
+                    <ProjectProgress completionPercentage={project.statistics?.completion_percentage || 0} />
+                )}
+
+                <div className='flex items-center justify-between mb-3'>
+                    <ProjectDeadline deadline={project.deadline} />
+                    <ProjectStatus status={project.status} />
                 </div>
 
-                {/* statistics */}
-                <ProjectStatistics />
-
-                {/* progress bar */}
-                <ProjectProgress />
-
-                <div className='flex items-center justify-between'>
-                    {/* deadline */}
-                    <ProjectDeadline deadline={project.deadline} />
-
-                    {/* project details link */}
+                <div className='text-end'>
                     <Link to={`/projects/${project.id}`} className='text-blue-500 hover:text-blue-700 transition font-bold'>
                         Details
                     </Link>
