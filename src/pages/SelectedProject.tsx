@@ -3,10 +3,11 @@ import { useLoaderData } from 'react-router';
 import { useAppDispatch } from '../hooks/useRedux';
 import { getProjectDetails } from '../services/project';
 import { setMembers } from '../features/regularUser/projectMemberSlice';
+import { setTasks } from '../features/regularUser/taskSlice';
 import ProjectOwner from '../components/project/projectOwner/ProjectOwner';
-import ProjectDeadline from '../components/project/ProjectDeadline';
-import DownloadDocument from '../components/document/DownloadDocument';
+import ProjectData from '../components/project/selectedProjectPage/ProjectData';
 import Members from '../components/project/members/Members';
+import ProjectTasksHeader from '../components/project/tasks/ProjectTasksHeader';
 
 // loader
 export const loader = async ({ params }: { params: any; }): Promise<any> => {
@@ -28,13 +29,15 @@ function SelectedProject(): JSX.Element {
             members: data.members,
             membersLimit: data.members_limit,
         }));
+
+        dispatch(setTasks({
+            tasks: data.tasks
+        }));
     }, [ data.id, dispatch ]);
 
     return (
-        <div className='selected-project-page my-10 grid lg:grid-cols-2 gap-4'>
-            {/* Section One */}
-            <section>
-                {/* project owner details & features */}
+        <div className='selected-project-page my-10 grid grid-cols-1 lg:grid-cols-2 gap-4'>
+            <section className='grid gap-4'>
                 <ProjectOwner
                     ownerAvatar={data.owner.avatar}
                     ownerName={data.owner.name}
@@ -42,47 +45,31 @@ function SelectedProject(): JSX.Element {
                     projectId={data.id}
                     projectTitle={data.title}
                     projectStatus={data.status}
-                    divCss='p-4 border rounded-md mb-5'
+                    divCss='p-4 border rounded-md'
                 />
 
-                {/* project data */}
-                <div className='p-4 border rounded-md'>
-                    <h2 className='font-semibold text-lg mb-3'>
-                        {data.title}
-                    </h2>
-
-                    <p className='mb-3 text-sm text-justify'>
-                        {data.description}
-                    </p>
-
-                    <div className='flex items-center justify-between'>
-                        {data.document && (
-                            <div className='flex gap-2 text-sm'>
-                                <p className="text-sm font-semibold">
-                                    Document:
-                                </p>
-
-                                <DownloadDocument document={data.document} />
-                            </div>
-                        )}
-
-                        <ProjectDeadline deadline={data.deadline} />
-                    </div>
-                </div>
+                <ProjectData data={data} />
             </section>
 
-            {/* Section Two */}
-            <section>
-                {/* project statistics */}
-                <div className='p-4 border rounded-md mb-5'>
-                    Project statistics
-                </div>
-
-                {/* project members */}
+            <section className='grid gap-4'>
                 <Members
                     projectId={data.id}
                     isProjectOwner={data.is_owner}
                 />
+
+                {/* project statistics */}
+                <div className='p-4 border rounded-md'>
+                    Project statistics
+                </div>
+            </section>
+
+            <section className='md:col-span-2 p-4 border rounded-md'>
+                <ProjectTasksHeader
+                    isProjectOwner={data.is_owner}
+                    projectId={data.id}
+                />
+
+                {/* task list */}
             </section>
         </div>
     );

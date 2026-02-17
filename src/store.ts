@@ -4,6 +4,7 @@ import notificationReducer from './features/regularUser/notificationSlice';
 import projectReducer from './features/regularUser/projectSlice';
 import documentReducer from './features/document/documentSlice';
 import projectMemberReducer from './features/regularUser/projectMemberSlice';
+import tasksReducer from './features/regularUser/taskSlice';
 import usersReducer from './features/adminUser/usersSlice';
 import createUserReducer from './features/adminUser/createUserSlice';
 
@@ -13,6 +14,7 @@ const appReducer = combineReducers({
     project: projectReducer,
     document: documentReducer,
     projectMembers: projectMemberReducer,
+    tasks: tasksReducer,
     users: usersReducer,
     newUser: createUserReducer,
 });

@@ -8,9 +8,7 @@ import ProjectProgress from './ProjectProgress';
 import ProjectDeadline from '../ProjectDeadline';
 import ProjectStatus from './ProjectStatus';
 
-function ProjectCard({ project }: { project: ProjectCardType; }): JSX.Element {
-    console.log(project);
-    
+function ProjectCard({ project }: { project: ProjectCardType; }): JSX.Element {    
     return (
         <Card className="hover:shadow-md transition-shadow">
             <CardHeader>
