@@ -1,5 +1,6 @@
 import type { Member } from "./member";
 import type { Document } from "./document";
+import type { Task } from "./task";
 
 export type ProjectStatus = 'pending' | 'active' | 'completed' | 'closed';
 
@@ -42,6 +43,7 @@ export type ProjectDetails = {
     statistics: ProjectStatistics;
     members: Member[];
     members_limit: number;
+    tasks: Task[]
 } & ProjectData;
 
 // api response

@@ -9,14 +9,12 @@ export type Task = {
     status: TaskStatus;
     priority: TaskPriority;
     due_date: string;
-
     assignee: {
         id: number;
         name: string;
         email: string;
         avatar: string | null;
     };
-
     created_at: string;
     updated_at: string;
 };

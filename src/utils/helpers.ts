@@ -22,7 +22,7 @@ export const formatDateAdvance = (dateString: string): string => {
 export const userInitials = (name: string): string => {
     return name
         .split(' ')
-        .map(n => n[0])
+        .map(n => n[ 0 ])
         .join('')
         .toUpperCase()
         .substring(0, 2);
@@ -32,4 +32,55 @@ export const isProjectOverdue = (deadline: string): boolean => {
     if (!deadline) return false;
 
     return new Date(deadline) < new Date();
+};
+
+export const isTaskOverdue = (dueDate: string, status: string): boolean => {
+    if (status === 'done') return false;
+
+    return new Date(dueDate) < new Date();
+};
+
+export const getTaskStatusColor = (status: string): string => {
+    switch (status) {
+        case 'todo':
+            return 'bg-gray-500';
+        case 'in_progress':
+            return 'bg-blue-500';
+        case 'review':
+            return 'bg-yellow-500';
+        case 'done':
+            return 'bg-green-500';
+        default:
+            return 'bg-gray-500';
+    }
+};
+
+export const getTaskPriorityColor = (priority: string): string => {
+    switch (priority) {
+        case 'low':
+            return 'bg-gray-200 text-gray-800';
+        case 'medium':
+            return 'bg-blue-200 text-blue-800';
+        case 'high':
+            return 'bg-orange-200 text-orange-800';
+        case 'critical':
+            return 'bg-red-200 text-red-800';
+        default:
+            return 'bg-gray-200 text-gray-800';
+    }
+};
+
+export const getTaskStatusLabel = (status: string): string => {
+    switch (status) {
+        case 'todo':
+            return 'To Do';
+        case 'in_progress':
+            return 'In Progress';
+        case 'review':
+            return 'Review';
+        case 'done':
+            return 'Done';
+        default:
+            return status;
+    }
 };

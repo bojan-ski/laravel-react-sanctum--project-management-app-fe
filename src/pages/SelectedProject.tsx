@@ -1,6 +1,6 @@
 import { useEffect, type JSX } from 'react';
 import { useLoaderData } from 'react-router';
-import { useAppDispatch } from '../hooks/useRedux';
+import { useAppDispatch, useAppSelector } from '../hooks/useRedux';
 import { getProjectDetails } from '../services/project';
 import { setMembers } from '../features/regularUser/projectMemberSlice';
 import { setTasks } from '../features/regularUser/taskSlice';
@@ -8,6 +8,7 @@ import ProjectOwner from '../components/project/projectOwner/ProjectOwner';
 import ProjectData from '../components/project/selectedProjectPage/ProjectData';
 import Members from '../components/project/members/Members';
 import ProjectTasksHeader from '../components/project/tasks/ProjectTasksHeader';
+import TasksList from '../components/task/TasksList';
 
 // loader
 export const loader = async ({ params }: { params: any; }): Promise<any> => {
@@ -19,6 +20,7 @@ export const loader = async ({ params }: { params: any; }): Promise<any> => {
 
 function SelectedProject(): JSX.Element {
     const { data } = useLoaderData();
+    const { tasks } = useAppSelector(state => state.tasks);
     const dispatch = useAppDispatch();
     console.log(data);
 
@@ -67,9 +69,13 @@ function SelectedProject(): JSX.Element {
                 <ProjectTasksHeader
                     isProjectOwner={data.is_owner}
                     projectId={data.id}
+                    tasksLength={tasks.length}
                 />
-
-                {/* task list */}
+                
+                <TasksList
+                    tasks={tasks}
+                    emptyMessage="No tasks in this project"
+                />
             </section>
         </div>
     );

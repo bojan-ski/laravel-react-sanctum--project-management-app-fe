@@ -8,11 +8,11 @@ import ProjectProgress from './ProjectProgress';
 import ProjectDeadline from '../ProjectDeadline';
 import ProjectStatus from './ProjectStatus';
 
-function ProjectCard({ project }: { project: ProjectCardType; }): JSX.Element {    
+function ProjectCard({ project }: { project: ProjectCardType; }): JSX.Element {
     return (
         <Card className="hover:shadow-md transition-shadow">
             <CardHeader>
-                <CardTitle className="mb-1">
+                <CardTitle className="line-clamp-2 mb-1">
                     {project.title}
                 </CardTitle>
                 <CardDescription>
@@ -39,16 +39,14 @@ function ProjectCard({ project }: { project: ProjectCardType; }): JSX.Element {
                     <ProjectProgress completionPercentage={project.statistics?.completion_percentage || 0} />
                 )}
 
-                <div className='flex items-center justify-between mb-3'>
+                <div className='flex items-center justify-between mb-4'>
                     <ProjectDeadline deadline={project.deadline} />
                     <ProjectStatus status={project.status} />
                 </div>
 
-                <div className='text-end'>
-                    <Link to={`/projects/${project.id}`} className='text-blue-500 hover:text-blue-700 transition font-bold'>
-                        Details
-                    </Link>
-                </div>
+                <Link to={`/projects/${project.id}`} className='block text-blue-500 hover:text-blue-700 transition font-semibold text-right'>
+                    View Details →
+                </Link>
             </CardContent>
         </Card>
     );

@@ -1,22 +1,21 @@
 import { type JSX } from 'react';
-import { useAppSelector } from '../../../hooks/useRedux';
 import CreateTaskModal from './CreateTaskModal';
 
 type ProjectTasksHeaderProps = {
     isProjectOwner: boolean;
     projectId: number;
+    tasksLength: number;
 };
 
 function ProjectTasksHeader({
     isProjectOwner,
     projectId,
-}: ProjectTasksHeaderProps): JSX.Element {
-    const { tasks } = useAppSelector(state => state.tasks);
-
+    tasksLength
+}: ProjectTasksHeaderProps): JSX.Element {   
     return (
         <div className="flex items-center justify-between mb-5">
             <h3 className="text-lg font-semibold">
-                Tasks ({tasks.length})
+                Tasks ({tasksLength})
             </h3>
 
             {isProjectOwner && <CreateTaskModal projectId={projectId} />}

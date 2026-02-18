@@ -2,7 +2,7 @@ import { type JSX } from 'react';
 
 function ProjectProgress({ completionPercentage }: { completionPercentage: number; }): JSX.Element {
   return (
-    <div className="mb-3">
+    <div className="mb-4">
       <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
         <span>Progress</span>
         <span>{completionPercentage}%</span>
