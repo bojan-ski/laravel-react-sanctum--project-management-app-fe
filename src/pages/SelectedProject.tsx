@@ -4,74 +4,73 @@ import { useAppDispatch, useAppSelector } from '../hooks/useRedux';
 import { getProjectDetails } from '../services/project';
 import { setMembers } from '../features/regularUser/projectMemberSlice';
 import { setTasks } from '../features/regularUser/taskSlice';
+import type { SelectedProjectDetailsResponse } from '../types/project';
 import ProjectOwner from '../components/project/projectOwner/ProjectOwner';
 import ProjectData from '../components/project/selectedProjectPage/ProjectData';
 import Members from '../components/project/members/Members';
+import TasksStatistics from '../components/project/selectedProjectPage/TasksStatistics';
 import ProjectTasksHeader from '../components/project/tasks/ProjectTasksHeader';
 import TasksList from '../components/task/TasksList';
 
-// loader
-export const loader = async ({ params }: { params: any; }): Promise<any> => {
-    const projectDetails: any = await getProjectDetails(params.id);
-    // console.log(projectDetails);
+export const loader = async ({ params }: { params: any; }): Promise<SelectedProjectDetailsResponse> => {
+    const response: SelectedProjectDetailsResponse = await getProjectDetails(params.id);
 
-    return { ...projectDetails };
+    return response;
 };
 
 function SelectedProject(): JSX.Element {
-    const { data } = useLoaderData();
+    const { data: project } = useLoaderData();
     const { tasks } = useAppSelector(state => state.tasks);
     const dispatch = useAppDispatch();
-    console.log(data);
 
     useEffect(() => {
         console.log('useEffect - SelectedProject');
 
         dispatch(setMembers({
-            members: data.members,
-            membersLimit: data.members_limit,
+            members: project.members,
+            membersLimit: project.members_limit,
         }));
 
         dispatch(setTasks({
-            tasks: data.tasks
+            tasks: project.tasks
         }));
-    }, [ data.id, dispatch ]);
+    }, [ project.id, dispatch ]);
 
     return (
         <div className='selected-project-page my-10 grid grid-cols-1 lg:grid-cols-2 gap-4'>
-            <section className='grid gap-4'>
+            <section>
                 <ProjectOwner
-                    ownerAvatar={data.owner.avatar}
-                    ownerName={data.owner.name}
-                    isProjectOwner={data.is_owner}
-                    projectId={data.id}
-                    projectTitle={data.title}
-                    projectStatus={data.status}
+                    ownerAvatar={project.owner.avatar}
+                    ownerName={project.owner.name}
+                    isProjectOwner={project.is_owner}
+                    projectId={project.id}
+                    projectTitle={project.title}
+                    projectStatus={project.status}
                     divCss='p-4 border rounded-md'
                 />
 
-                <ProjectData data={data} />
+                <ProjectData project={project} />
             </section>
 
             <section className='grid gap-4'>
                 <Members
-                    projectId={data.id}
-                    isProjectOwner={data.is_owner}
+                    projectId={project.id}
+                    isProjectOwner={project.is_owner}
                 />
 
-                {/* project statistics */}
-                <div className='p-4 border rounded-md'>
-                    Project statistics
-                </div>
+                <TasksStatistics
+                    completionPercentage={project.statistics?.completion_percentage || 0}
+                    tasks={tasks}
+                />
             </section>
 
             <section className='md:col-span-2 p-4 border rounded-md'>
                 <ProjectTasksHeader
-                    isProjectOwner={data.is_owner}
-                    projectId={data.id}
+                    isProjectOwner={project.is_owner}
+                    projectId={project.id}
                     tasksLength={tasks.length}
                 />
-                
+
                 <TasksList
                     tasks={tasks}
                     emptyMessage="No tasks in this project"

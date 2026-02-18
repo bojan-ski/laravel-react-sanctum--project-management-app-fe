@@ -9,9 +9,9 @@ import type { ProjectFormSubmitResult, ProjectsState, SelectedProjectDataRespons
 import ProjectForm from '../components/project/ProjectForm';
 
 export const loader = async ({ params }: { params: any; }): Promise<SelectedProjectDataResponse> => {
-    const project: SelectedProjectDataResponse = await getProjectData(params.id);
+    const response: SelectedProjectDataResponse = await getProjectData(params.id);
 
-    return project;
+    return response;
 };
 
 function EditProject(): JSX.Element {

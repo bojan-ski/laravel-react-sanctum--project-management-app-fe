@@ -1,3 +1,5 @@
+import type { Task } from "../types/task";
+
 export const formatDate = (dateString: string): string => {
     return new Date(dateString).toLocaleDateString('en-US', {
         year: 'numeric',
@@ -32,6 +34,15 @@ export const isProjectOverdue = (deadline: string): boolean => {
     if (!deadline) return false;
 
     return new Date(deadline) < new Date();
+};
+
+export const getTasksByStatus = (tasks: Task[]) => {
+    return {
+        todo: tasks.filter(t => t.status === 'todo'),
+        in_progress: tasks.filter(t => t.status === 'in_progress'),
+        review: tasks.filter(t => t.status === 'review'),
+        done: tasks.filter(t => t.status === 'done'),
+    };
 };
 
 export const isTaskOverdue = (dueDate: string, status: string): boolean => {

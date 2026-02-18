@@ -19,9 +19,9 @@ function Members({
     return (
         <div className='p-4 border rounded-md'>
             <div className='flex items-center justify-between'>
-                <div className='text-xs md:text-sm font-medium'>
+                <h3 className='text-sm md:text-base font-medium'>
                     Limit: <span>{members.length}</span>/<span>{membersLimit}</span>
-                </div>
+                </h3>
 
                 {!isProjectOwner && <LeaveProject projectId={projectId} />}
 

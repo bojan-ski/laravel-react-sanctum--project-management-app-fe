@@ -23,8 +23,7 @@ function ProjectOwner({
     divCss,
 }: ProjectOwnerProps): JSX.Element {
     return (
-        <div className={`flex items-center justify-between ${divCss}`}>
-            {/* project owner details */}
+        <div className={`flex items-center justify-between mb-4 ${divCss}`}>
             {!isProjectOwner ? (
                 <ProjectOwnerDetails
                     ownerAvatar={ownerAvatar}
@@ -32,13 +31,11 @@ function ProjectOwner({
                 />
             ) : (
                 <>
-                    {/* change project status */}
                     <ChangeProjectStatus
                         projectId={projectId}
                         projectStatus={projectStatus}
                     />
-
-                    {/* edit & delete options */}
+                    
                     <ProjectOptions
                         projectId={projectId}
                         projectTitle={projectTitle}
