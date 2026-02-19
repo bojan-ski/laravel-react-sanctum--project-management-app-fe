@@ -10,7 +10,7 @@ export const taskSchema = z.object({
         .max(64, "Title cannot exceed 64 characters"),
     description: z
         .string()
-        .min(10, "Description must be at least 10 characters")
+        .min(200, "Description must be at least 200 characters")
         .max(1500, "Description cannot exceed 1500 characters"),
     priority: z.enum([ 'low', 'medium', 'high', 'critical' ], {
         message: "Priority must be low, medium, high, or critical"

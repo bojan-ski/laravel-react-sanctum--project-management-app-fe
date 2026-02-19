@@ -1,7 +1,10 @@
 export type ApiResponseStatus = 'success' | 'error';
 
-export type NullDataApiResponse = {
+export type ApiResponse = {
     status: ApiResponseStatus;
     message: string;
-    data: null;
 };
+
+export type NullDataApiResponse = {
+    data: null;
+} & ApiResponse;

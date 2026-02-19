@@ -135,7 +135,7 @@ function CreateTaskModal({ projectId }: { projectId: number; }): JSX.Element {
                     <FormTextarea
                         name='description'
                         label='Task description *'
-                        minLength={10}
+                        minLength={200}
                         maxLength={1500}
                         placeholder='Describe the task in detail...'
                         required={true}

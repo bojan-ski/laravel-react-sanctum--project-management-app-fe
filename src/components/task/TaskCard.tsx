@@ -1,7 +1,7 @@
 import { type JSX } from 'react';
 import { Link } from 'react-router';
 import type { Task } from '../../types/task';
-import { formatDate, isTaskOverdue } from '../../utils/helpers';
+import { formatDate } from '../../utils/helpers';
 import {
     Card,
     CardContent,
@@ -16,7 +16,7 @@ import TaskPriorityBadge from './TaskPriorityBadge ';
 import { Calendar } from 'lucide-react';
 
 function TaskCard({ task }: { task: Task; }): JSX.Element {
-    const overdue = isTaskOverdue(task.due_date, task.status);
+    const overdue = task.is_overdue;    
 
     return (
         <Card className="hover:shadow-md transition-shadow">

@@ -6,7 +6,7 @@ type FormSelectProps = {
     label?: string;
     name: string;
     defaultValue?: string;
-    options: any[];
+    options: any;
     disabledOptionLabel?: string;
     required?: boolean;
     disabled?: boolean;
@@ -57,19 +57,18 @@ function FormSelect({
                     <SelectValue placeholder={disabledOptionLabel} />
                 </SelectTrigger>
 
-                {/* array or object options */}
                 <SelectContent>
                     {isObjectOptions
-                        ? Object.entries(options).map(([optionValue, optionLabel]) => (
+                        ? Object.entries(options).map(([ optionValue, optionLabel ]) => (
                             <SelectItem
                                 key={optionValue}
                                 value={optionValue}
                                 disabled={disabled}
                             >
-                                {optionLabel}
+                                {optionLabel as string}
                             </SelectItem>
                         ))
-                        : options.map((optionLabel, idx) => (
+                        : options.map((optionLabel: string, idx: number) => (
                             <SelectItem
                                 key={idx}
                                 value={optionLabel}

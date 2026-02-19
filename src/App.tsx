@@ -7,11 +7,12 @@ import AppLayout from "./layout/AppLayout";
 
 // pages
 import Login from "./pages/auth/Login";
+import Notifications from "./pages/Notifications";
 import Projects from "./pages/Projects";
 import SelectedProject from "./pages/SelectedProject";
 import AddProject from "./pages/AddProject";
 import EditProject from "./pages/EditProject";
-import Notifications from "./pages/Notifications";
+import SelectedTask from "./pages/SelectedTask";
 import Profile from "./pages/Profile";
 import Users from "./pages/admin/Users";
 import SelectedUser from "./pages/admin/SelectedUser";
@@ -19,6 +20,7 @@ import SelectedUser from "./pages/admin/SelectedUser";
 // loaders
 import { loader as projectDetailsLoader } from "./pages/SelectedProject";
 import { loader as projectDataLoader } from "./pages/EditProject";
+import { loader as taskDetailsLoader } from "./pages/SelectedTask";
 import { loader as profileDataLoader } from "./pages/Profile";
 
 const router = createBrowserRouter([
@@ -30,6 +32,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Login />
+      },
+      {
+        path: '/notifications',
+        element: <Notifications />,
       },
       {
         path: '/add_project',
@@ -50,8 +56,9 @@ const router = createBrowserRouter([
         loader: projectDataLoader
       },
       {
-        path: '/notifications',
-        element: <Notifications />,
+        path: '/tasks/:id',
+        element: <SelectedTask />,
+        loader: taskDetailsLoader
       },
       {
         path: '/profile',

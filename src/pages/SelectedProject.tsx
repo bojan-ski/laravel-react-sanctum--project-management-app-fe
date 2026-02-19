@@ -21,7 +21,7 @@ export const loader = async ({ params }: { params: any; }): Promise<SelectedProj
 function SelectedProject(): JSX.Element {
     const { data: project } = useLoaderData();
     const { tasks } = useAppSelector(state => state.tasks);
-    const dispatch = useAppDispatch();
+    const dispatch = useAppDispatch();    
 
     useEffect(() => {
         console.log('useEffect - SelectedProject');
