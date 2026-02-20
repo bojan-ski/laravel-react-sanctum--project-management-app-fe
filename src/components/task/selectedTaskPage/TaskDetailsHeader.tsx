@@ -6,11 +6,9 @@ import TaskStatusBadge from '../TaskStatusBadge';
 import TaskPriorityBadge from '../TaskPriorityBadge ';
 
 function TaskDetailsHeader({ task }: { task: TaskDetails; }): JSX.Element {
-    console.log();
-
     return (
         <div className="border rounded-md p-4 mb-4">
-            <h2 className="text-xl font-semibold">
+            <h2 className="text-lg md:text-xl font-semibold">
                 {task.title}
             </h2>
 

@@ -21,9 +21,8 @@ function SelectedTask(): JSX.Element {
             <TaskDetailsHeader task={task} />
 
             <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
-                <section className='task-details p-4 border rounded-md'>
-                    <TaskDetailsInfo task={task} />
-                    
+                <section className='task-details'>
+                    <TaskDetailsInfo task={task} />                    
                     {/* TaskActivityTimeline */}
                 </section>
 
