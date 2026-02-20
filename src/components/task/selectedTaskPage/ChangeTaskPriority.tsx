@@ -1,8 +1,10 @@
 import { type JSX } from 'react';
+import { useAppSelector } from '../../../hooks/useRedux';
 import { useThunk } from '../../../hooks/useThunk';
 import { useZodValidation } from '../../../hooks/useZodValidation';
 import { updateTaskPriority } from '../../../features/regularUser/taskSlice';
 import { taskPrioritySchema, type TaskPriority } from '../../../schemas/taskSchema';
+import type { TaskState } from '../../../types/task';
 import FormSelect from '../../form/FormSelect';
 import toast from 'react-hot-toast';
 
@@ -15,6 +17,7 @@ function ChangeTaskPriority({
     taskId,
     taskPriority
 }: ChangeTaskPriorityProps): JSX.Element {
+    const { isLoading } = useAppSelector<TaskState>(state => state.tasks);
     const { run } = useThunk(updateTaskPriority);
     const { validate, errors, setErrors } = useZodValidation<TaskPriority>();
 
@@ -48,6 +51,7 @@ function ChangeTaskPriority({
             options={options}
             onMutate={handleTaskPriorityChange}
             selectCss='text-xs'
+            disabled={isLoading}
             error={errors.status}
         />
     );

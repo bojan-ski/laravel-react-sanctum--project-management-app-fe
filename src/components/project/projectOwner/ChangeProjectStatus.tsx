@@ -1,8 +1,10 @@
 import { type JSX } from 'react';
+import { useAppSelector } from '../../../hooks/useRedux';
 import { useZodValidation } from '../../../hooks/useZodValidation';
 import { useThunk } from '../../../hooks/useThunk';
 import { changeProjectStatus } from '../../../features/regularUser/projectSlice';
 import { projectStatusSchema, type ProjectStatusFilter } from '../../../schemas/projectSchema';
+import type { ProjectsState } from '../../../types/project';
 import FormSelect from '../../form/FormSelect';
 import toast from 'react-hot-toast';
 
@@ -15,6 +17,7 @@ function ChangeProjectStatus({
     projectId,
     projectStatus,
 }: ChangeProjectStatusProps): JSX.Element {
+    const { isLoading } = useAppSelector<ProjectsState>(state => state.project);
     const { run } = useThunk(changeProjectStatus);
     const { validate, errors, setErrors } = useZodValidation<ProjectStatusFilter>();
 
@@ -47,6 +50,7 @@ function ChangeProjectStatus({
             options={options}
             onMutate={handleProjectStatusChange}
             selectCss='text-xs'
+            disabled={isLoading}
             error={errors.status}
         />
     );

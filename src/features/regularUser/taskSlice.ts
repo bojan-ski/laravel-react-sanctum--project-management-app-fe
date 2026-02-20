@@ -69,17 +69,15 @@ export const removeTask = createAsyncThunk('tasks/removeTask', async (
 ) => {
     try {
         const apiCall = await deleteTask(taskId);
-        console.log(apiCall);
 
         return apiCall;
     } catch (error: any) {
-        console.log(error);
         return handleAsyncThunkError(error, rejectWithValue);
     }
 });
 
 const taskSlice = createSlice({
-    name: 'tasks',
+    name: 'task',
     initialState: initialTaskState,
     reducers: {
         setTasks(state, { payload }) {

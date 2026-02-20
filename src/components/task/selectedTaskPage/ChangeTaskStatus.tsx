@@ -1,7 +1,9 @@
 import { type JSX } from 'react';
+import { useAppSelector } from '../../../hooks/useRedux';
 import { useThunk } from '../../../hooks/useThunk';
 import { useZodValidation } from '../../../hooks/useZodValidation';
 import { updateTaskStatus } from '../../../features/regularUser/taskSlice';
+import type { TaskState } from '../../../types/task';
 import { taskStatusSchema, type TaskStatus } from '../../../schemas/taskSchema';
 import FormSelect from '../../form/FormSelect';
 import toast from 'react-hot-toast';
@@ -15,6 +17,7 @@ function ChangeTaskStatus({
     taskId,
     taskStatus
 }: ChangeTaskStatusProps): JSX.Element {
+    const { isLoading } = useAppSelector<TaskState>(state => state.tasks);
     const { run } = useThunk(updateTaskStatus);
     const { validate, errors, setErrors } = useZodValidation<TaskStatus>();
 
@@ -53,6 +56,7 @@ function ChangeTaskStatus({
             options={options}
             onMutate={handleTaskStatusChange}
             selectCss='text-xs'
+            disabled={isLoading}
             error={errors.status}
         />
     );

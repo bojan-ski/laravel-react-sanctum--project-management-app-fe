@@ -23,7 +23,6 @@ export type Task = {
 };
 
 export type TaskDetails = {
-    can_update_status: boolean;
     project: {
         id: number;
         title: string;
@@ -34,6 +33,8 @@ export type TaskDetails = {
         avatar: string | null;
     };
     activities: any;
+    is_creator: boolean,
+    is_assignee: boolean,
 } & Task;
 
 // api response
