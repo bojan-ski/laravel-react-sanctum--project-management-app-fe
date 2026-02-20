@@ -1,10 +1,12 @@
 import { type JSX } from 'react';
-import { useAppSelector } from '../../../hooks/useRedux';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
 import { useThunk } from '../../../hooks/useThunk';
 import { useZodValidation } from '../../../hooks/useZodValidation';
 import { updateTaskPriority } from '../../../features/regularUser/taskSlice';
+import { getUserProjects } from '../../../features/regularUser/projectSlice';
 import { taskPrioritySchema, type TaskPriority } from '../../../schemas/taskSchema';
 import type { TaskState } from '../../../types/task';
+import type { ProjectsState } from '../../../types/project';
 import FormSelect from '../../form/FormSelect';
 import toast from 'react-hot-toast';
 
@@ -18,6 +20,8 @@ function ChangeTaskPriority({
     taskPriority
 }: ChangeTaskPriorityProps): JSX.Element {
     const { isLoading } = useAppSelector<TaskState>(state => state.tasks);
+    const { filters, pagination } = useAppSelector<ProjectsState>(state => state.project);
+    const dispatch = useAppDispatch();
     const { run } = useThunk(updateTaskPriority);
     const { validate, errors, setErrors } = useZodValidation<TaskPriority>();
 
@@ -36,6 +40,12 @@ function ChangeTaskPriority({
             toast.success(thunkCall.data.message);
 
             setErrors({});
+
+            dispatch(getUserProjects({
+                ownership: filters.owner,
+                status: filters.status,
+                page: pagination.currentPage
+            }));
         } else {
             toast.error(thunkCall.error.random || "Change Task Priority Error");
 

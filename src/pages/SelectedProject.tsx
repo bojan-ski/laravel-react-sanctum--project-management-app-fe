@@ -1,10 +1,10 @@
-import { useEffect, type JSX } from 'react';
+import { useEffect, useState, type JSX } from 'react';
 import { useLoaderData } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../hooks/useRedux';
 import { getProjectDetails } from '../services/project';
 import { setMembers } from '../features/regularUser/projectMemberSlice';
 import { setTasks } from '../features/regularUser/taskSlice';
-import type { SelectedProjectDetailsResponse } from '../types/project';
+import type { ProjectStatus, SelectedProjectDetailsResponse } from '../types/project';
 import ProjectOwner from '../components/project/projectOwner/ProjectOwner';
 import ProjectData from '../components/project/selectedProjectPage/ProjectData';
 import Members from '../components/project/members/Members';
@@ -21,7 +21,8 @@ export const loader = async ({ params }: { params: any; }): Promise<SelectedProj
 function SelectedProject(): JSX.Element {
     const { data: project } = useLoaderData();
     const { tasks } = useAppSelector(state => state.tasks);
-    const dispatch = useAppDispatch();    
+    const dispatch = useAppDispatch();
+    const [ projectStatus, setProjectStatus ] = useState<ProjectStatus>(project.status);
 
     useEffect(() => {
         console.log('useEffect - SelectedProject');
@@ -45,7 +46,8 @@ function SelectedProject(): JSX.Element {
                     isProjectOwner={project.is_owner}
                     projectId={project.id}
                     projectTitle={project.title}
-                    projectStatus={project.status}
+                    projectStatus={projectStatus}
+                    setProjectStatus={setProjectStatus}
                     divCss='p-4 border rounded-md'
                 />
 
@@ -56,6 +58,7 @@ function SelectedProject(): JSX.Element {
                 <Members
                     projectId={project.id}
                     isProjectOwner={project.is_owner}
+                    projectStatus={projectStatus}
                 />
 
                 <TasksStatistics
@@ -69,6 +72,7 @@ function SelectedProject(): JSX.Element {
                     isProjectOwner={project.is_owner}
                     projectId={project.id}
                     tasksLength={tasks.length}
+                    projectStatus={projectStatus}
                 />
 
                 <TasksList

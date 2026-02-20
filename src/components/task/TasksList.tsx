@@ -14,7 +14,7 @@ function TasksList({
 }: TasksListProps): JSX.Element {
     if (tasks.length === 0) {
         return <NoDataMessage message={emptyMessage} />;
-    }    
+    }
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

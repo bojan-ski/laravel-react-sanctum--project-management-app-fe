@@ -1,9 +1,11 @@
 import { type JSX } from 'react';
-import { useAppSelector } from '../../../hooks/useRedux';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
 import { useThunk } from '../../../hooks/useThunk';
 import { useZodValidation } from '../../../hooks/useZodValidation';
 import { updateTaskStatus } from '../../../features/regularUser/taskSlice';
+import { getUserProjects } from '../../../features/regularUser/projectSlice';
 import type { TaskState } from '../../../types/task';
+import type { ProjectsState } from '../../../types/project';
 import { taskStatusSchema, type TaskStatus } from '../../../schemas/taskSchema';
 import FormSelect from '../../form/FormSelect';
 import toast from 'react-hot-toast';
@@ -18,6 +20,8 @@ function ChangeTaskStatus({
     taskStatus
 }: ChangeTaskStatusProps): JSX.Element {
     const { isLoading } = useAppSelector<TaskState>(state => state.tasks);
+    const { filters, pagination } = useAppSelector<ProjectsState>(state => state.project);
+    const dispatch = useAppDispatch();
     const { run } = useThunk(updateTaskStatus);
     const { validate, errors, setErrors } = useZodValidation<TaskStatus>();
 
@@ -41,6 +45,12 @@ function ChangeTaskStatus({
             toast.success(thunkCall.data.message);
 
             setErrors({});
+
+            dispatch(getUserProjects({
+                ownership: filters.owner,
+                status: filters.status,
+                page: pagination.currentPage
+            }));
         } else {
             toast.error(thunkCall.error.random || "Change Task Status Error");
 

@@ -1,5 +1,5 @@
 import { type JSX } from 'react';
-import { CheckCircle2, Users } from 'lucide-react';
+import { Files, Users } from 'lucide-react';
 
 type ProjectStatisticsProps = {
   totalMembers: number;
@@ -22,7 +22,7 @@ function ProjectStatistics({
       </div>
 
       <div className="flex items-center gap-2 text-sm">
-        <CheckCircle2 className="h-4 w-4 text-yellow-500" />
+        <Files className="h-4 w-4 text-gray-500" />
         <span className="text-gray-600">
           {completedTasks}/{totalTasks} tasks
         </span>

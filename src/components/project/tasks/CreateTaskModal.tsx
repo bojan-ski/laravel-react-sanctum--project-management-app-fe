@@ -1,10 +1,12 @@
 import { useState, type ChangeEvent, type FormEvent, type JSX } from 'react';
-import { useAppSelector } from '../../../hooks/useRedux';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
 import { useThunk } from '../../../hooks/useThunk';
 import { useZodValidation } from '../../../hooks/useZodValidation';
 import { createNewTask } from '../../../features/regularUser/taskSlice';
+import { getUserProjects } from '../../../features/regularUser/projectSlice';
 import { taskSchema, type TaskFormData, type TaskPriority } from '../../../schemas/taskSchema';
 import type { TaskState } from '../../../types/task';
+import type { ProjectsState } from '../../../types/project';
 import {
     Dialog,
     DialogContent,
@@ -24,7 +26,9 @@ import toast from 'react-hot-toast';
 
 function CreateTaskModal({ projectId }: { projectId: number; }): JSX.Element {
     const { isLoading } = useAppSelector<TaskState>(state => state.tasks);
+    const { filters, pagination } = useAppSelector<ProjectsState>(state => state.project);
     const { members } = useAppSelector(state => state.projectMembers);
+    const dispatch = useAppDispatch();
     const { run } = useThunk(createNewTask);
     const { validate, errors, setErrors } = useZodValidation<TaskFormData>();
     const [ isOpen, setIsOpen ] = useState<boolean>(false);
@@ -37,8 +41,8 @@ function CreateTaskModal({ projectId }: { projectId: number; }): JSX.Element {
     });
     const priorityOptions: TaskPriority[] = [ 'low', 'medium', 'high', 'critical' ];
     const memberOptions = members.reduce((acc, member) => {
-        if(!member.is_owner){
-            acc[ member.id ] = `${member.name} (${member.email})`;    
+        if (!member.is_owner) {
+            acc[ member.id ] = `${member.name} (${member.email})`;
         }
 
         return acc;
@@ -80,6 +84,12 @@ function CreateTaskModal({ projectId }: { projectId: number; }): JSX.Element {
             });
             setErrors({});
             setIsOpen(false);
+
+            dispatch(getUserProjects({
+                ownership: filters.owner,
+                status: filters.status,
+                page: pagination.currentPage
+            }));
         } else {
             toast.error(thunkCall.error.random || "Create Task Error");
 

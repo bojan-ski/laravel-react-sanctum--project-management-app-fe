@@ -1,6 +1,7 @@
 import { type JSX } from 'react';
 import { useAppSelector } from '../../../hooks/useRedux';
 import type { Member, ProjectMembersState } from '../../../types/member';
+import type { ProjectStatus } from '../../../types/project';
 import LeaveProject from './leave/LeaveProject';
 import InviteMembersModal from './invite/InviteMembersModal';
 import MemberRow from './MemberRow';
@@ -8,11 +9,13 @@ import MemberRow from './MemberRow';
 type MembersProps = {
     projectId: number;
     isProjectOwner: boolean;
+    projectStatus: ProjectStatus;
 };
 
 function Members({
     projectId,
     isProjectOwner,
+    projectStatus
 }: MembersProps): JSX.Element {
     const { members, membersLimit } = useAppSelector<ProjectMembersState>(state => state.projectMembers);
 
@@ -23,10 +26,14 @@ function Members({
                     Limit: <span>{members.length}</span>/<span>{membersLimit}</span>
                 </h3>
 
-                {!isProjectOwner && <LeaveProject projectId={projectId} />}
+                {(projectStatus === 'active' || projectStatus === 'pending') && (
+                    <>
+                        {!isProjectOwner && <LeaveProject projectId={projectId} />}
 
-                {(isProjectOwner && members.length < membersLimit) && (
-                    <InviteMembersModal projectId={projectId} />
+                        {(isProjectOwner && members.length < membersLimit) && (
+                            <InviteMembersModal projectId={projectId} />
+                        )}
+                    </>
                 )}
             </div>
 

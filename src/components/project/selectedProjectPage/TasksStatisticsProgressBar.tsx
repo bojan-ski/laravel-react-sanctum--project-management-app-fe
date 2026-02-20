@@ -9,7 +9,7 @@ function TasksStatisticsProgressBar({ completionPercentage }: { completionPercen
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2.5">
                 <div
-                    className="bg-green-500 h-2.5 rounded-full transition-all duration-300"
+                    className="bg-gray-800 h-2.5 rounded-full transition-all duration-300"
                     style={{ width: `${completionPercentage}%` }}
                 ></div>
             </div>

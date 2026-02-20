@@ -1,4 +1,5 @@
 import { type JSX } from 'react';
+import type { ProjectStatus } from '../../../types/project';
 import ProjectOwnerDetails from './ProjectOwnerDetails';
 import ChangeProjectStatus from './ChangeProjectStatus';
 import ProjectOptions from './ProjectOptions';
@@ -9,7 +10,8 @@ type ProjectOwnerProps = {
     isProjectOwner: boolean;
     projectId: number;
     projectTitle: string;
-    projectStatus: string;
+    projectStatus: ProjectStatus;
+    setProjectStatus: (option: ProjectStatus) => void;
     divCss?: string;
 };
 
@@ -20,6 +22,7 @@ function ProjectOwner({
     projectId,
     projectTitle,
     projectStatus,
+    setProjectStatus,
     divCss,
 }: ProjectOwnerProps): JSX.Element {
     return (
@@ -34,12 +37,15 @@ function ProjectOwner({
                     <ChangeProjectStatus
                         projectId={projectId}
                         projectStatus={projectStatus}
+                        setProjectStatus={setProjectStatus}
                     />
-                    
-                    <ProjectOptions
-                        projectId={projectId}
-                        projectTitle={projectTitle}
-                    />
+
+                    {(projectStatus === 'active' || projectStatus === 'pending') && (
+                        <ProjectOptions
+                            projectId={projectId}
+                            projectTitle={projectTitle}
+                        />
+                    )}
                 </>
             )}
         </div>

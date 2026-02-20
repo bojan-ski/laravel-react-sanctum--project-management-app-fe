@@ -9,7 +9,7 @@ function ProjectProgress({ completionPercentage }: { completionPercentage: numbe
       </div>
       <div className="w-full bg-gray-200 rounded-full h-2">
         <div
-          className="bg-indigo-600 h-2 rounded-full transition-all"
+          className="bg-gray-800 h-2 rounded-full transition-all"
           style={{ width: `${completionPercentage}%` }}
         />
       </div>
