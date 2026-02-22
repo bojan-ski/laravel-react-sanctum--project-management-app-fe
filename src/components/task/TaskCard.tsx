@@ -17,7 +17,7 @@ import { Calendar } from 'lucide-react';
 
 function TaskCard({ task }: { task: Task; }): JSX.Element {
     const overdue = task.is_overdue;    
-
+    
     return (
         <Card className="hover:shadow-md transition-shadow">
             <CardHeader>

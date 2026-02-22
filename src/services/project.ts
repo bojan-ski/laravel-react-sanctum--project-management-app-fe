@@ -1,11 +1,15 @@
 import api from "../api/axios";
 import type { ProjectFormData } from "../schemas/projectSchema";
 import type { NullDataApiResponse } from "../types/api";
-import type { GetProjectsResponse, SelectedProjectDataResponse, SelectedProjectDetailsResponse } from "../types/project";
+import type {
+    GetProjectsResponse,
+    SelectedProjectDataResponse,
+    SelectedProjectDetailsResponse
+} from "../types/project";
 
 export async function getProjects(
-    ownership: string = '',
-    status: string = '',
+    ownership: string = 'all',
+    status: string = 'all',
     page: number = 1
 ): Promise<GetProjectsResponse> {
     const response = await api.get(`/api/projects`, {

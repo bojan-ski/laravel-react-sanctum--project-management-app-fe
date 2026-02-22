@@ -38,11 +38,13 @@ export type TaskDetails = {
 } & Task;
 
 // api response
+export type GetUserTasksResponse = {
+    data: Task[];
+} & ApiResponse;
+
 export type SelectedTaskDetailsResponse = {
-    status: 'success';
-    message: string;
     data: TaskDetails;
-};
+} & ApiResponse;
 
 export type UpdateTaskStatusResponse = {
     data: {
@@ -58,6 +60,12 @@ export type UpdateTaskPriorityResponse = {
     } | null;
 } & ApiResponse;
 
+export type GetUserTasksResponseErrors = {
+    ownership?: string;
+    status?: string;
+    priority?: string;
+};
+
 export type TaskFormDataErrors = {
     assigned_to?: string;
     title?: string;
@@ -67,7 +75,25 @@ export type TaskFormDataErrors = {
 };
 
 // task slice
+export type UserTasksFiltersOwner = 'all' | 'created' | 'assigned';
+export type UserTasksFiltersStatus = 'all' | 'todo' | 'in_progress' | 'review' | 'done';
+export type UserTasksFiltersPriority = 'all' | 'low' | 'medium' | 'high' | 'critical';
+
+export type UserTasksFilters = {
+    ownership: UserTasksFiltersOwner;
+    status: UserTasksFiltersStatus;
+    priority: UserTasksFiltersPriority;
+};
+
+export type UserTasksPagination = {
+    currentPage: number;
+    lastPage: number;
+};
+
 export type TaskState = {
     isLoading: boolean;
-    tasks: Task[];
+    projectTasks: Task[];
+    userTasks: Task[];
+    filters: UserTasksFilters;
+    pagination: UserTasksPagination;
 };

@@ -4,6 +4,7 @@ import { getTaskDetails } from '../services/task';
 import type { SelectedTaskDetailsResponse } from '../types/task';
 import TaskDetailsHeader from '../components/task/selectedTaskPage/TaskDetailsHeader';
 import TaskDetailsInfo from '../components/task/selectedTaskPage/TaskDetailsInfo';
+import TaskActivityTimeline from '../components/task/selectedTaskPage/TaskActivityTimeline';
 
 export const loader = async ({ params }: { params: any; }): Promise<SelectedTaskDetailsResponse> => {
     const response: SelectedTaskDetailsResponse = await getTaskDetails(params.id);
@@ -22,8 +23,8 @@ function SelectedTask(): JSX.Element {
 
             <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
                 <section className='task-details'>
-                    <TaskDetailsInfo task={task} />                    
-                    {/* TaskActivityTimeline */}
+                    <TaskDetailsInfo task={task} />
+                    <TaskActivityTimeline activities={task.activities} />
                 </section>
 
                 <section className='chat p-4 border rounded-md'>

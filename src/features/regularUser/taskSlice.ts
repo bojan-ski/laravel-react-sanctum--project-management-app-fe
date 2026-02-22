@@ -1,13 +1,53 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { handleAsyncThunkError } from "../../utils/reduxErrorHandler";
-import { changeTaskPriority, changeTaskStatus, createTask, deleteTask } from "../../services/task";
-import type { Task, TaskFormDataErrors, TaskState } from "../../types/task";
+import {
+    changeTaskPriority,
+    changeTaskStatus,
+    createTask,
+    deleteTask,
+    getUserTasks
+} from "../../services/task";
+import type {
+    GetUserTasksResponseErrors,
+    Task, TaskFormDataErrors,
+    TaskState
+} from "../../types/task";
 import type { TaskFormData } from "../../schemas/taskSchema";
 
 const initialTaskState: TaskState = {
     isLoading: false,
-    tasks: [],
+    projectTasks: [],
+    userTasks: [],
+    filters: {
+        ownership: 'all',
+        status: 'all',
+        priority: 'all'
+    },
+    pagination: {
+        currentPage: 1,
+        lastPage: 1,
+    },
 };
+
+type GetUserProjectsProps = {
+    ownership?: string;
+    status?: string;
+    priority?: string;
+    page?: number;
+};
+
+export const fetchUserTasks = createAsyncThunk('tasks/fetchUserTasks', async (
+    { ownership, status, priority, page }: GetUserProjectsProps,
+    { rejectWithValue }
+) => {
+    try {
+        const apiCall = await getUserTasks(ownership, status, priority, page);
+
+        return apiCall;
+    } catch (error: any) {
+        return handleAsyncThunkError<GetUserTasksResponseErrors>(error, rejectWithValue);
+    }
+});
 
 type CreateNewTaskProps = {
     projectId: number;
@@ -80,12 +120,40 @@ const taskSlice = createSlice({
     name: 'task',
     initialState: initialTaskState,
     reducers: {
-        setTasks(state, { payload }) {
-            state.tasks = payload.tasks;
+        setProjectTasks(state, { payload }): void {
+            state.projectTasks = payload.tasks;
         },
+        setFilterUserTasksOwnership: (state, { payload }): void => {
+            state.filters.ownership = payload;
+            state.pagination.currentPage = 1;
+        },
+        setFilterUserTasksStatus: (state, { payload }): void => {
+            state.filters.status = payload;
+            state.pagination.currentPage = 1;
+        },
+        setFilterUserTasksPriority: (state, { payload }): void => {
+            state.filters.priority = payload;
+            state.pagination.currentPage = 1;
+        },
+        setUserTasksPage: (state, { payload }): void => {
+            state.pagination.currentPage = payload;
+        }
     },
     extraReducers: (builder) => {
         builder
+            // fetch user tasks
+            .addCase(fetchUserTasks.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchUserTasks.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+
+                state.userTasks = payload.data;
+            })
+            .addCase(fetchUserTasks.rejected, (state) => {
+                state.isLoading = false;
+            })
+
             // create new task
             .addCase(createNewTask.pending, (state) => {
                 state.isLoading = true;
@@ -93,7 +161,7 @@ const taskSlice = createSlice({
             .addCase(createNewTask.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
 
-                state.tasks.unshift(payload.data);
+                state.projectTasks.unshift(payload.data);
             })
             .addCase(createNewTask.rejected, (state) => {
                 state.isLoading = false;
@@ -107,7 +175,7 @@ const taskSlice = createSlice({
                 state.isLoading = false;
 
                 const updatedTaskData = payload.data;
-                const updatedTask = state.tasks.find(
+                const updatedTask = state.projectTasks.find(
                     (task: Task) => task.id === updatedTaskData.id
                 );
 
@@ -127,7 +195,7 @@ const taskSlice = createSlice({
                 state.isLoading = false;
 
                 const updatedTaskData = payload.data;
-                const updatedTask = state.tasks.find(
+                const updatedTask = state.projectTasks.find(
                     (task: Task) => task.id === updatedTaskData.id
                 );
 
@@ -152,5 +220,11 @@ const taskSlice = createSlice({
     },
 });
 
-export const { setTasks } = taskSlice.actions;
+export const {
+    setProjectTasks,
+    setFilterUserTasksOwnership,
+    setFilterUserTasksStatus,
+    setFilterUserTasksPriority,
+    setUserTasksPage
+} = taskSlice.actions;
 export default taskSlice.reducer;

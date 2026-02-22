@@ -13,7 +13,7 @@ function GlobalPagination({
     handlePageChange
 }: GlobalPaginationProps): JSX.Element {
     return (
-        <section className="flex items-center justify-center gap-2 mb-10">
+        <section className="flex items-center justify-center gap-2 mt-5 mb-10">
             <GlobalPaginationOption
                 onMutate={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}

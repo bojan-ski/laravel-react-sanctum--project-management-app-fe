@@ -27,6 +27,15 @@ function Navbar({ isAdmin }: { isAdmin: boolean; }): JSX.Element {
                     </NavLink>
 
                     <NavLink
+                        to={'/tasks'}
+                        className={({ isActive }) =>
+                            `capitalize btn font-semibold text-sm border rounded-sm py-1.5 px-4 text-white hover:bg-yellow-500 transition cursor-pointer ${isActive ? 'bg-yellow-500' : 'bg-yellow-600'}`
+                        }
+                    >
+                        tasks
+                    </NavLink>
+
+                    <NavLink
                         to={'/profile'}
                         className={({ isActive }) =>
                             `capitalize btn font-semibold text-sm border rounded-sm py-1.5 px-4 text-white hover:bg-yellow-500 transition cursor-pointer ${isActive ? 'bg-yellow-500' : 'bg-yellow-600'}`

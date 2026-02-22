@@ -13,6 +13,7 @@ import SelectedProject from "./pages/SelectedProject";
 import AddProject from "./pages/AddProject";
 import EditProject from "./pages/EditProject";
 import SelectedTask from "./pages/SelectedTask";
+import UserTasks from "./pages/UserTasks";
 import Profile from "./pages/Profile";
 import Users from "./pages/admin/Users";
 import SelectedUser from "./pages/admin/SelectedUser";
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
         path: '/projects/:id/edit',
         element: <EditProject />,
         loader: projectDataLoader
+      },
+      {
+        path: '/tasks',
+        element: <UserTasks />
       },
       {
         path: '/tasks/:id',

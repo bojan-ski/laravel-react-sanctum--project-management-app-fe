@@ -4,8 +4,8 @@ import { useThunk } from '../../../hooks/useThunk';
 import { useZodValidation } from '../../../hooks/useZodValidation';
 import { createNewTask } from '../../../features/regularUser/taskSlice';
 import { getUserProjects } from '../../../features/regularUser/projectSlice';
-import { taskSchema, type TaskFormData, type TaskPriority } from '../../../schemas/taskSchema';
-import type { TaskState } from '../../../types/task';
+import { taskSchema, type TaskFormData } from '../../../schemas/taskSchema';
+import type { TaskPriority, TaskState } from '../../../types/task';
 import type { ProjectsState } from '../../../types/project';
 import {
     Dialog,

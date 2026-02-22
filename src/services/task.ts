@@ -2,10 +2,29 @@ import api from "../api/axios";
 import type { TaskFormData } from "../schemas/taskSchema";
 import type { NullDataApiResponse } from "../types/api";
 import type {
+    GetUserTasksResponse,
     SelectedTaskDetailsResponse,
     UpdateTaskPriorityResponse,
     UpdateTaskStatusResponse
 } from "../types/task";
+
+export async function getUserTasks(
+    ownership: string = 'all',
+    status: string = 'all',
+    priority: string = 'all',
+    page: number = 1
+): Promise<GetUserTasksResponse> {    
+    const response = await api.get('/api/tasks', {
+        params: {
+            ownership,
+            status,
+            priority,
+            page
+        }
+    });
+
+    return response.data;
+}
 
 export async function createTask(
     projectId: number,

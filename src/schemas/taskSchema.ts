@@ -40,3 +40,23 @@ export const taskPrioritySchema = z.enum([
     'low', 'medium', 'high', 'critical'
 ]);
 export type TaskPriority = z.infer<typeof taskPrioritySchema>;
+
+export const taskOwnershipSchema = z.enum([
+    "created", "assigned",
+]);
+export type TaskOwnership = z.infer<typeof taskOwnershipSchema>;
+
+export const filterTaskPrioritySchema = z.enum([
+    'all', ...taskPrioritySchema.options
+]);
+export type FilterTaskByPriority = z.infer<typeof filterTaskPrioritySchema>;
+
+export const filterTaskStatusSchema = z.enum([
+    'all', ...taskStatusSchema.options
+]);
+export type FilterTaskByStatus = z.infer<typeof filterTaskStatusSchema>;
+
+export const filterTaskOwnershipSchema = z.enum([
+    'all', ...taskOwnershipSchema.options
+]);
+export type FilterTaskByOwnership = z.infer<typeof filterTaskOwnershipSchema>;

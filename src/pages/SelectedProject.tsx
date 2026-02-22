@@ -3,7 +3,7 @@ import { useLoaderData } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../hooks/useRedux';
 import { getProjectDetails } from '../services/project';
 import { setMembers } from '../features/regularUser/projectMemberSlice';
-import { setTasks } from '../features/regularUser/taskSlice';
+import { setProjectTasks } from '../features/regularUser/taskSlice';
 import type { ProjectStatus, SelectedProjectDetailsResponse } from '../types/project';
 import ProjectOwner from '../components/project/projectOwner/ProjectOwner';
 import ProjectData from '../components/project/selectedProjectPage/ProjectData';
@@ -20,7 +20,7 @@ export const loader = async ({ params }: { params: any; }): Promise<SelectedProj
 
 function SelectedProject(): JSX.Element {
     const { data: project } = useLoaderData();
-    const { tasks } = useAppSelector(state => state.tasks);
+    const { projectTasks: tasks } = useAppSelector(state => state.tasks);
     const dispatch = useAppDispatch();
     const [ projectStatus, setProjectStatus ] = useState<ProjectStatus>(project.status);
 
@@ -32,7 +32,7 @@ function SelectedProject(): JSX.Element {
             membersLimit: project.members_limit,
         }));
 
-        dispatch(setTasks({
+        dispatch(setProjectTasks({
             tasks: project.tasks
         }));
     }, [ project.id, dispatch ]);

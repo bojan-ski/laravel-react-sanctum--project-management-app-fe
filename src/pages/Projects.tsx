@@ -70,8 +70,6 @@ function Projects(): JSX.Element {
             )}
         </div>
     );
-
-    return <div></div>;
 }
 
 export default Projects;

@@ -6,7 +6,7 @@ import TaskDetailsInfoDateStamps from './TaskDetailsInfoDateStamps';
 
 function TaskDetailsInfo({ task }: { task: TaskDetails; }): JSX.Element {
     return (
-        <div>
+        <div className='mb-4'>
             <div className='p-4 border rounded-md mb-4'>
                 <h3 className='text-sm md:text-base font-semibold text-gray-600 mb-2'>
                     Description
