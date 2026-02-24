@@ -5,14 +5,15 @@ import {
     changeTaskStatus,
     createTask,
     deleteTask,
-    getUserTasks
+    getUserTasks,
+    uploadDocument
 } from "../../services/task";
+import type { TaskDocumentFormData, TaskFormData } from "../../schemas/taskSchema";
 import type {
     GetUserTasksResponseErrors,
     Task, TaskFormDataErrors,
     TaskState
 } from "../../types/task";
-import type { TaskFormData } from "../../schemas/taskSchema";
 
 const initialTaskState: TaskState = {
     isLoading: false,
@@ -29,7 +30,7 @@ const initialTaskState: TaskState = {
     },
 };
 
-type GetUserProjectsProps = {
+type FetchUserTasksProps = {
     ownership?: string;
     status?: string;
     priority?: string;
@@ -37,13 +38,13 @@ type GetUserProjectsProps = {
 };
 
 export const fetchUserTasks = createAsyncThunk('tasks/fetchUserTasks', async (
-    { ownership, status, priority, page }: GetUserProjectsProps,
+    { ownership, status, priority, page }: FetchUserTasksProps,
     { rejectWithValue }
 ) => {
     try {
         const apiCall = await getUserTasks(ownership, status, priority, page);
 
-        return apiCall;
+        return apiCall.data;
     } catch (error: any) {
         return handleAsyncThunkError<GetUserTasksResponseErrors>(error, rejectWithValue);
     }
@@ -116,6 +117,24 @@ export const removeTask = createAsyncThunk('tasks/removeTask', async (
     }
 });
 
+type UploadTaskDocumentProps = {
+    taskId: number;
+    document: TaskDocumentFormData;
+};
+
+export const uploadTaskDocument = createAsyncThunk('tasks/uploadTaskDocument', async (
+    { taskId, document }: UploadTaskDocumentProps,
+    { rejectWithValue }
+) => {
+    try {
+        const apiCall = await uploadDocument(taskId, document);       
+
+        return apiCall;
+    } catch (error: any) {        
+        return handleAsyncThunkError(error, rejectWithValue);
+    }
+});
+
 const taskSlice = createSlice({
     name: 'task',
     initialState: initialTaskState,
@@ -145,10 +164,12 @@ const taskSlice = createSlice({
             .addCase(fetchUserTasks.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(fetchUserTasks.fulfilled, (state, { payload }) => {
+            .addCase(fetchUserTasks.fulfilled, (state, { payload }) => {                
                 state.isLoading = false;
 
                 state.userTasks = payload.data;
+                state.pagination.currentPage = payload.current_page;
+                state.pagination.lastPage = payload.last_page;
             })
             .addCase(fetchUserTasks.rejected, (state) => {
                 state.isLoading = false;
@@ -216,7 +237,18 @@ const taskSlice = createSlice({
             })
             .addCase(removeTask.rejected, (state) => {
                 state.isLoading = false;
-            });
+            })
+
+            // assignee upload task document
+            .addCase(uploadTaskDocument.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(uploadTaskDocument.fulfilled, (state) => {
+                state.isLoading = false;
+            })
+            .addCase(uploadTaskDocument.rejected, (state) => {
+                state.isLoading = false;
+            })
     },
 });
 

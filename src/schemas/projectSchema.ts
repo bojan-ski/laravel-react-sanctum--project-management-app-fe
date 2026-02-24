@@ -6,6 +6,7 @@ export const projectSchema = z.object({
         .max(64, "Title cannot exceed 64 characters"),
     description: z
         .string()
+        .min(300, "Description must be at least 300 characters")
         .max(3000, "Description cannot exceed 3000 characters"),
     deadline: z
         .string()
@@ -20,10 +21,21 @@ export const projectSchema = z.object({
             },
             { message: "Deadline must be a valid future date" }
         ),
+    // document_path: z
+    //     .instanceof(File)
+    //     .optional()
+    //     .or(z.null()),
     document_path: z
-        .instanceof(File)
-        .optional()
-        .or(z.null()),
+        .instanceof(File, { message: "A file is required" })
+        .refine(file => file.size > 0, "File cannot be empty")
+        .refine(file => file.size <= 1024 * 1024, "File must be under 1MB")
+        .refine(
+            file => [
+                'application/pdf',
+                'application/msword',                                                                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
+            ].includes(file.type),
+            "Only PDF, DOC, and DOCX files are allowed"
+        ),
 });
 export type ProjectFormData = z.infer<typeof projectSchema>;
 

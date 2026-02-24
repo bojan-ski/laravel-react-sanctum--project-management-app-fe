@@ -92,6 +92,7 @@ export default function ProjectForm({
                     <FormTextarea
                         name='description'
                         label='enter description *'
+                        minLength={300}
                         maxLength={3000}
                         placeholder='max 3000 characters'
                         required={true}

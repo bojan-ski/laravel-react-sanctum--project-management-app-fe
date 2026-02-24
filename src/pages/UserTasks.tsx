@@ -63,7 +63,7 @@ function UserTasks(): JSX.Element {
         navigate(`?ownership=${filters.ownership}&status=${filters.status}&priority=${filters.priority}&page=${newPage}`);
     };
 
-    if (isLoading) return <Loading />;
+    if (isLoading) return <Loading />;    
 
     return (
         <div className='user-tasks-page mt-10'>

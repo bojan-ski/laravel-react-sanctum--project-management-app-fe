@@ -7,7 +7,10 @@ type TaskPriorityBadgeProps = {
     className?: string;
 };
 
-function TaskPriorityBadge({ priority, className = '' }: TaskPriorityBadgeProps): JSX.Element {
+function TaskPriorityBadge({
+    priority,
+    className = ''
+}: TaskPriorityBadgeProps): JSX.Element {
     return (
         <Badge
             variant="outline"

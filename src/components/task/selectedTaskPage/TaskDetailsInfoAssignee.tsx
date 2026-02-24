@@ -26,8 +26,12 @@ function TaskDetailsInfoAssignee({
                     avatar={assigneeAvatar}
                 />
                 <div>
-                    <p className='text-xs md:text-sm font-medium'>{assigneeName}</p>
-                    <p className='text-xs text-gray-600'>{assigneeEmail}</p>
+                    <p className='text-xs md:text-sm font-medium'>
+                        {assigneeName}
+                    </p>
+                    <p className='text-xs text-gray-600'>
+                        {assigneeEmail}
+                    </p>
                 </div>
             </div>
         </div>

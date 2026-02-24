@@ -32,7 +32,7 @@ export const taskSchema = z.object({
 export type TaskFormData = z.infer<typeof taskSchema>;
 
 export const taskStatusSchema = z.enum([
-    'todo', 'in_progress', 'review', 'done'
+    'to_do', 'in_progress', 'review', 'done'
 ]);
 export type TaskStatus = z.infer<typeof taskStatusSchema>;
 
@@ -60,3 +60,18 @@ export const filterTaskOwnershipSchema = z.enum([
     'all', ...taskOwnershipSchema.options
 ]);
 export type FilterTaskByOwnership = z.infer<typeof filterTaskOwnershipSchema>;
+
+export const taskDocumentSchema = z.object({
+    document: z
+        .instanceof(File, { message: "A file is required" })
+        .refine(file => file.size > 0, "File cannot be empty")
+        .refine(file => file.size <= 1024 * 1024, "File must be under 1MB")
+        .refine(
+            file => [
+                'application/pdf',
+                'application/msword',                                                                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
+            ].includes(file.type),
+            "Only PDF, DOC, and DOCX files are allowed"
+        ),
+});
+export type TaskDocumentFormData = z.infer<typeof taskDocumentSchema>;

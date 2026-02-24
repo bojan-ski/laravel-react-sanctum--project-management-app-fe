@@ -42,12 +42,16 @@ function Projects(): JSX.Element {
 
     const handleProjectsPageChange = (newPage: number): void => {
         dispatch(setUserProjectsPage(newPage));
-        dispatch(getUserProjects({ ownership: filters.owner, status: filters.status, page: newPage }));
+        dispatch(getUserProjects({
+            ownership: filters.owner,
+            status: filters.status,
+            page: newPage
+        }));
 
         navigate(`?ownership=${filters.owner}&status=${filters.status}&page=${newPage}`);
     };
 
-    if (isLoading) return <Loading />;
+    if (isLoading) return <Loading />;    
 
     return (
         <div className='projects-page mt-10'>

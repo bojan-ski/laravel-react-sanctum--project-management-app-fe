@@ -12,14 +12,12 @@ function TaskDetailsHeader({ task }: { task: TaskDetails; }): JSX.Element {
                 {task.title}
             </h2>
 
-            {task.is_creator && (
+            {(task.is_creator && task.project.is_active) ? (
                 <div className="flex items-end justify-between mt-4">
                     <UpdateTaskOptions task={task} />
                     <DeleteTask task={task} />
                 </div>
-            )}
-
-            {task.is_assignee && (
+            ) : (
                 <div className="flex items-center gap-2 mt-4">
                     <TaskStatusBadge status={task.status} />
                     <TaskPriorityBadge priority={task.priority} />

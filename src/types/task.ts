@@ -1,6 +1,7 @@
 import type { ApiResponse } from "./api";
+import type { Document } from "./document";
 
-export type TaskStatus = 'todo' | 'in_progress' | 'review' | 'done';
+export type TaskStatus = 'to_do' | 'in_progress' | 'review' | 'done';
 export type TaskPriority = 'low' | 'medium' | 'high' | 'critical';
 
 export type Task = {
@@ -22,24 +23,54 @@ export type Task = {
     updated_at: string;
 };
 
+export type TaskActivityAction = 'status_changed' | 'priority_changed' | 'document_uploaded';
+
+export type TaskActivity = {
+    id: number;
+    task_id: number;
+    user_id: number;
+    user: {
+        id: number;
+        name: string;
+        email: string;
+        avatar: string | null;
+    };
+    action: TaskActivityAction;
+    changes: {
+        from: string;
+        to: string;
+    };
+    document: Document;
+    created_at: string;
+    updated_at: string;
+};
+
 export type TaskDetails = {
     project: {
         id: number;
         title: string;
+        status: string;
+        is_active: boolean;
     };
     creator: {
         id: number;
         name: string;
+        email: string;
         avatar: string | null;
     };
-    activities: any;
+    task_in_progress: boolean;
+    activities: TaskActivity[];
     is_creator: boolean,
     is_assignee: boolean,
 } & Task;
 
 // api response
 export type GetUserTasksResponse = {
-    data: Task[];
+    data: {
+        data: Task[];
+        current_page: number;
+        last_page: number;
+    };
 } & ApiResponse;
 
 export type SelectedTaskDetailsResponse = {
@@ -76,7 +107,7 @@ export type TaskFormDataErrors = {
 
 // task slice
 export type UserTasksFiltersOwner = 'all' | 'created' | 'assigned';
-export type UserTasksFiltersStatus = 'all' | 'todo' | 'in_progress' | 'review' | 'done';
+export type UserTasksFiltersStatus = 'all' | 'to_do' | 'in_progress' | 'review' | 'done';
 export type UserTasksFiltersPriority = 'all' | 'low' | 'medium' | 'high' | 'critical';
 
 export type UserTasksFilters = {

@@ -1,5 +1,5 @@
 import api from "../api/axios";
-import type { TaskFormData } from "../schemas/taskSchema";
+import type { TaskDocumentFormData, TaskFormData } from "../schemas/taskSchema";
 import type { NullDataApiResponse } from "../types/api";
 import type {
     GetUserTasksResponse,
@@ -13,7 +13,7 @@ export async function getUserTasks(
     status: string = 'all',
     priority: string = 'all',
     page: number = 1
-): Promise<GetUserTasksResponse> {    
+): Promise<GetUserTasksResponse> {
     const response = await api.get('/api/tasks', {
         params: {
             ownership,
@@ -68,3 +68,19 @@ export async function deleteTask(taskId: number): Promise<NullDataApiResponse> {
 
     return response.data;
 }
+
+export const uploadDocument = async (
+    taskId: number,
+    documentFormData: TaskDocumentFormData
+): Promise<NullDataApiResponse> => {
+    const formData = new FormData();
+    formData.append('document', documentFormData.document);
+
+    const response = await api.post(`/api/tasks/${taskId}/document`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+
+    return response.data;
+};

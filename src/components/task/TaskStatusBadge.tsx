@@ -7,7 +7,10 @@ type TaskStatusBadgeProps = {
     className?: string;
 };
 
-function TaskStatusBadge({ status, className = '' }: TaskStatusBadgeProps): JSX.Element {
+function TaskStatusBadge({
+    status,
+    className = ''
+}: TaskStatusBadgeProps): JSX.Element {
     return (
         <Badge className={`${getTaskStatusColor(status)} text-white text-xs ${className}`}>
             {getTaskStatusLabel(status)}

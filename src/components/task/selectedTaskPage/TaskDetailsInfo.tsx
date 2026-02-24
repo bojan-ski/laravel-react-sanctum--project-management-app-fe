@@ -17,7 +17,8 @@ function TaskDetailsInfo({ task }: { task: TaskDetails; }): JSX.Element {
             </div>
 
             <div className='grid sm:grid-cols-2 gap-4 p-4 border rounded-md'>
-                <TaskDetailsInfoAssignee assigneeName={task.assignee.name}
+                <TaskDetailsInfoAssignee
+                    assigneeName={task.assignee.name}
                     assigneeEmail={task.assignee.email}
                     assigneeAvatar={task.assignee.avatar}
                 />

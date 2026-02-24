@@ -43,7 +43,7 @@ export const createProject = async (newProjectData: ProjectFormData): Promise<Nu
 };
 
 export async function getProjectDetails(projectId: number): Promise<SelectedProjectDetailsResponse> {
-    const response = await api.get(`/api/projects/${projectId}`);
+    const response = await api.get(`/api/projects/${projectId}`);    
 
     return response.data;
 }

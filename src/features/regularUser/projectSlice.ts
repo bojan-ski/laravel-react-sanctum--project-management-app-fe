@@ -148,8 +148,9 @@ const projectSlice = createSlice({
             .addCase(getUserProjects.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(getUserProjects.fulfilled, (state, { payload }) => {
+            .addCase(getUserProjects.fulfilled, (state, { payload }) => {                
                 state.isLoading = false;
+
                 state.projects = payload.data;
                 state.pagination.currentPage = payload.current_page;
                 state.pagination.lastPage = payload.last_page;

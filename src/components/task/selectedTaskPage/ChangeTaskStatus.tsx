@@ -26,7 +26,7 @@ function ChangeTaskStatus({
     const { validate, errors, setErrors } = useZodValidation<TaskStatus>();
 
     const options = {
-        'todo': 'to do',
+        'to_do': 'to do',
         'in_progress': "in progress",
         'review': 'review',
         'done': 'done'
@@ -39,7 +39,7 @@ function ChangeTaskStatus({
         const thunkCall = await run({
             taskId,
             newTaskStatus: option
-        });
+        });        
 
         if (thunkCall.ok) {
             toast.success(thunkCall.data.message);

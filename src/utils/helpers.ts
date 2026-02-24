@@ -38,7 +38,7 @@ export const isProjectOverdue = (deadline: string): boolean => {
 
 export const getTasksByStatus = (tasks: Task[]) => {
     return {
-        todo: tasks.filter(t => t.status === 'todo'),
+        to_do: tasks.filter(t => t.status === 'to_do'),
         in_progress: tasks.filter(t => t.status === 'in_progress'),
         review: tasks.filter(t => t.status === 'review'),
         done: tasks.filter(t => t.status === 'done'),
@@ -83,7 +83,7 @@ export const getTaskPriorityColor = (priority: string): string => {
 
 export const getTaskStatusLabel = (status: string): string => {
     switch (status) {
-        case 'todo':
+        case 'to_do':
             return 'To Do';
         case 'in_progress':
             return 'In Progress';

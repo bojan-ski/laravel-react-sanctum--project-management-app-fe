@@ -14,7 +14,7 @@ function TasksStatisticsStatCards({ tasks }: { tasks: Task[]; }): JSX.Element {
     const stats = [
         {
             label: 'To Do',
-            value: tasksByStatus.todo.length,
+            value: tasksByStatus.to_do.length,
             icon: Clock,
             color: 'text-gray-600'
         },
