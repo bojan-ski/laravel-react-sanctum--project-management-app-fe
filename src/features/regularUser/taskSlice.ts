@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { handleAsyncThunkError } from "../../utils/reduxErrorHandler";
+import { handleAsyncThunkError } from "../../api/reduxErrorHandler";
 import {
     changeTaskPriority,
     changeTaskStatus,
@@ -136,7 +136,7 @@ export const uploadTaskDocument = createAsyncThunk('tasks/uploadTaskDocument', a
 });
 
 const taskSlice = createSlice({
-    name: 'task',
+    name: 'tasks',
     initialState: initialTaskState,
     reducers: {
         setProjectTasks(state, { payload }): void {

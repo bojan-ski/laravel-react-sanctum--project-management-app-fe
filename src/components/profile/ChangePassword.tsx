@@ -42,7 +42,7 @@ function ChangePassword(): JSX.Element {
             });
             setErrors({});
         } else {
-            toast.error(thunkCall.error.random || "Validation error");
+            toast.error(thunkCall.error.random || "Change Password Error");
 
             setErrors(thunkCall.error);
         }

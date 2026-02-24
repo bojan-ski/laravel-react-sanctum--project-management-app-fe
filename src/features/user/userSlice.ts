@@ -3,7 +3,7 @@ import { login, logout } from "../../services/auth";
 import { changePassword, deleteAccount } from "../../services/profile";
 import { updateAvatar } from "../../services/avatar";
 import { getUserDataFromLS, removeUserDataFromLS, setUserDataInLS } from "../../utils/storage";
-import { handleAsyncThunkError } from "../../utils/reduxErrorHandler";
+import { handleAsyncThunkError } from "../../api/reduxErrorHandler";
 import type { LoginFormData } from "../../schemas/authSchema";
 import type { ChangePasswordFormData } from "../../schemas/profileSchema";
 import type { AuthState, AuthStateErrors } from "../../types/auth";

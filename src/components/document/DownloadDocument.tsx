@@ -6,7 +6,7 @@ import type { Document, DocumentState } from '../../types/document';
 import toast from 'react-hot-toast';
 
 function DownloadDocument({ document }: { document: Document; }): JSX.Element {
-    const { isLoading } = useAppSelector<DocumentState>(state => state.document);
+    const { isLoading } = useAppSelector<DocumentState>(state => state.documents);
     const { run } = useThunk(downloadSelectedDocument);
 
     const handleDownload = async (): Promise<void> => {

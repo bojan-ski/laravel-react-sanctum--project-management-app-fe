@@ -17,7 +17,7 @@ export const loader = async ({ params }: { params: any; }): Promise<SelectedProj
 function EditProject(): JSX.Element {
     const navigate: NavigateFunction = useNavigate();
     const { data: project } = useLoaderData();
-    const { isLoading } = useAppSelector<ProjectsState>(state => state.project);
+    const { isLoading } = useAppSelector<ProjectsState>(state => state.projects);
     const { run } = useThunk(updateUserProject);
 
     const handleUpdateProject = async (formData: ProjectFormData): Promise<ProjectFormSubmitResult> => {

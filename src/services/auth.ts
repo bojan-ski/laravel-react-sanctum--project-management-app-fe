@@ -1,6 +1,7 @@
 import api from "../api/axios";
 import { getCsrfCookie } from "./cookie";
-import type { LoginResponse, LogoutResponse } from "../types/auth";
+import type { LoginResponse } from "../types/auth";
+import type { NullDataApiResponse } from "../types/api";
 
 export async function login(
     email: string,
@@ -8,7 +9,7 @@ export async function login(
 ): Promise<LoginResponse> {
     await getCsrfCookie();
 
-    const response = await api.post<LoginResponse>('/api/login', {
+    const response = await api.post('/api/login', {
         email,
         password
     });
@@ -16,8 +17,8 @@ export async function login(
     return response.data;
 }
 
-export async function logout(): Promise<LogoutResponse> {
-    const response = await api.post<LogoutResponse>('/api/logout');
+export async function logout(): Promise<NullDataApiResponse> {
+    const response = await api.post('/api/logout');
 
     return response.data;
 }

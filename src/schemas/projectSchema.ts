@@ -21,13 +21,8 @@ export const projectSchema = z.object({
             },
             { message: "Deadline must be a valid future date" }
         ),
-    // document_path: z
-    //     .instanceof(File)
-    //     .optional()
-    //     .or(z.null()),
-    document_path: z
-        .instanceof(File, { message: "A file is required" })
-        .refine(file => file.size > 0, "File cannot be empty")
+    document: z
+        .instanceof(File)
         .refine(file => file.size <= 1024 * 1024, "File must be under 1MB")
         .refine(
             file => [
@@ -35,7 +30,9 @@ export const projectSchema = z.object({
                 'application/msword',                                                                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
             ].includes(file.type),
             "Only PDF, DOC, and DOCX files are allowed"
-        ),
+        )
+        .optional()
+        .or(z.null())
 });
 export type ProjectFormData = z.infer<typeof projectSchema>;
 

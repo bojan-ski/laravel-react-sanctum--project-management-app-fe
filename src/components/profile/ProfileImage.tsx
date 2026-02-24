@@ -66,7 +66,7 @@ function ProfileImage({
 
             revalidator.revalidate();
         } else {
-            toast.error(thunkCall.error.random || "AVATAR error");
+            toast.error(thunkCall.error.random || "Profile Image Error");
 
             setErrors(thunkCall.error);
         }

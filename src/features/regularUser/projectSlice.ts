@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { handleAsyncThunkError } from "../../utils/reduxErrorHandler";
+import { handleAsyncThunkError } from "../../api/reduxErrorHandler";
 import {
     createProject,
     deleteProject,
@@ -127,7 +127,7 @@ export const memberLeaveProject = createAsyncThunk('project/memberLeaveProject',
 });
 
 const projectSlice = createSlice({
-    name: 'project',
+    name: 'projects',
     initialState: initialProjectState,
     reducers: {
         setFilterOwnership: (state, { payload }): void => {

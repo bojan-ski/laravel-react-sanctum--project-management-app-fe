@@ -11,8 +11,8 @@ import createUserReducer from './features/adminUser/createUserSlice';
 const appReducer = combineReducers({
     user: userReducer,
     notifications: notificationReducer,
-    project: projectReducer,
-    document: documentReducer,
+    projects: projectReducer,
+    documents: documentReducer,
     projectMembers: projectMemberReducer,
     tasks: tasksReducer,
     users: usersReducer,

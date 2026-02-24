@@ -49,11 +49,11 @@ export default function ProjectForm({
     const handleSubmit = async (e: FormEvent): Promise<void> => {
         e.preventDefault();
 
-        const rawFormData = { ...formData, document_path: file };
+        const rawFormData = { ...formData, document: file };
         const validation = validate(projectSchema, rawFormData);
         if (!validation) return;
 
-        const result = await onSubmit({ ...formData, document_path: file });               
+        const result = await onSubmit({ ...formData, document: file });               
 
         if (result.status === 'success') {
             toast.success(result.message);
@@ -62,7 +62,7 @@ export default function ProjectForm({
         }
 
         if (result.status === 'error') {
-            toast.error(result.message || "Validation error");
+            toast.error(result.message || "Project Form Error");
 
             setErrors(result.errors ?? {});
         }
@@ -122,13 +122,13 @@ export default function ProjectForm({
                     )}
 
                     <FormInput
-                        name='document_path'
+                        name='document'
                         type='file'
                         label='upload file'
                         required={false}
                         onMutate={handleChange}
                         divCss='mb-3'
-                        error={errors.document_path}
+                        error={errors.document}
                     />
 
                     <FormSubmitButton

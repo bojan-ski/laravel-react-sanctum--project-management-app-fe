@@ -1,3 +1,4 @@
+import type { ApiResponse } from "./api";
 import type { User } from "./user";
 
 export type Member = {
@@ -11,34 +12,26 @@ export type Member = {
 
 // api response
 export type GetAvailableUsersResponse = {
-    status: 'success';
-    message: string;
     data: User[];
-};
+} & ApiResponse;
 
 export type InviteMembersResponse = {
-    status: 'success';
-    message: string;
     data: {
-        member_ids: number[]
+        member_ids: number[];
     };
-};
+} & ApiResponse;
 
 export type LeaveProjectResponse = {
-    status: 'success';
-    message: string;
     data: {
-        project_id: number
+        project_id: number;
     };
-};
+} & ApiResponse;
 
 export type RemoveProjectMemberResponse = {
-    status: 'success';
-    message: string;
     data: {
-        member_id: number
+        member_id: number;
     };
-};
+} & ApiResponse;
 
 // member slice
 export type ProjectMembersState = {

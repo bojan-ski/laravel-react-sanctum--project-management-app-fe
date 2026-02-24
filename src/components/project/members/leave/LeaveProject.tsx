@@ -10,13 +10,12 @@ import toast from 'react-hot-toast';
 
 function LeaveProject({ projectId }: { projectId: number; }): JSX.Element {
     const navigate: NavigateFunction = useNavigate();
-    const { isLoading } = useAppSelector<ProjectsState>(state => state.project);
+    const { isLoading } = useAppSelector<ProjectsState>(state => state.projects);
     const { run } = useThunk(memberLeaveProject);
 
     const handleLeaveProject = async (): Promise<void> => {
         if (confirm(`Leave project?`)) {
             const thunkCall = await run(projectId);
-            console.log(thunkCall);
 
             if (thunkCall.ok) {
                 toast.success(thunkCall.data.message);

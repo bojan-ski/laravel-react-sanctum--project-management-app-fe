@@ -7,7 +7,7 @@ import {
     markAllAsRead,
     markAsRead
 } from "../../services/notification";
-import { handleAsyncThunkError } from "../../utils/reduxErrorHandler";
+import { handleAsyncThunkError } from "../../api/reduxErrorHandler";
 import type { Notification, NotificationState } from "../../types/notification";
 
 const initialNotificationState: NotificationState = {

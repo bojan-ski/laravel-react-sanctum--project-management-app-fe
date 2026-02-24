@@ -9,7 +9,7 @@ import ProjectForm from '../components/project/ProjectForm';
 
 export default function AddProject(): JSX.Element {
     const navigate: NavigateFunction = useNavigate();
-    const { isLoading } = useAppSelector<ProjectsState>(state => state.project);
+    const { isLoading } = useAppSelector<ProjectsState>(state => state.projects);
     const dispatch = useAppDispatch();
     const { run } = useThunk(createNewProject);
 

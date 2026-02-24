@@ -19,7 +19,7 @@ function ChangeProjectStatus({
     projectStatus,
     setProjectStatus
 }: ChangeProjectStatusProps): JSX.Element {
-    const { isLoading } = useAppSelector<ProjectsState>(state => state.project);
+    const { isLoading } = useAppSelector<ProjectsState>(state => state.projects);
     const { run } = useThunk(changeProjectStatus);
     const { validate, errors, setErrors } = useZodValidation<ProjectStatusFilter>();
 

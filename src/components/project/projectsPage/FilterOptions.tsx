@@ -5,7 +5,7 @@ import FilterByOwnership from './FilterByOwnership';
 import FilterByStatus from './FilterByStatus';
 
 function FilterOptions(): JSX.Element {
-    const { filters } = useAppSelector<ProjectsState>(state => state.project);
+    const { filters } = useAppSelector<ProjectsState>(state => state.projects);
 
     return (
         <section className='filter-options flex gap-4 mb-5'>

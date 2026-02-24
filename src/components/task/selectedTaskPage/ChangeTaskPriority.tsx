@@ -20,7 +20,7 @@ function ChangeTaskPriority({
     taskPriority
 }: ChangeTaskPriorityProps): JSX.Element {
     const { isLoading } = useAppSelector<TaskState>(state => state.tasks);
-    const { filters, pagination } = useAppSelector<ProjectsState>(state => state.project);
+    const { filters, pagination } = useAppSelector<ProjectsState>(state => state.projects);
     const dispatch = useAppDispatch();
     const { run } = useThunk(updateTaskPriority);
     const { validate, errors, setErrors } = useZodValidation<TaskPriority>();

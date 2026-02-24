@@ -18,7 +18,7 @@ function DeleteProject({
     projectTitle
 }: DeleteProjectProps): JSX.Element {
     const navigate: NavigateFunction = useNavigate();
-    const { isLoading, filters, pagination } = useAppSelector<ProjectsState>(state => state.project);
+    const { isLoading, filters, pagination } = useAppSelector<ProjectsState>(state => state.projects);
     const { run } = useThunk(deleteUserProject);
     const dispatch = useAppDispatch();
 

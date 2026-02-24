@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { deleteDocument, downloadDocument } from "../../services/document";
-import { handleAsyncThunkError } from "../../utils/reduxErrorHandler";
+import { handleAsyncThunkError } from "../../api/reduxErrorHandler";
 import type { DocumentState } from "../../types/document";
 
 const initialDocumentState: DocumentState = {
@@ -39,7 +39,7 @@ export const deleteSelectedDocument = createAsyncThunk('document/deleteSelectedD
 });
 
 const documentSlice = createSlice({
-    name: 'document',
+    name: 'documents',
     initialState: initialDocumentState,
     reducers: {},
     extraReducers: (builder) => {

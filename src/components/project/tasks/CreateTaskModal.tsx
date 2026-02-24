@@ -26,7 +26,7 @@ import toast from 'react-hot-toast';
 
 function CreateTaskModal({ projectId }: { projectId: number; }): JSX.Element {
     const { isLoading } = useAppSelector<TaskState>(state => state.tasks);
-    const { filters, pagination } = useAppSelector<ProjectsState>(state => state.project);
+    const { filters, pagination } = useAppSelector<ProjectsState>(state => state.projects);
     const { members } = useAppSelector(state => state.projectMembers);
     const dispatch = useAppDispatch();
     const { run } = useThunk(createNewTask);

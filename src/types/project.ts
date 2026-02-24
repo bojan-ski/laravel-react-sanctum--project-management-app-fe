@@ -1,3 +1,4 @@
+import type { ApiResponse } from "./api";
 import type { Member } from "./member";
 import type { Document } from "./document";
 import type { Task } from "./task";
@@ -43,27 +44,26 @@ export type ProjectDetails = {
     statistics: ProjectStatistics;
     members: Member[];
     members_limit: number;
-    tasks: Task[]
+    tasks: Task[];
 } & ProjectData;
 
 // api response
 export type GetProjectsResponse = {
-    status: 'success';
-    message: string;
-    data: ProjectCard[];
-};
+    data: {
+        data: ProjectCard[];
+        current_page: number;
+        last_page: number;
+        total: number;
+    };
+} & ApiResponse;
 
 export type SelectedProjectDataResponse = {
-    status: 'success';
-    message: string;
     data: ProjectData;
-};
+} & ApiResponse;
 
 export type SelectedProjectDetailsResponse = {
-    status: 'success';
-    message: string;
     data: ProjectDetails;
-};
+} & ApiResponse;
 
 export type GetProjectsResponseErrors = {
     ownership?: string;

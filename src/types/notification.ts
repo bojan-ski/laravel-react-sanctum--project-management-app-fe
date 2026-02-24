@@ -1,3 +1,5 @@
+import type { ApiResponse } from "./api";
+
 export type Notification = {
     id: number;
     type: string;
@@ -13,32 +15,24 @@ export type Notification = {
 
 // api response
 export type GetNotificationsResponse = {
-    status: 'success';
-    message: string;
     data: Notification[];
-};
+} & ApiResponse;
 
 export type GetCountResponse = {
-    status: 'success';
-    message: string;
     data: {
         count: number;
     };
-};
+} & ApiResponse;
 
 export type GetMarkAsReadResponse = {
-    status: 'success';
-    message: string;
     data: {
         id: number;
     };
-};
+} & ApiResponse;
 
 export type GetNotificationResponse = {
-    status: 'success';
-    message: string;
     data: Notification;
-};
+} & ApiResponse;
 
 // notification slice
 export type NotificationState = {

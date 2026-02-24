@@ -3,13 +3,13 @@ import { useNavigate, type NavigateFunction } from 'react-router';
 import { useAppSelector } from '../../../hooks/useRedux';
 import { useThunk } from '../../../hooks/useThunk';
 import { logoutUser } from '../../../features/user/userSlice';
-import type { UserState } from '../../../types/types';
+import type { AuthState } from '../../../types/auth';
 import FormWrapper from '../../form/FormWrapper';
-import FormSubmitButton from '../../form/FormSubmitButton';
+import { LogOut } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 function LogoutOption(): JSX.Element {
-  const { isLoading } = useAppSelector<UserState>(state => state.user);
+  const { isLoading } = useAppSelector<AuthState>(state => state.user);
   const { run } = useThunk(logoutUser);
   const navigate: NavigateFunction = useNavigate();
 
@@ -17,16 +17,14 @@ function LogoutOption(): JSX.Element {
     e.preventDefault();
 
     if (confirm('Are you sure?')) {
-      // run dispatch call
-      const thunkCall = await run(undefined);      
+      const thunkCall = await run(undefined);
 
-      // dispatch response
       if (thunkCall.ok) {
         toast.success(thunkCall.data.message);
 
         navigate('/');
       } else {
-        toast.error(thunkCall.error.random);
+        toast.error(thunkCall.error.random || "Logout Error");
       }
     }
   };
@@ -35,12 +33,12 @@ function LogoutOption(): JSX.Element {
     <FormWrapper
       onSubmit={handleSubmit}
     >
-      {/* submit */}
-      <FormSubmitButton
-        loading={isLoading}
-        btnCss='text-sm border rounded-sm py-1.5 px-4 mx-2 cursor-pointer text-white bg-red-900 hover:bg-red-700 transition'
-        btnLabel='Logout'
-      />
+      <button
+        disabled={isLoading}
+        className='flex items-center gap-2 capitalize text-sm border rounded-sm py-1.5 px-3 cursor-pointer text-white bg-red-900 hover:bg-red-700 transition'>
+        <span className='hidden md:block'>Logout</span>
+        <LogOut className='h-5 w-5' />
+      </button>
     </FormWrapper>
   );
 }

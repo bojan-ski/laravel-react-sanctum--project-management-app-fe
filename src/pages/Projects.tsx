@@ -19,7 +19,7 @@ function Projects(): JSX.Element {
         filters,
         pagination,
         total
-    } = useAppSelector<ProjectsState>(state => state.project);
+    } = useAppSelector<ProjectsState>(state => state.projects);
     const dispatch = useAppDispatch();
 
     useEffect((): void => {

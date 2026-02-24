@@ -29,8 +29,8 @@ export const createProject = async (newProjectData: ProjectFormData): Promise<Nu
     formData.append('description', newProjectData.description);
     formData.append('deadline', newProjectData.deadline);
 
-    if (newProjectData.document_path) {
-        formData.append('document_path', newProjectData.document_path);
+    if (newProjectData.document) {
+        formData.append('document', newProjectData.document);
     }
 
     const response = await api.post('/api/projects', formData, {
@@ -63,8 +63,8 @@ export async function updateProject(
     formData.append('description', updateProjectData.description);
     formData.append('deadline', updateProjectData.deadline);
 
-    if (updateProjectData.document_path) {
-        formData.append('document_path', updateProjectData.document_path);
+    if (updateProjectData.document) {
+        formData.append('document', updateProjectData.document);
     }
 
     formData.append('_method', 'PUT');

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { handleAsyncThunkError } from "../../utils/reduxErrorHandler";
+import { handleAsyncThunkError } from "../../api/reduxErrorHandler";
 import { getAvailableUsers, inviteMembers, removeMember } from "../../services/member";
 import type { Member, ProjectMembersState } from "../../types/member";
 import type { User } from "../../types/user";

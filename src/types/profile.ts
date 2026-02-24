@@ -1,22 +1,9 @@
+import type { ApiResponse } from "./api";
 import type { User } from "./user";
 
 export type ProfileResponse = {
-    status: 'success';
-    message: string;
     data: User;
-};
-
-export type ChangePasswordResponse = {
-    status: 'success';
-    message: string;
-    data: null;
-};
-
-export type DeleteAccountResponse = {
-    status: 'success';
-    message: string;
-    data: null;
-};
+} & ApiResponse;
 
 export type ChangePasswordFormDataErrors = {
     old_password?: string;

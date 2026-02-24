@@ -14,7 +14,7 @@ function DeleteDocument({
     document,
     setShowDocOptions
 }: DeleteDocumentProps): JSX.Element {
-    const { isLoading } = useAppSelector<DocumentState>(state => state.document);
+    const { isLoading } = useAppSelector<DocumentState>(state => state.documents);
     const { run } = useThunk(deleteSelectedDocument);
 
     const handleDelete = async (): Promise<void> => {

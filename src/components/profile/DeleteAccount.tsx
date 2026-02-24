@@ -31,7 +31,7 @@ function DeleteAccount({ isLoading }: { isLoading: boolean; }): JSX.Element {
 
                 navigate('/');
             } else {
-                toast.error(thunkCall.error.random);
+                toast.error(thunkCall.error.random  || "Delete Account Error");
             }
         }
     };
