@@ -1,11 +1,16 @@
-import { type JSX } from 'react';
+import { useEffect, type JSX } from 'react';
 import { useLoaderData } from 'react-router';
 import { getTaskDetails } from '../services/task';
+import { useAppDispatch, useAppSelector } from '../hooks/useRedux';
+import { useRealtimeMessages } from '../hooks/useRealtimeMessages';
+import { getTaskMessages, markTaskMessagesAsRead } from '../features/regularUser/messageSlice';
 import type { SelectedTaskDetailsResponse } from '../types/task';
+import type { AuthState } from '../types/auth';
 import TaskDetailsHeader from '../components/task/selectedTaskPage/TaskDetailsHeader';
 import TaskDetailsInfo from '../components/task/selectedTaskPage/TaskDetailsInfo';
 import TaskActivityTimeline from '../components/task/selectedTaskPage/TaskActivityTimeline';
 import UploadTaskDocument from '../components/task/selectedTaskPage/UploadTaskDocument';
+import TaskChatContainer from '../components/task/selectedTaskChat/TaskChatContainer';
 
 export const loader = async ({ params }: { params: any; }): Promise<SelectedTaskDetailsResponse> => {
     const response: SelectedTaskDetailsResponse = await getTaskDetails(params.id);
@@ -15,7 +20,20 @@ export const loader = async ({ params }: { params: any; }): Promise<SelectedTask
 
 function SelectedTask(): JSX.Element {
     const { data: task } = useLoaderData();
-    console.log(task);
+    const { user } = useAppSelector<AuthState>(state => state.user);
+    const dispatch = useAppDispatch();
+
+    useRealtimeMessages({
+        currentUserId: user.id,
+        taskId: task.id
+    });
+
+    useEffect(() => {
+        console.log('Fetching task messages');
+
+        dispatch(getTaskMessages(task.id));
+        dispatch(markTaskMessagesAsRead(task.id));
+    }, [ task.id, dispatch ]);
 
     return (
         <div className='selected-task-page my-10 '>
@@ -36,9 +54,10 @@ function SelectedTask(): JSX.Element {
                         <UploadTaskDocument taskId={task.id} />
                     )}
 
-                    <div className='p-4 border rounded-md'>
-                        CHAT
-                    </div>
+                    <TaskChatContainer
+                        userId={user.id}
+                        taskId={task.id}
+                    />
                 </section>
             </div>
         </div>

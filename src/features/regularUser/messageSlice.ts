@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getMessages, sendMessage, } from "../../services/message";
+import { deleteMessage, getMessages, markMessagesAsRead, sendMessage, } from "../../services/message";
 import { handleAsyncThunkError } from "../../api/reduxErrorHandler";
-import type { MessageState } from "../../types/message";
+import type { Message, MessageState, SendMessageResponseErrors } from "../../types/message";
 
 const initialMessageState: MessageState = {
     isLoading: false,
     messages: [],
+    unreadMessageCount: 0,
 };
 
 export const getTaskMessages = createAsyncThunk('messages/getTaskMessages', async (
@@ -16,48 +17,73 @@ export const getTaskMessages = createAsyncThunk('messages/getTaskMessages', asyn
 
     try {
         const apiCall = await getMessages(taskId);
-        console.log(apiCall);
 
         return apiCall;
     } catch (error: any) {
-        console.log(error);
-
         return handleAsyncThunkError(error, rejectWithValue);
     }
 });
 
-type SendTaskMessagesProps = {
+type SendTaskMessageProps = {
     taskId: number;
     message: string;
 };
 
-export const sendTaskMessages = createAsyncThunk('messages/sendTaskMessages', async (
-    { taskId, message }: SendTaskMessagesProps,
+export const sendTaskMessage = createAsyncThunk('messages/sendTaskMessage', async (
+    { taskId, message }: SendTaskMessageProps,
     { rejectWithValue }
 ) => {
-    console.log('getUserNotifications');
-
     try {
         const apiCall = await sendMessage(taskId, message);
-        console.log(apiCall);
 
         return apiCall;
     } catch (error: any) {
-        console.log(error);
+        return handleAsyncThunkError<SendMessageResponseErrors>(error, rejectWithValue);
+    }
+});
 
+export const markTaskMessagesAsRead = createAsyncThunk('messages/markMessagesAsRead', async (
+    taskId: number,
+    { rejectWithValue }
+) => {
+    try {
+        const apiCall = await markMessagesAsRead(taskId);
+
+        return apiCall;
+    } catch (error: any) {
         return handleAsyncThunkError(error, rejectWithValue);
     }
 });
 
+type DeleteTaskMessageProps = {
+    taskId: number;
+    messageId: number;
+};
+
+export const deleteTaskMessage = createAsyncThunk('messages/deleteTaskMessage', async (
+    { taskId, messageId }: DeleteTaskMessageProps,
+    { rejectWithValue }
+) => {
+    try {
+        const apiCall = await deleteMessage(taskId, messageId);
+
+        return apiCall;
+    } catch (error: any) {
+        return handleAsyncThunkError(error, rejectWithValue);
+    }
+});
 
 const messageSlice = createSlice({
     name: 'messages',
     initialState: initialMessageState,
     reducers: {
         addMessage: (state, { payload }): void => {
-            console.log(payload);
-
             state.messages.push(payload);
+        },
+        removeMessage: (state, {payload}): void => {
+            state.messages = state.messages.filter(
+                message => message.id !== payload.message_id
+            );
         },
     },
     extraReducers: (builder) => {
@@ -67,8 +93,6 @@ const messageSlice = createSlice({
                 state.isLoading = true;
             })
             .addCase(getTaskMessages.fulfilled, (state, { payload }) => {
-                console.log(payload);
-
                 state.isLoading = false;
 
                 state.messages = payload.data;
@@ -78,15 +102,47 @@ const messageSlice = createSlice({
             })
 
             // send message
-            .addCase(sendTaskMessages.fulfilled, (state, { payload }) => {
-                console.log(payload);
+            .addCase(sendTaskMessage.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(sendTaskMessage.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
 
                 state.messages.push(payload.data);
+            })
+            .addCase(sendTaskMessage.rejected, (state) => {
+                state.isLoading = false;
+            })
+
+            // mark messages as read
+            .addCase(markTaskMessagesAsRead.fulfilled, (state) => {
+                state.messages = state.messages.map((message): Message => ({
+                    ...message,
+                    read_at: message.read_at || new Date().toISOString(),
+                    is_read: true
+                }));
+                state.unreadMessageCount = 0;
+            })
+
+            // delete message
+            .addCase(deleteTaskMessage.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(deleteTaskMessage.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+
+                state.messages = state.messages.filter(
+                    message => message.id !== payload.data.id
+                );
+            })
+            .addCase(deleteTaskMessage.rejected, (state) => {
+                state.isLoading = false;
             });
     },
 });
 
 export const {
-    addMessage
+    addMessage,
+    removeMessage
 } = messageSlice.actions;
 export default messageSlice.reducer;
