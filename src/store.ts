@@ -8,6 +8,7 @@ import tasksReducer from './features/regularUser/taskSlice';
 import messagesReducer from './features/regularUser/messageSlice';
 import usersReducer from './features/adminUser/usersSlice';
 import createUserReducer from './features/adminUser/createUserSlice';
+import allProjectReducer from './features/adminUser/projectSlice';
 
 const appReducer = combineReducers({
     user: userReducer,
@@ -19,6 +20,7 @@ const appReducer = combineReducers({
     messages: messagesReducer,
     users: usersReducer,
     newUser: createUserReducer,
+    allProjects: allProjectReducer,
 });
 
 const rootReducer = (state: any, action: any) => {

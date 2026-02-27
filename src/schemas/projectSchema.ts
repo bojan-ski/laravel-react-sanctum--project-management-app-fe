@@ -45,3 +45,10 @@ export const projectStatusSchema = z.enum([
     "all", "pending", "active", "completed", "closed"
 ]);
 export type ProjectStatusFilter = z.infer<typeof projectStatusSchema>;
+
+export const searchProjectsSchema = z.object({
+    search: z
+        .string()
+        .max(255, "Search text cannot exceed 255 characters"),
+});
+export type SearchProjectsFormData = z.infer<typeof searchProjectsSchema>;

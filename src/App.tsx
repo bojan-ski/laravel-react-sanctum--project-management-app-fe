@@ -21,12 +21,14 @@ import UserTasks from "./pages/UserTasks";
 import Profile from "./pages/Profile";
 import Users from "./pages/admin/Users";
 import SelectedUser from "./pages/admin/SelectedUser";
+import AllProjects from "./pages/admin/AllProjects";
 
 // loaders
 import { loader as projectDetailsLoader } from "./pages/SelectedProject";
 import { loader as projectDataLoader } from "./pages/EditProject";
 import { loader as taskDetailsLoader } from "./pages/SelectedTask";
 import { loader as profileDataLoader } from "./pages/Profile";
+import AdminPrivateRoute from "./private/AdminPrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -82,15 +84,23 @@ const router = createBrowserRouter([
             element: <Profile />,
             loader: profileDataLoader
           },
-          // ADMIN USER
           {
-            path: '/admin/users',
-            element: <Users />,
-          },
-          {
-            path: '/admin/users/:id',
-            element: <SelectedUser />
-          },
+            element: <AdminPrivateRoute />,
+            children: [
+              {
+                path: '/admin/users',
+                element: <Users />,
+              },
+              {
+                path: '/admin/users/:id',
+                element: <SelectedUser />
+              },
+              {
+                path: '/admin/projects',
+                element: <AllProjects />,
+              },
+            ]
+          }
         ]
       }
     ]

@@ -1,4 +1,5 @@
 import api from "../api/axios";
+import type { GetAllProjectsResponse } from "../types/admin";
 import type { NewUserFormData } from "../types/types";
 
 export async function getUsers(
@@ -20,6 +21,21 @@ export async function createUser(newUserData: NewUserFormData) {
 
 export async function deleteUser(userId: number | string) {
     const response = await api.delete(`/api/admin/users/${userId}`);
+
+    return response.data;
+}
+
+export async function getAllProjects(
+    search: string = '',
+    page: number = 1
+): Promise<GetAllProjectsResponse> {
+    const response = await api.get(`/api/admin/projects`, {
+        params: {
+            search,
+            page
+        },
+    });
+    console.log(response);
 
     return response.data;
 }
