@@ -6,7 +6,6 @@ import type { Message, MessageState, SendMessageResponseErrors } from "../../typ
 const initialMessageState: MessageState = {
     isLoading: false,
     messages: [],
-    unreadMessageCount: 0,
 };
 
 export const getTaskMessages = createAsyncThunk('messages/getTaskMessages', async (
@@ -121,7 +120,6 @@ const messageSlice = createSlice({
                     read_at: message.read_at || new Date().toISOString(),
                     is_read: true
                 }));
-                state.unreadMessageCount = 0;
             })
 
             // delete message

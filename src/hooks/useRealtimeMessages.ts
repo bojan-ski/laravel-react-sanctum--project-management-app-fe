@@ -15,9 +15,9 @@ export function useRealtimeMessages({
 }: RealtimeMessagesProps) {
     const dispatch = useAppDispatch();
 
-    if (!currentUserId || !taskId) return;
-
     useEffect(() => {
+        if (!currentUserId || !taskId) return;
+
         const channel = echo
             .private(`task.${taskId}`)
             .listen('.message.sent', (data: Message) => {

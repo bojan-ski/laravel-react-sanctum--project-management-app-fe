@@ -9,12 +9,14 @@ import MemberRow from './MemberRow';
 type MembersProps = {
     projectId: number;
     isProjectOwner: boolean;
+    isProjectMember: boolean;
     projectStatus: ProjectStatus;
 };
 
 function Members({
     projectId,
     isProjectOwner,
+    isProjectMember,
     projectStatus
 }: MembersProps): JSX.Element {
     const { members, membersLimit } = useAppSelector<ProjectMembersState>(state => state.projectMembers);
@@ -28,7 +30,7 @@ function Members({
 
                 {(projectStatus === 'active' || projectStatus === 'pending') && (
                     <>
-                        {!isProjectOwner && <LeaveProject projectId={projectId} />}
+                        {(!isProjectOwner && isProjectMember) && <LeaveProject projectId={projectId} />}
 
                         {(isProjectOwner && members.length < membersLimit) && (
                             <InviteMembersModal projectId={projectId} />

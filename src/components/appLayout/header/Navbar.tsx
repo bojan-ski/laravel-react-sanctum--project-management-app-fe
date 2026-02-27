@@ -3,16 +3,24 @@ import { NavLink } from 'react-router';
 
 function Navbar({ isAdmin }: { isAdmin: boolean; }): JSX.Element {
     return (
-        <nav className='flex items-center gap-2'>
+        <nav className={`flex items-center gap-2 ${isAdmin && 'col-span-2'}`}>
             {isAdmin ? (
                 <>
                     <NavLink
-                        to={'/users'}
+                        to={'/admin/users'}
                         className={({ isActive }) =>
                             `capitalize btn font-semibold text-sm border rounded-sm py-1.5 px-4 text-white hover:bg-yellow-500 transition cursor-pointer ${isActive ? 'bg-yellow-500' : 'bg-yellow-600'}`
                         }
                     >
                         users
+                    </NavLink>
+                    <NavLink
+                        to={'/admin/projects'}
+                        className={({ isActive }) =>
+                            `capitalize btn font-semibold text-sm border rounded-sm py-1.5 px-4 text-white hover:bg-yellow-500 transition cursor-pointer ${isActive ? 'bg-yellow-500' : 'bg-yellow-600'}`
+                        }
+                    >
+                        projects
                     </NavLink>
                 </>
             ) : (
@@ -34,17 +42,16 @@ function Navbar({ isAdmin }: { isAdmin: boolean; }): JSX.Element {
                     >
                         tasks
                     </NavLink>
-
-                    <NavLink
-                        to={'/profile'}
-                        className={({ isActive }) =>
-                            `capitalize btn font-semibold text-sm border rounded-sm py-1.5 px-4 text-white hover:bg-yellow-500 transition cursor-pointer ${isActive ? 'bg-yellow-500' : 'bg-yellow-600'}`
-                        }
-                    >
-                        profile
-                    </NavLink>
                 </>
             )}
+            <NavLink
+                to={'/profile'}
+                className={({ isActive }) =>
+                    `capitalize btn font-semibold text-sm border rounded-sm py-1.5 px-4 text-white hover:bg-yellow-500 transition cursor-pointer ${isActive ? 'bg-yellow-500' : 'bg-yellow-600'}`
+                }
+            >
+                profile
+            </NavLink>
         </nav>
     );
 }

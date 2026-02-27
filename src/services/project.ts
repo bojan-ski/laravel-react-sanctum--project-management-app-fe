@@ -33,7 +33,7 @@ export const createProject = async (newProjectData: ProjectFormData): Promise<Nu
         formData.append('document', newProjectData.document);
     }
 
-    const response = await api.post('/api/projects', formData, {
+    const response = await api.post('/api/projects/store', formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },

@@ -54,10 +54,7 @@ function SelectedTask(): JSX.Element {
                         <UploadTaskDocument taskId={task.id} />
                     )}
 
-                    <TaskChatContainer
-                        userId={user.id}
-                        taskId={task.id}
-                    />
+                    <TaskChatContainer taskId={task.id} />
                 </section>
             </div>
         </div>

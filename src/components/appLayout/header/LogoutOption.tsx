@@ -4,7 +4,7 @@ import { useAppSelector } from '../../../hooks/useRedux';
 import { useThunk } from '../../../hooks/useThunk';
 import { logoutUser } from '../../../features/user/userSlice';
 import type { AuthState } from '../../../types/auth';
-import FormWrapper from '../../form/FormWrapper';
+import { Button } from '../../ui/button';
 import { LogOut } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -30,16 +30,17 @@ function LogoutOption(): JSX.Element {
   };
 
   return (
-    <FormWrapper
-      onSubmit={handleSubmit}
-    >
-      <button
+    <div className='flex justify-end'>
+      <Button
+        onClick={handleSubmit}
+        size={'default'}
+        className='flex items-center gap-2 capitalize text-sm border rounded-sm py-1.5 px-3 cursor-pointer text-white bg-red-900 hover:bg-red-700 transition-colors'
         disabled={isLoading}
-        className='flex items-center gap-2 capitalize text-sm border rounded-sm py-1.5 px-3 cursor-pointer text-white bg-red-900 hover:bg-red-700 transition'>
+      >
         <span className='hidden md:block'>Logout</span>
         <LogOut className='h-5 w-5' />
-      </button>
-    </FormWrapper>
+      </Button>
+    </div>
   );
 }
 

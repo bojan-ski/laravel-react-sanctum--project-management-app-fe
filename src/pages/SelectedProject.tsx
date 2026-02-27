@@ -58,6 +58,7 @@ function SelectedProject(): JSX.Element {
                 <Members
                     projectId={project.id}
                     isProjectOwner={project.is_owner}
+                    isProjectMember={project.is_member}
                     projectStatus={projectStatus}
                 />
 

@@ -11,6 +11,7 @@ export type Message = {
     };
     read_at: string | null;
     is_read: boolean;
+    is_author: boolean;
     created_at: string;
     updated_at: string;
 };
@@ -38,5 +39,4 @@ export type DeleteMessageResponse = {
 export type MessageState = {
     isLoading: boolean;
     messages: Message[];
-    unreadMessageCount: number;
 };

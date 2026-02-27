@@ -18,7 +18,7 @@ export async function sendMessage(
 }
 
 export async function markMessagesAsRead(taskId: number): Promise<NullDataApiResponse> {
-    const response = await api.post(`/api/tasks/${taskId}/messages/mark_as_read`);
+    const response = await api.post(`/api/tasks/${taskId}/messages/read`);
 
     return response.data;
 }
@@ -27,7 +27,7 @@ export async function deleteMessage(
     taskId: number,
     messageId: number
 ): Promise<DeleteMessageResponse> {
-    const response = await api.delete(`/api/tasks/${taskId}/messages/${messageId}`);
+    const response = await api.delete(`/api/tasks/${taskId}/messages/${messageId}/destroy`);
 
     return response.data;
 }

@@ -19,6 +19,7 @@ export type Task = {
         email: string;
         avatar: string | null;
     };
+    can_view_task: boolean;
     created_at: string;
     updated_at: string;
 };

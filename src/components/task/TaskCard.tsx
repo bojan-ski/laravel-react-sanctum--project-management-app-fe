@@ -16,8 +16,8 @@ import TaskPriorityBadge from './TaskPriorityBadge ';
 import { Calendar } from 'lucide-react';
 
 function TaskCard({ task }: { task: Task; }): JSX.Element {
-    const overdue = task.is_overdue;    
-    
+    const overdue = task.is_overdue;
+
     return (
         <Card className="hover:shadow-md transition-shadow">
             <CardHeader>
@@ -57,12 +57,14 @@ function TaskCard({ task }: { task: Task; }): JSX.Element {
                     {overdue && <Badge variant="destructive" className="ml-1 text-xs">Overdue</Badge>}
                 </div>
 
-                <Link
-                    to={`/tasks/${task.id}`}
-                    className='block text-blue-500 hover:text-blue-700 transition font-semibold text-sm text-right'
-                >
-                    View Details →
-                </Link>
+                {task.can_view_task && (
+                    <Link
+                        to={`/tasks/${task.id}`}
+                        className='block text-blue-500 hover:text-blue-700 transition font-semibold text-sm text-right'
+                    >
+                        View Details →
+                    </Link>
+                )}
             </CardContent>
         </Card>
     );

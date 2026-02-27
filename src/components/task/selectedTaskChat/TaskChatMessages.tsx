@@ -5,14 +5,12 @@ import TaskChatMessage from './TaskChatMessage';
 
 type TaskChatMessagesProps = {
     isLoading: boolean;
-    userId: number | null;
     messagesCount: number;
     messages: Message[];
 };
 
 function TaskChatMessages({
     isLoading,
-    userId,
     messagesCount,
     messages
 }: TaskChatMessagesProps): JSX.Element {
@@ -36,7 +34,7 @@ function TaskChatMessages({
                         {messages.map((message: Message) => (
                             <TaskChatMessage
                                 key={message.id}
-                                isCurrentUser={message.user.id === userId}
+                                isCurrentUser={message.is_author}
                                 isLoading={isLoading}
                                 message={message}
                             />

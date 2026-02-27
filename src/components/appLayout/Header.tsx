@@ -12,12 +12,11 @@ function Header(): JSX.Element {
     return (
         <header className="header bg-gray-800 text-gray-300 py-4">
             {user.is_authenticated ? (
-                <div className="container navbar mx-auto flex items-center justify-between">
+                <div className="container navbar mx-auto grid grid-cols-3">
                     <Navbar isAdmin={user.is_admin} />
-                    <NotificationBell />
+                    {!user.is_admin && <NotificationBell />}
                     <LogoutOption />
                 </div>
-
             ) : (
                 <div className='text-center'>
                     <Logo />

@@ -43,6 +43,7 @@ export type ProjectDetails = {
     is_owner: boolean;
     statistics: ProjectStatistics;
     members: Member[];
+    is_member: boolean;
     members_limit: number;
     tasks: Task[];
 } & ProjectData;

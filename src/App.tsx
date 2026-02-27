@@ -2,6 +2,10 @@ import type { JSX } from "react";
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 
+// route protection
+import AuthPrivateRoute from "./private/AuthPrivateRoute";
+import PublicOnlyRoute from "./private/PublicOnlyRoute";
+
 // layout
 import AppLayout from "./layout/AppLayout";
 
@@ -31,54 +35,64 @@ const router = createBrowserRouter([
     // errorElement: <ErrorPage />,
     children: [
       {
-        index: true,
-        element: <Login />
+        element: <PublicOnlyRoute />,
+        children: [
+          {
+            index: true,
+            element: <Login />
+          }
+        ]
       },
       {
-        path: '/notifications',
-        element: <Notifications />,
-      },
-      {
-        path: '/add_project',
-        element: <AddProject />,
-      },
-      {
-        path: '/projects',
-        element: <Projects />,
-      },
-      {
-        path: '/projects/:id',
-        element: <SelectedProject />,
-        loader: projectDetailsLoader
-      },
-      {
-        path: '/projects/:id/edit',
-        element: <EditProject />,
-        loader: projectDataLoader
-      },
-      {
-        path: '/tasks',
-        element: <UserTasks />
-      },
-      {
-        path: '/tasks/:id',
-        element: <SelectedTask />,
-        loader: taskDetailsLoader
-      },
-      {
-        path: '/profile',
-        element: <Profile />,
-        loader: profileDataLoader
-      },
-      // ADMIN USER
-      {
-        path: '/users',
-        element: <Users />,
-      },
-      {
-        path: '/users/:id',
-        element: <SelectedUser />
-      },
+        element: <AuthPrivateRoute />,
+        children: [
+          {
+            path: '/notifications',
+            element: <Notifications />,
+          },
+          {
+            path: '/add_project',
+            element: <AddProject />,
+          },
+          {
+            path: '/projects',
+            element: <Projects />,
+          },
+          {
+            path: '/projects/:id',
+            element: <SelectedProject />,
+            loader: projectDetailsLoader
+          },
+          {
+            path: '/projects/:id/edit',
+            element: <EditProject />,
+            loader: projectDataLoader
+          },
+          {
+            path: '/tasks',
+            element: <UserTasks />
+          },
+          {
+            path: '/tasks/:id',
+            element: <SelectedTask />,
+            loader: taskDetailsLoader
+          },
+          {
+            path: '/profile',
+            element: <Profile />,
+            loader: profileDataLoader
+          },
+          // ADMIN USER
+          {
+            path: '/admin/users',
+            element: <Users />,
+          },
+          {
+            path: '/admin/users/:id',
+            element: <SelectedUser />
+          },
+        ]
+      }
     ]
   }
 ]);

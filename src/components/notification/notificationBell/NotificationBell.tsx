@@ -14,10 +14,10 @@ const NotificationBell = (): JSX.Element => {
     useRealtimeNotifications();
 
     return (
-        <div className="relative">
+        <div className="text-center">
             <Button
                 size="icon"
-                className="text-white bg-yellow-600 hover:bg-yellow-500 border border-white cursor-pointer"
+                className="text-white relative bg-yellow-600 hover:bg-yellow-500 border border-white cursor-pointer"
                 onClick={(e) => {
                     e.stopPropagation();
                     setIsOpen(!isOpen);
