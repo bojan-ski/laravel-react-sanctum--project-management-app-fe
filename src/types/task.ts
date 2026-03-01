@@ -82,14 +82,14 @@ export type UpdateTaskStatusResponse = {
     data: {
         id: number,
         status: string;
-    } | null;
+    };
 } & ApiResponse;
 
 export type UpdateTaskPriorityResponse = {
     data: {
         id: number,
         priority: string;
-    } | null;
+    };
 } & ApiResponse;
 
 export type GetUserTasksResponseErrors = {

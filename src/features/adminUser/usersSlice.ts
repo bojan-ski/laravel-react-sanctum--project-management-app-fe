@@ -1,18 +1,24 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { deleteUser, getUsers } from "../../services/admin";
-import type { UsersState } from "../../types/types";
+import { getUsers, addUser, deleteUser } from "../../services/admin";
+import { handleAsyncThunkError } from "../../api/reduxErrorHandler";
+import type { AddUserFormData } from "../../schemas/admin/userSchema";
+import type { AddNewUserErrors, UsersState } from "../../types/admin";
 
 const initialUsersState: UsersState = {
     isLoading: false,
     users: [],
     search: '',
-    currentPage: 1,
-    lastPage: 1,
+    pagination: {
+        currentPage: 1,
+        lastPage: 1,
+    },
     total: 0,
-    error: '',
 };
 
-export const getAllUsers = createAsyncThunk('users/getAllUsers', async ({ search, page }: { search?: string, page?: number; }, { rejectWithValue }) => {
+export const getAllUsers = createAsyncThunk('users/getAllUsers', async (
+    { search, page }: { search?: string, page?: number; },
+    { rejectWithValue }
+) => {
     console.log('getAllUsers');
 
     try {
@@ -20,19 +26,33 @@ export const getAllUsers = createAsyncThunk('users/getAllUsers', async ({ search
 
         return apiCall.data;
     } catch (error: any) {
-        return rejectWithValue(error?.response?.statusText || 'Error - Fetch users');
+        return handleAsyncThunkError(error, rejectWithValue);
     }
 });
 
-export const removeUser = createAsyncThunk("users/removeUser", async (userId: number | string, { rejectWithValue }) => {
+export const addNewUser = createAsyncThunk('users/addNewUser', async (
+    formData: AddUserFormData,
+    { rejectWithValue }
+) => {
+    try {
+        const apiCall = await addUser(formData);
+
+        return apiCall;
+    } catch (error: any) {
+        return handleAsyncThunkError<AddNewUserErrors>(error, rejectWithValue);
+    }
+});
+
+export const removeUser = createAsyncThunk("users/removeUser", async (
+    userId: number,
+    { rejectWithValue }
+) => {
     try {
         const apiCall = await deleteUser(userId);
 
-        return { userId, message: apiCall.message };
+        return apiCall;
     } catch (error: any) {
-        console.log(error);
-
-        return rejectWithValue(error?.response?.statusText || "Error - Delete user");
+        return handleAsyncThunkError(error, rejectWithValue);
     }
 });
 
@@ -40,12 +60,12 @@ const usersSlice = createSlice({
     name: 'users',
     initialState: initialUsersState,
     reducers: {
-        setSearch: (state, { payload }): void => {
+        setUsersSearch: (state, { payload }): void => {
             state.search = payload;
-            state.currentPage = 1;
+            state.pagination.currentPage = 1;
         },
-        setPage: (state, { payload }): void => {
-            state.currentPage = payload;
+        setUsersPage: (state, { payload }): void => {
+            state.pagination.currentPage = payload;
         }
     },
     extraReducers: (builder) => {
@@ -53,38 +73,51 @@ const usersSlice = createSlice({
             // get all users
             .addCase(getAllUsers.pending, (state) => {
                 state.isLoading = true;
-                state.error = '';
             })
             .addCase(getAllUsers.fulfilled, (state, { payload }) => {
-                state.isLoading = false; 
+                state.isLoading = false;
+
                 state.users = payload.data;
-                state.currentPage = payload.current_page;
-                state.lastPage = payload.last_page;
+                state.pagination.currentPage = payload.current_page;
+                state.pagination.lastPage = payload.last_page;
                 state.total = payload.total;
             })
-            .addCase(getAllUsers.rejected, (state, { payload }) => {
+            .addCase(getAllUsers.rejected, (state) => {
                 state.isLoading = false;
-                state.error = payload as string;
+            })
+
+            // add new user
+            .addCase(addNewUser.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(addNewUser.fulfilled, (state, { payload }) => {
+                state.isLoading = false;
+
+                state.users.unshift(payload.data);
+            })
+            .addCase(addNewUser.rejected, (state) => {
+                state.isLoading = false;
             })
 
             // delete user
             .addCase(removeUser.pending, (state) => {
                 state.isLoading = true;
-                state.error = '';
             })
             .addCase(removeUser.fulfilled, (state, { payload }) => {
-                state.isLoading = false;                
-                state.users = state.users.filter(user => user.id !== payload.userId);
-            })
-            .addCase(removeUser.rejected, (state, { payload }) => {
                 state.isLoading = false;
-                state.error = payload as string;
+
+                state.users = state.users.filter(
+                    user => user.id !== payload.data.id
+                );
+            })
+            .addCase(removeUser.rejected, (state) => {
+                state.isLoading = false;
             });
     },
 });
 
 export const {
-    setSearch,
-    setPage
+    setUsersSearch,
+    setUsersPage
 } = usersSlice.actions;
 export default usersSlice.reducer;

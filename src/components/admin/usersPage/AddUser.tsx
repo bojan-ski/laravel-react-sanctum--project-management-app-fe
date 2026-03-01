@@ -1,115 +1,130 @@
-import { type ChangeEvent, type FormEvent, type JSX } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
-import { getAllUsers } from '../../../features/adminUser/usersSlice';
-import { addNewUser, setFormData } from '../../../features/adminUser/createUserSlice';
-import type { NewUserState } from '../../../types/types';
+import { useState, type ChangeEvent, type FormEvent, type JSX } from 'react';
+import { useAppSelector } from '../../../hooks/useRedux';
+import { useThunk } from '../../../hooks/useThunk';
+import { useZodValidation } from '../../../hooks/useZodValidation';
+import { addNewUser } from '../../../features/adminUser/usersSlice';
+import { addUserSchema, type AddUserFormData } from '../../../schemas/admin/userSchema';
+import type { UsersState } from '../../../types/admin';
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "../../../components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { Button } from '../../ui/button';
 import FormWrapper from '../../form/FormWrapper';
 import FormInput from '../../form/FormInput';
 import FormSubmitButton from '../../form/FormSubmitButton';
+import { Button } from '../../ui/button';
+import { UserPlus } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-type AddUserProps = {
-    search: string;
-    currentPage: number;
-};
-
-function AddUser({ search, currentPage }: AddUserProps): JSX.Element {
-    const { isLoading, formData, errors } = useAppSelector<NewUserState>(state => state.newUser);
-    const dispatch = useAppDispatch();
+function AddUser(): JSX.Element {
+    const { isLoading } = useAppSelector<UsersState>(state => state.users);
+    const { run } = useThunk(addNewUser);
+    const { validate, errors, setErrors } = useZodValidation<AddUserFormData>();
+    const [ openModal, setModalOpen ] = useState<boolean>(false);
+    const [ formData, setFormData ] = useState<AddUserFormData>({
+        name: '',
+        email: '',
+        password: ''
+    });
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
-        dispatch(setFormData({ ...formData, [e.target.name]: e.target.value }));
+        setFormData({ ...formData, [ e.target.name ]: e.target.value });
     };
 
     const handleAddUser = async (e: FormEvent): Promise<void> => {
         e.preventDefault();
 
-        const result = await dispatch(addNewUser(formData));
+        const validation = validate(addUserSchema, formData);
+        if (!validation) return;
 
-        if (result.meta.requestStatus == 'fulfilled') {
-            toast.success(result?.payload.message);
+        const thunkCall = await run(validation);
 
-            dispatch(getAllUsers({ search: search, page: currentPage }));
-        }
+        if (thunkCall.ok) {
+            toast.success(thunkCall.data.message);
 
-        if (result.meta.requestStatus == 'rejected') {
-            toast.error(result.payload.random || result?.meta.requestStatus);
+            setFormData({
+                name: '',
+                email: '',
+                password: ''
+            });
+            setErrors({});
+            setModalOpen(false);
+        } else {
+            toast.error(thunkCall.error.random || "Add User Error");
+
+            setErrors(thunkCall.error);
         }
     };
 
     return (
-        <Dialog>
-            <DialogTrigger asChild>
-                <Button className='cursor-pointer hover:text-yellow-500'>
-                    +
-                </Button>
-            </DialogTrigger>
+        <div className='text-end'>
+            <Dialog open={openModal} onOpenChange={setModalOpen}>
+                <DialogTrigger asChild>
+                    <Button
+                        className='bg-yellow-500 hover:bg-yellow-600 w-max text-xs sm:text-sm cursor-pointer'
+                    >
+                        <UserPlus />
+                        <span>User</span>
+                    </Button>
+                </DialogTrigger>
 
-            <DialogContent className="bg-white border-0" aria-describedby={undefined}>
-                <VisuallyHidden>
-                    <DialogTitle>
-                        Add User
-                    </DialogTitle>
-                </VisuallyHidden>
+                <DialogContent className="bg-white border-0" aria-describedby={undefined}>
+                    <VisuallyHidden>
+                        <DialogTitle>
+                            Add User
+                        </DialogTitle>
+                    </VisuallyHidden>
 
-                <FormWrapper
-                    onSubmit={handleAddUser}
-                >
-                    {/* name */}
-                    <FormInput
-                        name='name'
-                        label='Enter name *'
-                        minLength={2}
-                        maxLength={48}
-                        placeholder='max 48 characters'
-                        required={true}
-                        value={formData.name}
-                        onMutate={handleChange}
-                        divCss='mb-3'
-                        error={errors?.name}
-                    />
+                    <FormWrapper
+                        onSubmit={handleAddUser}
+                    >
+                        <FormInput
+                            name='name'
+                            label='Enter name *'
+                            minLength={2}
+                            maxLength={48}
+                            placeholder='max 48 characters'
+                            required={true}
+                            value={formData.name}
+                            onMutate={handleChange}
+                            divCss='mb-3'
+                            error={errors?.name}
+                        />
 
-                    {/* email */}
-                    <FormInput
-                        name='email'
-                        type='email'
-                        label='Enter email *'
-                        minLength={2}
-                        maxLength={48}
-                        placeholder='max 48 characters'
-                        required={true}
-                        value={formData.email}
-                        onMutate={handleChange}
-                        divCss='mb-3'
-                        error={errors?.email}
-                    />
+                        <FormInput
+                            name='email'
+                            type='email'
+                            label='Enter email *'
+                            minLength={2}
+                            maxLength={48}
+                            placeholder='max 48 characters'
+                            required={true}
+                            value={formData.email}
+                            onMutate={handleChange}
+                            divCss='mb-3'
+                            error={errors?.email}
+                        />
 
-                    {/* password */}
-                    <FormInput
-                        name='password'
-                        type='password'
-                        label='Enter password *'
-                        minLength={6}
-                        placeholder='min 6 characters'
-                        required={true}
-                        value={formData.password}
-                        onMutate={handleChange}
-                        divCss='mb-3'
-                        error={errors?.password}
-                    />
+                        <FormInput
+                            name='password'
+                            type='password'
+                            label='Enter password *'
+                            minLength={6}
+                            placeholder='min 6 characters'
+                            required={true}
+                            value={formData.password}
+                            onMutate={handleChange}
+                            divCss='mb-3'
+                            error={errors?.password}
+                        />
 
-                    {/* submit */}
-                    <FormSubmitButton
-                        loading={isLoading}
-                        btnCss='border rounded-sm py-2 px-5 text-white bg-yellow-500 hover:bg-yellow-600 transition cursor-pointer font-semibold'
-                        btnLabel='Register'
-                    />
-                </FormWrapper>
-            </DialogContent>
-        </Dialog>
+                        <FormSubmitButton
+                            loading={isLoading}
+                            btnCss='border rounded-sm text-xs sm:text-sm rounded-sm py-1.5 md:py-2 px-4 md:px-5 text-white bg-yellow-500 hover:bg-yellow-600 transition cursor-pointer font-semibold'
+                            btnLabel='Add User'
+                        />
+                    </FormWrapper>
+                </DialogContent>
+            </Dialog>
+        </div>
     );
 }
 

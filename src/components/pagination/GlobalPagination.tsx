@@ -20,7 +20,7 @@ function GlobalPagination({
                 label='Prev'
             />
 
-            <span className="flex items-center px-4">
+            <span className="text-xs md:text-sm px-4">
                 Page {currentPage} of {lastPage}
             </span>
 

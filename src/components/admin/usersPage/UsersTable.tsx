@@ -1,6 +1,12 @@
 import { type JSX } from 'react';
-import type { User } from '../../../types/types';
-import { Table, TableBody, TableHead, TableHeader, TableRow, } from "../../../components/ui/table";
+import type { User } from '../../../types/user';
+import {
+    Table,
+    TableBody,
+    TableHead,
+    TableHeader,
+    TableRow
+} from "../../../components/ui/table";
 import UsersTableRow from '../../../components/admin/usersPage/UsersTableRow';
 
 function UsersTable({ users }: { users: User[]; }): JSX.Element {
@@ -9,10 +15,10 @@ function UsersTable({ users }: { users: User[]; }): JSX.Element {
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead className='font-semibold'>Name</TableHead>
-                        <TableHead className='font-semibold'>Email</TableHead>
-                        <TableHead className='font-semibold'>Created</TableHead>
-                        <TableHead className="font-semibold">Actions</TableHead>
+                        <TableHead className='font-semibold text-xs md:text-sm'>Name</TableHead>
+                        <TableHead className='font-semibold text-xs md:text-sm hidden md:table-cell'>Email</TableHead>
+                        <TableHead className='font-semibold text-xs md:text-sm hidden lg:table-cell'>Created</TableHead>
+                        <TableHead className='font-semibold text-xs md:text-sm'>Actions</TableHead>
                     </TableRow>
                 </TableHeader>
 

@@ -6,28 +6,29 @@ type UsersSearchProps = {
     handleSearch: (term: string) => void;
 };
 
-function UsersSearch({ search, handleSearch }: UsersSearchProps): JSX.Element {
-    const [searchTerm, setSearchTerm] = useState(search);
+function UsersSearch({
+    search,
+    handleSearch
+}: UsersSearchProps): JSX.Element {
+    const [ searchTerm, setSearchTerm ] = useState(search);
 
     useEffect(() => {
-        console.log('useEffect - UsersSearch');
-
         const delay = setTimeout(() => {
             if (searchTerm !== search) handleSearch(searchTerm);
         }, 700);
 
         return () => clearTimeout(delay);
-    }, [searchTerm]);
+    }, [ searchTerm ]);
 
     return (
-        <div className="users-search">
+        <div className="users-search mb-4 md:mb-0">
             <Input
                 min={2}
-                maxLength={48}
+                maxLength={64}
                 placeholder="Search by name or email..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-60"
+                className="w-full md:w-96"
             />
         </div>
     );

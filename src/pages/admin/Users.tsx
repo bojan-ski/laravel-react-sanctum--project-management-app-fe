@@ -1,71 +1,75 @@
 import { useEffect, type JSX } from 'react';
-import { useNavigate, type NavigateFunction } from 'react-router';
+import { useNavigate, useSearchParams, type NavigateFunction } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
-import { getAllUsers, setPage, setSearch } from '../../features/adminUser/usersSlice';
-import type { UsersState } from '../../types/types';
+import { getAllUsers, setUsersPage, setUsersSearch } from '../../features/adminUser/usersSlice';
+import type { UsersState } from '../../types/admin';
 import NoDataMessage from '../../components/global/NoDataMessage';
-import Loading from '../../components/global/Loading';
-import ErrorMessage from '../../components/global/ErrorMessage';
 import AddUser from '../../components/admin/usersPage/AddUser';
 import UsersSearch from '../../components/admin/usersPage/UsersSearch';
 import UsersTable from '../../components/admin/usersPage/UsersTable';
-import UsersTablePagination from '../../components/admin/usersPage/UsersTablePagination';
+import GlobalPagination from '../../components/pagination/GlobalPagination';
 
 function Users(): JSX.Element {
-    const { isLoading, users, search, currentPage, lastPage, total, error } = useAppSelector<UsersState>(state => state.users);
-    const dispatch = useAppDispatch();
+    const [ searchParams ] = useSearchParams();
     const navigate: NavigateFunction = useNavigate();
+    const { users, search, pagination } = useAppSelector<UsersState>(state => state.users);
+    const dispatch = useAppDispatch();
 
     useEffect((): void => {
-        console.log('useEffect - Users');
-        if (users.length == 0) dispatch(getAllUsers({}));
+        const urlSearch = searchParams.get('search') as string || '';
+        const urlPage = parseInt(searchParams.get('page') || '1', 10);
+
+        if (urlSearch !== search) dispatch(setUsersSearch(urlSearch));
+        if (urlPage !== pagination.currentPage) dispatch(setUsersPage(urlPage));
+
+        if (users.length == 0) {
+            dispatch(getAllUsers({
+                search: urlSearch,
+                page: urlPage
+            }));
+        }
     }, []);
 
     const handleSearch = (searchTerm: string): void => {
-        dispatch(setSearch(searchTerm));
-        dispatch(getAllUsers({ search: searchTerm, page: 1 }));
+        dispatch(setUsersSearch(searchTerm));
+        dispatch(getAllUsers({
+            search: searchTerm,
+            page: 1
+        }));
 
         navigate(`?search=${searchTerm}&page=1`);
     };
 
-    const handlePageChange = (newPage: number): void => {
-        dispatch(setPage(newPage));
-        dispatch(getAllUsers({ search: search, page: newPage }));
+    const handleUsersPageChange = (newPage: number): void => {
+        dispatch(setUsersPage(newPage));
+        dispatch(getAllUsers({
+            search: search,
+            page: newPage
+        }));
 
-        navigate(`?search=${search}$page=${newPage}`);
+        navigate(`?search=${search}&page=${newPage}`);
     };
 
-    if (isLoading) return <Loading />;
-
-    if(error) return <ErrorMessage error={error}/>
-
     return (
-        <div className='users-page mt-10'>
-            {/* search & add new user */}
-            <section className='flex items-center justify-between mb-5'>
+        <div className='admin-users-page mt-10'>
+            <section className='flex flex-col md:flex-row md:items-center md:justify-between mb-5'>
                 <UsersSearch
                     search={search}
                     handleSearch={handleSearch}
                 />
-
-                <AddUser
-                    search={search}
-                    currentPage={currentPage}
-                />
+                <AddUser />
             </section>
 
-            {/* users container */}
             {users.length == 0 ? (
                 <NoDataMessage message="There are no users" />
             ) : (
                 <>
                     <UsersTable users={users} />
 
-                    <UsersTablePagination
-                        total={total}
-                        currentPage={currentPage}
-                        lastPage={lastPage}
-                        handlePageChange={handlePageChange}
+                    <GlobalPagination
+                        currentPage={pagination.currentPage}
+                        lastPage={pagination.lastPage}
+                        handlePageChange={handleUsersPageChange}
                     />
                 </>
             )}

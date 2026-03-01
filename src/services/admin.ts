@@ -1,11 +1,18 @@
 import api from "../api/axios";
-import type { AllProjectStatsResponse, GetAllProjectsResponse } from "../types/admin";
-import type { NewUserFormData } from "../types/types";
+import type { AddUserFormData } from "../schemas/admin/userSchema";
+import type {
+    AddNewUserResponse,
+    AllProjectStatsResponse,
+    DeleteUserResponse,
+    GetAllProjectsResponse,
+    GetRegularUserDetailsResponse,
+    GetUsersResponse
+} from "../types/admin";
 
 export async function getUsers(
     search: string = '',
     page: number = 1
-) {
+): Promise<GetUsersResponse> {
     const response = await api.get(`/api/admin/users`, {
         params: { search, page },
     });
@@ -13,13 +20,21 @@ export async function getUsers(
     return response.data;
 }
 
-export async function createUser(newUserData: NewUserFormData) {
-    const response = await api.post('/api/admin/users', newUserData);
+export async function addUser(formData: AddUserFormData): Promise<AddNewUserResponse> {
+    const response = await api.post('/api/admin/users', formData);
+    console.log(response);    
 
     return response.data;
 }
 
-export async function deleteUser(userId: number | string) {
+export async function getUser(userId: number): Promise<GetRegularUserDetailsResponse> {
+    const response = await api.get(`/api/admin/users/${userId}`);
+    console.log(response);
+
+    return response.data;
+}
+
+export async function deleteUser(userId: number): Promise<DeleteUserResponse> {
     const response = await api.delete(`/api/admin/users/${userId}`);
 
     return response.data;

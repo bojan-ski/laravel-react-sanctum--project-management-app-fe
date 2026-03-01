@@ -109,7 +109,5 @@ export type ProjectFormErrors = ProjectFormDataErrors & {
 export type ProjectFormSubmitResult = {
     status: ProjectFormSubmitStatus;
     message: string;
-    errors?: {
-        random: string;
-    } & ProjectFormDataErrors;
+    errors?: ProjectFormErrors;
 };
