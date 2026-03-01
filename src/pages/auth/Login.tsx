@@ -47,7 +47,7 @@ function Login(): JSX.Element {
             dispatch(fetchUnreadCount());
 
             if (thunkCall.data.data[ 'is_admin' ]) {
-                navigate('/users');
+                navigate('/admin/users');
             } else {
                 navigate('/projects');
             }

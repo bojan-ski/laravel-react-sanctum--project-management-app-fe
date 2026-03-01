@@ -3,11 +3,13 @@ import { useNavigate, useSearchParams, type NavigateFunction } from 'react-route
 import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
 import {
     fetchAllProjects,
+    fetchAllProjectStats,
     setAllProjectsPage,
     setAllProjectsSearch
 } from '../../features/adminUser/projectSlice';
 import type { AllProjectsState } from '../../types/admin';
 import Loading from '../../components/global/Loading';
+import AllProjectsStats from '../../components/admin/allProjectsPage/AllProjectsStats';
 import SearchProjects from '../../components/admin/allProjectsPage/SearchProjects';
 import NoDataMessage from '../../components/global/NoDataMessage';
 import ProjectsList from '../../components/project/ProjectsList';
@@ -18,6 +20,7 @@ function AllProjects(): JSX.Element {
     const navigate: NavigateFunction = useNavigate();
     const {
         isLoading,
+        stats,
         projects,
         search,
         pagination
@@ -37,6 +40,8 @@ function AllProjects(): JSX.Element {
                 page: urlPage
             }));
         }
+
+        dispatch(fetchAllProjectStats());
     }, []);
 
     const handleAllProjectsPageChange = (newPage: number): void => {
@@ -53,6 +58,8 @@ function AllProjects(): JSX.Element {
 
     return (
         <div className='admin-projects-page mt-10'>
+
+            <AllProjectsStats stats={stats} />
 
             <SearchProjects
                 isLoading={isLoading}

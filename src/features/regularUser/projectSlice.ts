@@ -144,7 +144,7 @@ const projectSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            // get all projects
+            // get user projects
             .addCase(getUserProjects.pending, (state) => {
                 state.isLoading = true;
             })

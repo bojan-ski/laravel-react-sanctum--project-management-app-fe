@@ -1,5 +1,5 @@
 import api from "../api/axios";
-import type { GetAllProjectsResponse } from "../types/admin";
+import type { AllProjectStatsResponse, GetAllProjectsResponse } from "../types/admin";
 import type { NewUserFormData } from "../types/types";
 
 export async function getUsers(
@@ -35,7 +35,12 @@ export async function getAllProjects(
             page
         },
     });
-    console.log(response);
+
+    return response.data;
+}
+
+export async function getAllProjectStats(): Promise<AllProjectStatsResponse> {
+    const response = await api.get('/api/admin/projects/stats');
 
     return response.data;
 }
