@@ -1,21 +1,19 @@
 import { type JSX } from 'react';
 import type { User } from '../../../types/user';
-import { formatDate, userInitials } from '../../../utils/helpers';
-import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
+import { formatDate } from '../../../utils/helpers';
 import { TableCell, TableRow, } from "../../ui/table";
 import UsersTableRowOptions from './UsersTableRowOptions';
+import UserAvatar from '../../global/UserAvatar';
 
 function UsersTableRow({ user }: { user: User }): JSX.Element {
     return (
         <TableRow>
             <TableCell>
                 <div className="flex items-center gap-3">
-                    <Avatar>
-                        <AvatarImage src={user.avatar as string} alt={user.name} />
-                        <AvatarFallback>
-                            {userInitials(user.name)}
-                        </AvatarFallback>
-                    </Avatar>
+                    <UserAvatar
+                        name={user.name}
+                        avatar={user.avatar}
+                    />
                     <span className="font-medium text-xs md:text-sm">
                         {user.name}
                     </span>

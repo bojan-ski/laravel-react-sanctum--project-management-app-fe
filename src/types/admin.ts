@@ -8,7 +8,7 @@ export type RegularUserDetails = {
     member_projects_count: number;
     total_projects: number;
     recent_projects: ProjectCard[];
-} & ApiResponse;
+} & User;
 
 // api response
 export type GetUsersResponse = {
@@ -35,7 +35,7 @@ export type AddNewUserResponse = {
     errors?: AddNewUserFormErrors;
 } & ApiResponse;
 
-export type GetRegularUserDetailsResponse = {
+export type SelectedRegularUserDetailsResponse = {
     data: RegularUserDetails;
 } & ApiResponse;
 

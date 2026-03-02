@@ -5,7 +5,7 @@ import type {
     AllProjectStatsResponse,
     DeleteUserResponse,
     GetAllProjectsResponse,
-    GetRegularUserDetailsResponse,
+    SelectedRegularUserDetailsResponse,
     GetUsersResponse
 } from "../types/admin";
 
@@ -22,14 +22,12 @@ export async function getUsers(
 
 export async function addUser(formData: AddUserFormData): Promise<AddNewUserResponse> {
     const response = await api.post('/api/admin/users', formData);
-    console.log(response);    
 
     return response.data;
 }
 
-export async function getUser(userId: number): Promise<GetRegularUserDetailsResponse> {
+export async function getUser(userId: number): Promise<SelectedRegularUserDetailsResponse> {
     const response = await api.get(`/api/admin/users/${userId}`);
-    console.log(response);
 
     return response.data;
 }

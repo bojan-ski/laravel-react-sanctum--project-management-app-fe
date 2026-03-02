@@ -5,6 +5,7 @@ import { RouterProvider } from "react-router/dom";
 // route protection
 import AuthPrivateRoute from "./private/AuthPrivateRoute";
 import PublicOnlyRoute from "./private/PublicOnlyRoute";
+import AdminPrivateRoute from "./private/AdminPrivateRoute";
 
 // layout
 import AppLayout from "./layout/AppLayout";
@@ -28,7 +29,7 @@ import { loader as projectDetailsLoader } from "./pages/SelectedProject";
 import { loader as projectDataLoader } from "./pages/EditProject";
 import { loader as taskDetailsLoader } from "./pages/SelectedTask";
 import { loader as profileDataLoader } from "./pages/Profile";
-import AdminPrivateRoute from "./private/AdminPrivateRoute";
+import { loader as regularUserDetailsLoader } from "./pages/admin/SelectedUser";
 
 const router = createBrowserRouter([
   {
@@ -93,7 +94,8 @@ const router = createBrowserRouter([
               },
               {
                 path: '/admin/users/:id',
-                element: <SelectedUser />
+                element: <SelectedUser />,
+                loader: regularUserDetailsLoader
               },
               {
                 path: '/admin/projects',
