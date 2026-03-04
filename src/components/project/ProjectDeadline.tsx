@@ -1,14 +1,22 @@
 import { type JSX } from 'react';
-import { formatDate, isProjectOverdue } from '../../utils/helpers';
+import { formatDate } from '../../utils/helpers';
 import { Calendar } from 'lucide-react';
 
-function ProjectDeadline({ deadline }: { deadline: string; }): JSX.Element {
+type ProjectDeadlineProps = {
+    deadline: string;
+    isOverdue: boolean;
+};
+
+function ProjectDeadline({
+    deadline,
+    isOverdue
+}: ProjectDeadlineProps): JSX.Element {
     return (
-        <div className={`flex items-center font-semibold gap-2 text-xs md:text-sm ${isProjectOverdue(deadline) ? 'text-red-600' : ''}`}>
+        <div className={`flex items-center font-semibold gap-2 text-xs md:text-sm ${isOverdue ? 'text-red-600' : ''}`}>
             <Calendar className="h-4 w-4" />
 
             <span>
-                {isProjectOverdue(deadline) ? 'Overdue: ' : 'Due: '}
+                {isOverdue ? 'Overdue: ' : 'Due: '}
                 {formatDate(deadline)}
             </span>
         </div>

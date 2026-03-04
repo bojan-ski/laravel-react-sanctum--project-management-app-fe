@@ -5,7 +5,7 @@ export const addUserSchema = z.object({
         .string()
         .max(64, "Title cannot exceed 64 characters"),
     email: z
-        .email()
+        .email('Please enter a valid email address')
         .max(64, "Email cannot exceed 64 characters"),
     password: z
         .string()

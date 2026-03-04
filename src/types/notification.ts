@@ -5,7 +5,10 @@ export type Notification = {
     type: string;
     notifiable_id: number;
     notifiable_type: string;
-    data: any;
+    data: {
+        sender_name: string;
+        message: number;
+    };
     action_taken: string | null;
     is_invitation: boolean;
     is_pending: boolean;
@@ -18,7 +21,7 @@ export type GetNotificationsResponse = {
     data: Notification[];
 } & ApiResponse;
 
-export type GetCountResponse = {
+export type CountResponse = {
     data: {
         count: number;
     };

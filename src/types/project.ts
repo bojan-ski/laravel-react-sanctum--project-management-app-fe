@@ -11,6 +11,7 @@ export type Project = {
     description: string;
     status: ProjectStatus;
     deadline: string;
+    is_overdue: boolean;    
     created_at: string;
     updated_at: string;
 };
@@ -39,14 +40,12 @@ export type ProjectData = {
 } & Project;
 
 export type ProjectDetails = {
-    owner: ProjectOwner;
-    is_owner: boolean;
-    statistics: ProjectStatistics;
+    document: Document;
     members: Member[];
     is_member: boolean;
     members_limit: number;
     tasks: Task[];
-} & ProjectData;
+} & ProjectCard;
 
 // api response
 export type GetProjectsResponse = {

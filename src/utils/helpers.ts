@@ -30,12 +30,6 @@ export const userInitials = (name: string): string => {
         .substring(0, 2);
 };
 
-export const isProjectOverdue = (deadline: string): boolean => {
-    if (!deadline) return false;
-
-    return new Date(deadline) < new Date();
-};
-
 export const getTasksByStatus = (tasks: Task[]) => {
     return {
         to_do: tasks.filter(t => t.status === 'to_do'),
@@ -43,13 +37,7 @@ export const getTasksByStatus = (tasks: Task[]) => {
         review: tasks.filter(t => t.status === 'review'),
         done: tasks.filter(t => t.status === 'done'),
     };
-};
-
-export const isTaskOverdue = (dueDate: string, status: string): boolean => {
-    if (status === 'done') return false;
-
-    return new Date(dueDate) < new Date();
-};
+}
 
 export const getTaskStatusColor = (status: string): string => {
     switch (status) {

@@ -40,8 +40,6 @@ export const getUserProjects = createAsyncThunk('projects/getUserProjects', asyn
     { ownership, status, page }: GetUserProjectsProps,
     { rejectWithValue }
 ) => {
-    console.log('getUserProjects');
-
     try {
         const apiCall = await getProjects(ownership, status, page);
 

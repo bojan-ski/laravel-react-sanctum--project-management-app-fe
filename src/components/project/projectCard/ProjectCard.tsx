@@ -40,7 +40,10 @@ function ProjectCard({ project }: { project: ProjectCardType; }): JSX.Element {
                 )}
 
                 <div className='flex items-center justify-between mb-4'>
-                    <ProjectDeadline deadline={project.deadline} />
+                    <ProjectDeadline
+                        deadline={project.deadline}
+                        isOverdue={project.is_overdue}
+                    />
                     <ProjectStatus status={project.status} />
                 </div>
 

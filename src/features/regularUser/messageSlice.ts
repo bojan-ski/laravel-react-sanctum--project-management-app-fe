@@ -78,6 +78,11 @@ const messageSlice = createSlice({
     reducers: {
         addMessage: (state, { payload }): void => {
             state.messages.push(payload);
+
+            // const exists = state.messages.some(message => message.id === payload.id);
+            // if (!exists) {
+            //     state.messages.push(payload);
+            // }
         },
         removeMessage: (state, {payload}): void => {
             state.messages = state.messages.filter(
@@ -107,7 +112,12 @@ const messageSlice = createSlice({
             .addCase(sendTaskMessage.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
 
-                state.messages.push(payload.data);
+                // state.messages.push(payload.data);
+
+                const exists = state.messages.some(message => message.id === payload.data.id);
+                if (!exists) {
+                    state.messages.push(payload.data);
+                }
             })
             .addCase(sendTaskMessage.rejected, (state) => {
                 state.isLoading = false;

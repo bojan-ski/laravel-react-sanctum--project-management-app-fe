@@ -21,7 +21,10 @@ export function useRealtimeMessages({
         const channel = echo
             .private(`task.${taskId}`)
             .listen('.message.sent', (data: Message) => {
+                console.log(data.user.id !== currentUserId);
+                
                 if (data.user.id !== currentUserId) {
+                    console.log(data);
                     dispatch(addMessage(data));
                 }
             })

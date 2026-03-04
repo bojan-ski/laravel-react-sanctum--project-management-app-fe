@@ -12,7 +12,7 @@ export async function sendMessage(
     taskId: number,
     message: string
 ): Promise<SendMessageResponse> {
-    const response = await api.post(`/api/tasks/${taskId}/messages/store`, { message });
+    const response = await api.post(`/api/tasks/${taskId}/messages`, { message });
 
     return response.data;
 }
@@ -27,7 +27,7 @@ export async function deleteMessage(
     taskId: number,
     messageId: number
 ): Promise<DeleteMessageResponse> {
-    const response = await api.delete(`/api/tasks/${taskId}/messages/${messageId}/destroy`);
+    const response = await api.delete(`/api/tasks/${taskId}/messages/${messageId}`);
 
     return response.data;
 }

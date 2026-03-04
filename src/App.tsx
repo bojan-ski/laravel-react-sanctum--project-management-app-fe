@@ -6,6 +6,7 @@ import { RouterProvider } from "react-router/dom";
 import AuthPrivateRoute from "./private/AuthPrivateRoute";
 import PublicOnlyRoute from "./private/PublicOnlyRoute";
 import AdminPrivateRoute from "./private/AdminPrivateRoute";
+import RegularUserPrivateRoute from "./private/RegularUserPrivateRoute";
 
 // layout
 import AppLayout from "./layout/AppLayout";
@@ -23,6 +24,7 @@ import Profile from "./pages/Profile";
 import Users from "./pages/admin/Users";
 import SelectedUser from "./pages/admin/SelectedUser";
 import AllProjects from "./pages/admin/AllProjects";
+import Error from "./pages/Error";
 
 // loaders
 import { loader as projectDetailsLoader } from "./pages/SelectedProject";
@@ -35,7 +37,7 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <AppLayout />,
-    // errorElement: <ErrorPage />,
+    // errorElement: <Error />,
     children: [
       {
         element: <PublicOnlyRoute />,
@@ -45,45 +47,49 @@ const router = createBrowserRouter([
             element: <Login />
           }
         ]
-      },
-      {
+      }, {
         element: <AuthPrivateRoute />,
         children: [
           {
-            path: '/notifications',
-            element: <Notifications />,
-          },
-          {
-            path: '/add_project',
-            element: <AddProject />,
-          },
-          {
-            path: '/projects',
-            element: <Projects />,
-          },
-          {
-            path: '/projects/:id',
+            path: "projects/:id",
             element: <SelectedProject />,
             loader: projectDetailsLoader
           },
           {
-            path: '/projects/:id/edit',
-            element: <EditProject />,
-            loader: projectDataLoader
-          },
-          {
-            path: '/tasks',
-            element: <UserTasks />
-          },
-          {
-            path: '/tasks/:id',
-            element: <SelectedTask />,
-            loader: taskDetailsLoader
-          },
-          {
-            path: '/profile',
+            path: "profile",
             element: <Profile />,
             loader: profileDataLoader
+          },
+          {
+            element: <RegularUserPrivateRoute />,
+            children: [
+              {
+                path: "notifications",
+                element: <Notifications />
+              },
+              {
+                path: "add_project",
+                element: <AddProject />
+              },
+              {
+                path: "projects",
+                element: <Projects />
+              },
+              {
+                path: "projects/:id/edit",
+                element: <EditProject />,
+                loader: projectDataLoader
+              },
+              {
+                path: "tasks",
+                element: <UserTasks />
+              },
+              {
+                path: "tasks/:id",
+                element: <SelectedTask />,
+                loader: taskDetailsLoader
+              }
+            ],
           },
           {
             element: <AdminPrivateRoute />,

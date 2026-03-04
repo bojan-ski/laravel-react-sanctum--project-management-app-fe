@@ -35,7 +35,7 @@ function SelectedProject(): JSX.Element {
         dispatch(setProjectTasks({
             tasks: project.tasks
         }));
-    }, [ project.id, dispatch ]);
+    }, [ project.id, dispatch ]);    
 
     return (
         <div className='selected-project-page my-10 grid grid-cols-1 lg:grid-cols-2 gap-4'>

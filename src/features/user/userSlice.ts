@@ -95,6 +95,7 @@ const userSlice = createSlice({
             })
             .addCase(loginUser.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
+
                 state.user = payload.data;
 
                 // update storage
@@ -110,6 +111,7 @@ const userSlice = createSlice({
             })
             .addCase(logoutUser.fulfilled, (state) => {
                 state.isLoading = false;
+
                 state.user = INIT_STATE;
 
                 // clear storage
@@ -147,6 +149,7 @@ const userSlice = createSlice({
             })
             .addCase(deleteUserAccount.fulfilled, (state) => {
                 state.isLoading = false;
+                
                 state.user = INIT_STATE;
 
                 // clear storage

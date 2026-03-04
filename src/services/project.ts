@@ -33,7 +33,7 @@ export const createProject = async (newProjectData: ProjectFormData): Promise<Nu
         formData.append('document', newProjectData.document);
     }
 
-    const response = await api.post('/api/projects/store', formData, {
+    const response = await api.post('/api/projects', formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },
@@ -90,7 +90,7 @@ export const statusChange = async (
 };
 
 export const deleteProject = async (projectId: number): Promise<NullDataApiResponse> => {
-    const response = await api.delete(`/api/projects/${projectId}/destroy`);
+    const response = await api.delete(`/api/projects/${projectId}`);
 
     return response.data;
 };

@@ -14,7 +14,7 @@ const NotificationBell = (): JSX.Element => {
     useRealtimeNotifications();
 
     return (
-        <div className="text-center">
+        <div className="text-center relative">
             <Button
                 size="icon"
                 className="text-white relative bg-yellow-600 hover:bg-yellow-500 border border-white cursor-pointer"

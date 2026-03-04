@@ -19,8 +19,6 @@ export const getAllUsers = createAsyncThunk('users/getAllUsers', async (
     { search, page }: { search?: string, page?: number; },
     { rejectWithValue }
 ) => {
-    console.log('getAllUsers');
-
     try {
         const apiCall = await getUsers(search, page);
 

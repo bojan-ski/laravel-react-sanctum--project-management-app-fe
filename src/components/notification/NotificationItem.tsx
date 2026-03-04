@@ -17,7 +17,7 @@ const NotificationItem = ({
         <div
             className={`px-4 py-2 hover:bg-gray-50 transition-colors ${!notification.read_at ? 'bg-indigo-50/50' : ''}`}
         >
-            <div className='text-xs mb-1'>
+            <div className='text-xs text-start mb-1'>
                 <p>
                     {notification.data.message}
                 </p>

@@ -16,7 +16,7 @@ export async function changePassword(formData: ChangePasswordFormData): Promise<
 }
 
 export async function deleteAccount(password: DeleteAccountFormData): Promise<NullDataApiResponse> {
-    const response = await api.delete('/api/profile/destroy', {
+    const response = await api.delete('/api/profile', {
         data: password
     });
 

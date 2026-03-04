@@ -14,7 +14,10 @@ export async function getUsers(
     page: number = 1
 ): Promise<GetUsersResponse> {
     const response = await api.get(`/api/admin/users`, {
-        params: { search, page },
+        params: {
+            search,
+            page
+        },
     });
 
     return response.data;

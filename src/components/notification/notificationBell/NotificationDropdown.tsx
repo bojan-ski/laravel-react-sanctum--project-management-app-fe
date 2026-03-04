@@ -39,7 +39,7 @@ const NotificationDropdown = ({ isOpen }: { isOpen: boolean; }): JSX.Element => 
     return (
         <div
             ref={dropdownRef}
-            className="absolute -right-20 md:-right-40 top-12 w-64 md:w-96 max-h-[600px] z-50 shadow-lg"
+            className="absolute -left-10 sm:left-15 top-12 w-64 md:w-96 max-h-[600px] z-50 shadow-lg"
         >
             <Card className='p-0 gap-0'>
                 <BellHeader unreadCount={unreadCount} />

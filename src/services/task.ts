@@ -64,7 +64,7 @@ export async function changeTaskPriority(
 }
 
 export async function deleteTask(taskId: number): Promise<NullDataApiResponse> {
-    const response = await api.delete(`/api/tasks/${taskId}/destroy`);
+    const response = await api.delete(`/api/tasks/${taskId}`);
 
     return response.data;
 }

@@ -31,6 +31,9 @@ function TaskChatMessage({
         }
     };
 
+    console.log(isCurrentUser);
+    
+
     return (
         <div className={`flex gap-2 ${isCurrentUser ? 'flex-row-reverse' : 'flex-row'}`}>
             <div className='flex-shrink-0'>

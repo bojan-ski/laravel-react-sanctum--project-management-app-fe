@@ -25,7 +25,10 @@ function ProjectData({ project }: { project: ProjectDetails; }): JSX.Element {
                     </div>
                 )}
 
-                <ProjectDeadline deadline={project.deadline} />
+                <ProjectDeadline
+                    deadline={project.deadline}
+                    isOverdue={project.is_overdue}
+                />
             </div>
         </div>
     );

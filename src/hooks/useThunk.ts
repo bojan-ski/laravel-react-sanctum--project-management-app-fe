@@ -15,8 +15,7 @@ export function useThunk<T extends AsyncThunk<any, any, any>>(thunk: T) {
         | { ok: true; data: Fulfilled<T>; }
         | { ok: false; error: Rejected<T>; }
     > {
-        const result = await dispatch(thunk(arg));
-        console.log(result);        
+        const result = await dispatch(thunk(arg));      
 
         if (result.meta.requestStatus === "fulfilled") {
             return {

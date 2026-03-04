@@ -21,8 +21,6 @@ export const getUserNotifications = createAsyncThunk('notifications/getUserNotif
     unread: boolean,
     { rejectWithValue }
 ) => {
-    console.log('getUserNotifications');
-
     try {
         const apiCall = await getNotifications(unread);
 
@@ -133,6 +131,7 @@ const notificationSlice = createSlice({
             })
             .addCase(fetchUnreadCount.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
+                
                 state.unreadCount = payload.data.count;
             })
             .addCase(fetchUnreadCount.rejected, (state) => {

@@ -34,8 +34,6 @@ export const fetchAllProjects = createAsyncThunk('allProjects/fetchAllProjects',
     { search, page }: FetchAllProjectsProps,
     { rejectWithValue }
 ) => {
-    console.log('fetchAllProjects');
-
     try {
         const apiCall = await getAllProjects(search, page);
 

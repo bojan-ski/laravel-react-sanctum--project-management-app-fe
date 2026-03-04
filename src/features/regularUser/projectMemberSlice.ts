@@ -15,8 +15,6 @@ export const getAllAvailableUsers = createAsyncThunk('projectMembers/fetchAvaila
     projectId: number,
     { rejectWithValue }
 ) => {
-    console.log('getAllAvailableUsers');
-
     try {
         const apiCall = await getAvailableUsers(projectId);
 
@@ -79,6 +77,7 @@ const projectMemberSlice = createSlice({
             })
             .addCase(getAllAvailableUsers.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
+
                 state.availableUsers = payload.data;
             })
             .addCase(getAllAvailableUsers.rejected, (state) => {
@@ -91,6 +90,7 @@ const projectMemberSlice = createSlice({
             })
             .addCase(inviteSelectedUsers.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
+
                 state.availableUsers = state.availableUsers.filter(
                     (user: User) => !payload.data.user_ids.includes(user.id)
                 );
@@ -105,7 +105,10 @@ const projectMemberSlice = createSlice({
             })
             .addCase(removeSelectedMember.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
-                state.members = state.members.filter((member: Member) => member.id !== payload.data.member_id);
+
+                state.members = state.members.filter(
+                    (member: Member) => member.id !== payload.data.member_id
+                );
             })
             .addCase(removeSelectedMember.rejected, (state) => {
                 state.isLoading = false;

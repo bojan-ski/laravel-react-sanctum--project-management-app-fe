@@ -1,7 +1,7 @@
 import api from "../api/axios";
 import type {
     GetNotificationsResponse,
-    GetCountResponse,
+    CountResponse,
     GetNotificationResponse,
     GetMarkAsReadResponse
 } from "../types/notification";
@@ -16,7 +16,7 @@ export async function getNotifications(unread: boolean): Promise<GetNotification
     return response.data;
 }
 
-export async function getUnreadCount(): Promise<GetCountResponse> {
+export async function getUnreadCount(): Promise<CountResponse> {
     const response = await api.get('/api/notifications/unread_count');
 
     return response.data;
@@ -28,7 +28,7 @@ export async function markAsRead(notificationId: number): Promise<GetMarkAsReadR
     return response.data;
 }
 
-export async function markAllAsRead(): Promise<GetCountResponse> {
+export async function markAllAsRead(): Promise<CountResponse> {
     const response = await api.post('/api/notifications/read_all');
 
     return response.data;
