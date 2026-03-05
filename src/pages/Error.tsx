@@ -1,9 +1,16 @@
-import React from 'react'
+import { type JSX } from 'react';
+import { useRouteError } from 'react-router';
+import ErrorMessage from '../components/global/ErrorMessage';
 
-function Error() {
+function Error(): JSX.Element {
+  const error: any = useRouteError();
+  const errorMsg: string = error.error.message ?? error.statusText;
+
   return (
-    <div>Error</div>
-  )
+    <div className='h-screen flex items-center justify-center'>
+      <ErrorMessage error={errorMsg} />
+    </div>
+  );
 }
 
-export default Error
+export default Error;
