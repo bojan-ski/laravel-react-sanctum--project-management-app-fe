@@ -12,8 +12,6 @@ export const getTaskMessages = createAsyncThunk('messages/getTaskMessages', asyn
     taskId: number,
     { rejectWithValue }
 ) => {
-    console.log('getTaskMessages');
-
     try {
         const apiCall = await getMessages(taskId);
 
@@ -76,15 +74,16 @@ const messageSlice = createSlice({
     name: 'messages',
     initialState: initialMessageState,
     reducers: {
-        addMessage: (state, { payload }): void => {
-            state.messages.push(payload);
+        addMessage: (state, { payload }): void => {            
+            const exists = state.messages.some(
+                (message: Message) => message.id === payload.id
+            );
 
-            // const exists = state.messages.some(message => message.id === payload.id);
-            // if (!exists) {
-            //     state.messages.push(payload);
-            // }
+            if (!exists) {
+                state.messages.push(payload);
+            }
         },
-        removeMessage: (state, {payload}): void => {
+        removeMessage: (state, { payload }): void => {
             state.messages = state.messages.filter(
                 message => message.id !== payload.message_id
             );
@@ -112,9 +111,10 @@ const messageSlice = createSlice({
             .addCase(sendTaskMessage.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
 
-                // state.messages.push(payload.data);
+                const exists = state.messages.some(
+                    (message: Message) => message.id === payload.data.id
+                );
 
-                const exists = state.messages.some(message => message.id === payload.data.id);
                 if (!exists) {
                     state.messages.push(payload.data);
                 }

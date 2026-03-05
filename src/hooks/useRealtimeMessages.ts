@@ -19,19 +19,13 @@ export function useRealtimeMessages({
         if (!currentUserId || !taskId) return;
 
         const channel = echo
-            .private(`task.${taskId}`)
+            .join(`task.${taskId}`)
             .listen('.message.sent', (data: Message) => {
-                console.log(data.user.id !== currentUserId);
-                
-                if (data.user.id !== currentUserId) {
-                    console.log(data);
-                    dispatch(addMessage(data));
-                }
+                dispatch(addMessage(data));
             })
             .listen('.message.deleted', (data: { message_id: number; }) => {
                 dispatch(removeMessage(data));
             });
-
         return () => {
             echo.leave(`task.${taskId}`);
         };

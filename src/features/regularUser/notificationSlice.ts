@@ -98,9 +98,15 @@ const notificationSlice = createSlice({
     initialState: initialNotificationState,
     reducers: {
         addNotification: (state, { payload }): void => {
-            state.unreadNotifications.unshift(payload);
-            state.notifications.unshift(payload);
-            state.unreadCount += 1;
+            const exists = state.notifications.some(
+                (notification:Notification) => notification.id === payload.id
+            );
+
+            if (!exists) {
+                state.unreadNotifications.unshift(payload);
+                state.notifications.unshift(payload);
+                state.unreadCount += 1;
+            }
         },
     },
     extraReducers: (builder) => {
@@ -131,7 +137,7 @@ const notificationSlice = createSlice({
             })
             .addCase(fetchUnreadCount.fulfilled, (state, { payload }) => {
                 state.isLoading = false;
-                
+
                 state.unreadCount = payload.data.count;
             })
             .addCase(fetchUnreadCount.rejected, (state) => {

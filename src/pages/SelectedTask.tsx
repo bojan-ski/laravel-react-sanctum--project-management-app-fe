@@ -29,8 +29,6 @@ function SelectedTask(): JSX.Element {
     });
 
     useEffect(() => {
-        console.log('Fetching task messages');
-
         dispatch(getTaskMessages(task.id));
         dispatch(markTaskMessagesAsRead(task.id));
     }, [ task.id, dispatch ]);

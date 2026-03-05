@@ -1,5 +1,7 @@
 import { useEffect, useRef, type JSX } from 'react';
+import { useAppSelector } from '../../../hooks/useRedux';
 import type { Message } from '../../../types/message';
+import type { AuthState } from '../../../types/auth';
 import NoDataMessage from '../../global/NoDataMessage';
 import TaskChatMessage from './TaskChatMessage';
 
@@ -14,6 +16,7 @@ function TaskChatMessages({
     messagesCount,
     messages
 }: TaskChatMessagesProps): JSX.Element {
+    const { user } = useAppSelector<AuthState>(state => state.user);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -34,7 +37,7 @@ function TaskChatMessages({
                         {messages.map((message: Message) => (
                             <TaskChatMessage
                                 key={message.id}
-                                isCurrentUser={message.is_author}
+                                isCurrentUser={message.user.id === user.id}
                                 isLoading={isLoading}
                                 message={message}
                             />

@@ -29,10 +29,7 @@ function TaskChatMessage({
         if (!thunkCall.ok) {
             toast.error(thunkCall.error.random || "Delete Message Error");
         }
-    };
-
-    console.log(isCurrentUser);
-    
+    };    
 
     return (
         <div className={`flex gap-2 ${isCurrentUser ? 'flex-row-reverse' : 'flex-row'}`}>

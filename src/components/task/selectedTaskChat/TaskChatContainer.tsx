@@ -5,10 +5,7 @@ import TaskChatMessages from './TaskChatMessages';
 import SendTaskMessageForm from './SendTaskMessageForm';
 
 function TaskChatContainer({ taskId }: { taskId: number; }): JSX.Element {
-    const { isLoading, messages } = useAppSelector<MessageState>(state => state.messages);
-
-    console.log(messages);
-    
+    const { isLoading, messages } = useAppSelector<MessageState>(state => state.messages);    
 
     return (
         <div className='p-4 border rounded-md'>
