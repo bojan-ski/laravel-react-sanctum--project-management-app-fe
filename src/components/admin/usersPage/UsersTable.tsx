@@ -23,7 +23,7 @@ function UsersTable({ users }: { users: User[]; }): JSX.Element {
                 </TableHeader>
 
                 <TableBody>
-                    {users.map(user => <UsersTableRow key={user.id} user={user} />)}
+                    {users.map((user: User) => <UsersTableRow key={user.id} user={user} />)}
                 </TableBody>
             </Table>
         </section>

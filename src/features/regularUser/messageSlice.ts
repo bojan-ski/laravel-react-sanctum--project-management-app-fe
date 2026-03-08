@@ -74,7 +74,7 @@ const messageSlice = createSlice({
     name: 'messages',
     initialState: initialMessageState,
     reducers: {
-        addMessage: (state, { payload }): void => {            
+        addMessage: (state, { payload }): void => {
             const exists = state.messages.some(
                 (message: Message) => message.id === payload.id
             );
@@ -85,7 +85,7 @@ const messageSlice = createSlice({
         },
         removeMessage: (state, { payload }): void => {
             state.messages = state.messages.filter(
-                message => message.id !== payload.message_id
+                (message: Message) => message.id !== payload.message_id
             );
         },
     },
@@ -140,7 +140,7 @@ const messageSlice = createSlice({
                 state.isLoading = false;
 
                 state.messages = state.messages.filter(
-                    message => message.id !== payload.data.id
+                    (message: Message) => message.id !== payload.data.id
                 );
             })
             .addCase(deleteTaskMessage.rejected, (state) => {

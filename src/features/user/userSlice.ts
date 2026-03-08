@@ -98,7 +98,6 @@ const userSlice = createSlice({
 
                 state.user = payload.data;
 
-                // update storage
                 setUserDataInLS(payload.data);
             })
             .addCase(loginUser.rejected, (state) => {
@@ -114,7 +113,6 @@ const userSlice = createSlice({
 
                 state.user = INIT_STATE;
 
-                // clear storage
                 removeUserDataFromLS();
             })
             .addCase(logoutUser.rejected, (state) => {
@@ -152,7 +150,6 @@ const userSlice = createSlice({
                 
                 state.user = INIT_STATE;
 
-                // clear storage
                 removeUserDataFromLS();
             })
             .addCase(deleteUserAccount.rejected, (state) => {

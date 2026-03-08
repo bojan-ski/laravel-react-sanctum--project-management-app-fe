@@ -12,7 +12,7 @@ function TaskDetailsInfoDueDate({
     isOverdue,
     dueDate
 }: TaskDetailsInfoDueDateProps): JSX.Element {
-    const overdue = isOverdue;
+    const overdue: boolean = isOverdue;
 
     return (
         <div className='text-xs md:text-sm'>

@@ -1,13 +1,12 @@
 import { type JSX } from 'react';
 import { Clock, Play, CheckCircle, Archive, CircleIcon } from 'lucide-react';
-
-export type ProjectStatus = 'pending' | 'active' | 'completed' | 'closed';
+import type { ProjectStatus as ProjectStatusTypes } from '../../../types/project';
 
 type ProjectStatusProps = {
-    status: ProjectStatus;
+    status: ProjectStatusTypes;
 };
 
-const statusMap: Record<ProjectStatus, { icon: any; color: string; }> = {
+const statusMap: Record<ProjectStatusTypes, { icon: any; color: string; }> = {
     pending: { icon: Clock, color: 'text-amber-500' },
     active: { icon: Play, color: 'text-blue-500' },
     completed: { icon: CheckCircle, color: 'text-emerald-500' },

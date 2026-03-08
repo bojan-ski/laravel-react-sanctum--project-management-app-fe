@@ -35,7 +35,7 @@ function TasksFilterByOwnership({ filters }: { filters: UserTasksFilters; }): JS
 
             navigate(`?ownership=${option}&status=${filters.status}&priority=${filters.priority}&page=1`);
         } else {
-            toast.error(thunkCall.error.random || "Validation error");
+            toast.error(thunkCall.error.random || "TasksFilterByOwnership error");
 
             setErrors(thunkCall.error);
         }

@@ -11,7 +11,6 @@ function Notifications(): JSX.Element {
   const dispatch = useAppDispatch();
 
   useEffect((): void => {
-    console.log('useEffect - Notifications');
     dispatch(getUserNotifications(false));
   }, []);
 

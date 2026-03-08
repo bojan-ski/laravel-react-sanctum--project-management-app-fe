@@ -25,8 +25,6 @@ function SelectedProject(): JSX.Element {
     const [ projectStatus, setProjectStatus ] = useState<ProjectStatus>(project.status);
 
     useEffect(() => {
-        console.log('useEffect - SelectedProject');
-
         dispatch(setMembers({
             members: project.members,
             membersLimit: project.members_limit,

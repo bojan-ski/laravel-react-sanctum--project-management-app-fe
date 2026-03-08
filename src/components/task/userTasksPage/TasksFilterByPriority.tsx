@@ -35,7 +35,7 @@ function TasksFilterByPriority({ filters }: { filters: UserTasksFilters; }): JSX
 
             navigate(`?ownership=${filters.ownership}&status=${filters.status}&priority=${option}&page=1`);
         } else {
-            toast.error(thunkCall.error.random || "Validation error");
+            toast.error(thunkCall.error.random || "TasksFilterByPriority error");
 
             setErrors(thunkCall.error);
         }

@@ -15,7 +15,7 @@ function TasksFilterByStatus({ filters }: { filters: UserTasksFilters; }): JSX.E
     const { run } = useThunk(fetchUserTasks);
     const { validate, errors, setErrors } = useZodValidation<FilterTaskByStatus>();
 
-    const options: UserTasksFiltersStatus[] = [ 'all', 'todo', 'in_progress', 'review', 'done' ];
+    const options: UserTasksFiltersStatus[] = [ 'all', 'to_do', 'in_progress', 'review', 'done' ];
 
     const handleFilterStatusChange = async (option: string): Promise<void> => {
         const validation = validate(filterTaskStatusSchema, option);
@@ -35,7 +35,7 @@ function TasksFilterByStatus({ filters }: { filters: UserTasksFilters; }): JSX.E
 
             navigate(`?ownership=${filters.ownership}&status=${option}&priority=${filters.priority}&page=1`);
         } else {
-            toast.error(thunkCall.error.random || "Validation error");
+            toast.error(thunkCall.error.random || "TasksFilterByStatus error");
 
             setErrors(thunkCall.error);
         }

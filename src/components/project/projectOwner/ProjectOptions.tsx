@@ -23,7 +23,6 @@ function ProjectOptions({
             </DropdownMenuTrigger>
 
             <DropdownMenuContent align="end">
-                {/* edit */}
                 <DropdownMenuItem className='text-xs md:text-sm'>
                     <Link
                         className='flex items-center gap-2'
@@ -34,7 +33,6 @@ function ProjectOptions({
                     </Link>
                 </DropdownMenuItem>
 
-                {/* delete */}
                 <DeleteProject
                     projectId={projectId}
                     projectTitle={projectTitle}

@@ -28,8 +28,6 @@ function AllProjects(): JSX.Element {
     const dispatch = useAppDispatch();
 
     useEffect((): void => {
-        console.log('useEffect - AllProjects');
-
         const urlSearch = searchParams.get('search') as string || '';
         const urlPage = parseInt(searchParams.get('page') || '1', 10);
 
